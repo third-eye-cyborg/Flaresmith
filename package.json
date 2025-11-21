@@ -1,0 +1,15 @@
+{
+  "name": "cloudmake",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "CloudMake organizational repository setup",
+  "devDependencies": {
+    "@astrosteveo/speckit": "^2.4.0"
+  }
+}
