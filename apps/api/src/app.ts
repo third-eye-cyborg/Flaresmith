@@ -46,8 +46,11 @@ app.use("/api/*", rateLimitMiddleware());
 app.use("/api/projects/*", idempotencyMiddleware(["POST", "PUT", "DELETE"]));
 app.use("/api/environments/*", idempotencyMiddleware(["POST", "PUT", "DELETE"]));
 
-// Route imports will be added here as they are implemented
-// app.route("/api/projects", projectsRouter);
+// Route imports
+import projectsRouter from "./routes/projects";
+
+// Mount routes
+app.route("/api/projects", projectsRouter);
 // app.route("/api/environments", environmentsRouter);
 // app.route("/api/specs", specsRouter);
 // app.route("/api/chat", chatRouter);

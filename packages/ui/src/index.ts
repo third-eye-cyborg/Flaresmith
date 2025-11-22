@@ -3,3 +3,5 @@ export { Card } from "./Card";
 export { Input } from "./Input";
 export { Text } from "./Text";
 export { View } from "./View";
+export { EnvironmentCard } from "./EnvironmentCard";
+export type { EnvironmentCardProps } from "./EnvironmentCard";

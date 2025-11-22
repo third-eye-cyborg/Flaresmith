@@ -124,3 +124,13 @@ export const builds = pgTable("builds", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+// Type exports
+export type Organization = typeof organizations.$inferSelect;
+export type User = typeof users.$inferSelect;
+export type Project = typeof projects.$inferSelect;
+export type Environment = typeof environments.$inferSelect;
+export type IntegrationConfig = typeof integrationConfigs.$inferSelect;
+export type Deployment = typeof deployments.$inferSelect;
+export type Build = typeof builds.$inferSelect;
+

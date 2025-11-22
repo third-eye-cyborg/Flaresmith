@@ -123,24 +123,24 @@ Based on plan.md structure:
 
 ### Implementation for User Story 2
 
-- [ ] T061 [P] [US2] Create Build Drizzle model schema in apps/api/db/schema/build.ts
-- [ ] T062 [P] [US2] Define GET /projects/:id/environments response Zod schema in packages/types/src/api/environments.ts
-- [ ] T063 [US2] Implement EnvironmentService for aggregating status across integrations in apps/api/src/services/environmentService.ts
-- [ ] T064 [US2] Create GitHub integration service for branch and environment status in apps/api/src/integrations/github/environmentService.ts
-- [ ] T065 [US2] Create Cloudflare integration service for deployment status queries in apps/api/src/integrations/cloudflare/statusService.ts
-- [ ] T066 [US2] Create Neon integration service for branch status queries in apps/api/src/integrations/neon/statusService.ts
-- [ ] T067 [US2] Create Postman integration service for environment status in apps/api/src/integrations/postman/environmentService.ts
-- [ ] T068 [US2] Implement GET /projects/:id/environments endpoint in apps/api/src/routes/projects/environments.ts
-- [ ] T069 [US2] Implement deployment history tracking in apps/api/src/services/deploymentService.ts
-- [ ] T070 [US2] Create promotion action endpoint POST /projects/:id/promote in apps/api/src/routes/projects/promote.ts
-- [ ] T071 [US2] Implement environment promotion logic (dev→staging, staging→prod) in apps/api/src/services/promotionService.ts
-- [ ] T072 [US2] Create EnvironmentCard UI component in packages/ui/src/EnvironmentCard.tsx
-- [ ] T073 [US2] Create EnvironmentDashboard UI component in apps/web/src/components/environments/EnvironmentDashboard.tsx
-- [ ] T074 [US2] Create environment dashboard page in apps/web/app/projects/[id]/environments/page.tsx
-- [ ] T075 [US2] Implement usePollingStatus hook for real-time updates in packages/utils/src/hooks/usePollingStatus.ts
-- [ ] T076 [US2] Add typed API client methods for environment queries in packages/api-client/src/resources/environments.ts
-- [ ] T077 [US2] Create mobile environment monitoring view in apps/mobile/app/(tabs)/environments.tsx
-- [ ] T078 [US2] Setup deployment status push notifications via OneSignal in apps/mobile/src/services/notifications.ts
+- [X] T061 [P] [US2] Create Build Drizzle model schema in apps/api/db/schema/build.ts
+- [X] T062 [P] [US2] Define GET /projects/:id/environments response Zod schema in packages/types/src/api/environments.ts
+- [X] T063 [US2] Implement EnvironmentService for aggregating status across integrations in apps/api/src/services/environmentService.ts
+- [X] T064 [US2] Create GitHub integration service for branch and environment status in apps/api/src/integrations/github/environmentService.ts
+- [X] T065 [US2] Create Cloudflare integration service for deployment status queries in apps/api/src/integrations/cloudflare/statusService.ts
+- [X] T066 [US2] Create Neon integration service for branch status queries in apps/api/src/integrations/neon/statusService.ts
+- [X] T067 [US2] Create Postman integration service for environment status in apps/api/src/integrations/postman/environmentService.ts
+- [X] T068 [US2] Implement GET /projects/:id/environments endpoint in apps/api/src/routes/projects/environments.ts
+- [X] T069 [US2] Implement deployment history tracking in apps/api/src/services/deploymentService.ts
+- [X] T070 [US2] Create promotion action endpoint POST /projects/:id/promote in apps/api/src/routes/projects/promote.ts
+- [X] T071 [US2] Implement environment promotion logic (dev→staging, staging→prod) in apps/api/src/services/promotionService.ts
+- [X] T072 [US2] Create EnvironmentCard UI component in packages/ui/src/EnvironmentCard.tsx
+- [X] T073 [US2] Create EnvironmentDashboard UI component in apps/web/src/components/environments/EnvironmentDashboard.tsx
+- [X] T074 [US2] Create environment dashboard page in apps/web/app/projects/[id]/environments/page.tsx
+- [X] T075 [US2] Implement usePollingStatus hook for real-time updates in packages/utils/src/hooks/usePollingStatus.ts
+- [X] T076 [US2] Add typed API client methods for environment queries in packages/api-client/src/resources/environments.ts
+- [X] T077 [US2] Create mobile environment monitoring view in apps/mobile/app/environments/[projectId].tsx
+- [X] T078 [US2] Setup deployment status push notifications via OneSignal in apps/mobile/src/services/notifications.ts
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
