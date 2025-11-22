@@ -1,4 +1,5 @@
-import { db } from "../../db/connection";
+import { getDb } from "../../db/connection";
+import { getEnv } from "@cloudmake/utils";
 import { projects, environments, integrationConfigs } from "../../db/schema";
 import { GitHubRepoService } from "../integrations/github/repoService";
 import { GitHubTemplateService } from "../integrations/github/templateService";
@@ -7,6 +8,7 @@ import { NeonProjectService } from "../integrations/neon/projectService";
 import { CloudflareDeployService } from "../integrations/cloudflare/deployService";
 import { PostmanWorkspaceService } from "../integrations/postman/workspaceService";
 import { eq } from "drizzle-orm";
+import { withSpan } from "../lib/telemetry";
 
 /**
  * T048: ProjectService orchestrating all provisioning steps
@@ -58,6 +60,8 @@ export class ProjectService {
   }
 
   async createProject(input: CreateProjectInput): Promise<CreateProjectOutput> {
+    return withSpan('ProjectService.createProject', { attributes: { projectSlug: input.slug } }, async () => {
+    const db = getDb(getEnv("DATABASE_URL"));
     const { name, slug, orgId, integrations: integrationConfig = {} } = input;
 
     try {
@@ -73,6 +77,9 @@ export class ProjectService {
         })
         .returning();
 
+      if (!project) {
+        throw new Error('PROJECT_INSERT_FAILED');
+      }
       const projectId = project.id;
       const integrationResults: any = {};
 
@@ -318,10 +325,13 @@ export class ProjectService {
 
       throw new Error(`Project creation failed: ${error.message}`);
     }
+    });
   }
 
   async getProject(projectId: string) {
+    return withSpan('ProjectService.getProject', { attributes: { projectId } }, async () => {
     try {
+      const db = getDb(getEnv("DATABASE_URL"));
       const [project] = await db.select().from(projects).where(eq(projects.id, projectId));
 
       if (!project) {
@@ -332,5 +342,6 @@ export class ProjectService {
     } catch (error: any) {
       throw new Error(`Project fetch failed: ${error.message}`);
     }
+    });
   }
 }

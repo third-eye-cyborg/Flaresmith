@@ -9,7 +9,30 @@ import * as schema from "./schema";
  */
 
 export function createDbConnection(databaseUrl?: string) {
-  const connectionString = databaseUrl || getEnv("DATABASE_URL");
+  const isTest = process.env.NODE_ENV === 'test';
+  const connectionString = databaseUrl || process.env.DATABASE_URL;
+  if (!connectionString) {
+    if (isTest) {
+      // Provide a lightweight mock to avoid throwing in test suites that import modules with implicit db usage.
+      const mock: any = {
+        execute: async () => ({ rows: [] }),
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              orderBy: () => ({
+                limit: async () => []
+              })
+            })
+          })
+        })
+      };
+      return mock;
+    }
+    // Non-test environment: enforce presence
+    const required = getEnv("DATABASE_URL");
+    const sql = neon(required);
+    return drizzle(sql, { schema });
+  }
   const sql = neon(connectionString);
   return drizzle(sql, { schema });
 }
@@ -17,5 +40,13 @@ export function createDbConnection(databaseUrl?: string) {
 export function getDb(databaseUrl: string) {
   return createDbConnection(databaseUrl);
 }
+
+/**
+ * Default shared connection instance.
+ * Many existing route implementations import `db` directly; previously this was missing
+ * causing runtime errors. Exporting it here preserves backward compatibility while allowing
+ * tests to still construct isolated connections via `createDbConnection`.
+ */
+export const db = createDbConnection();
 
 export type DbConnection = ReturnType<typeof createDbConnection>;

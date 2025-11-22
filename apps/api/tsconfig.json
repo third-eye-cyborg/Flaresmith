@@ -2,12 +2,12 @@
   "extends": "@cloudmake/config-tsconfig/cloudflare.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "paths": {
       "@cloudmake/types": ["../../packages/types/src"],
       "@cloudmake/utils": ["../../packages/utils/src"]
     }
   },
-  "include": ["src", "db"],
+  "include": ["src", "db", "tests"],
   "exclude": ["node_modules", "dist"]
 }

@@ -7,6 +7,7 @@ import { structuredLogger } from "./middleware/logging";
 import { authMiddleware } from "./middleware/auth";
 import { idempotencyMiddleware } from "./middleware/idempotency";
 import { rateLimitMiddleware } from "./middleware/rateLimit";
+import { traceContextMiddleware } from "./middleware/traceContext";
 
 /**
  * T023: Hono App Initialization
@@ -16,6 +17,7 @@ import { rateLimitMiddleware } from "./middleware/rateLimit";
 export type Bindings = {
   DATABASE_URL: string;
   JWT_SECRET: string;
+  MASTER_ENCRYPTION_KEY: string;
   GITHUB_TOKEN: string;
   CLOUDFLARE_API_TOKEN: string;
   NEON_API_KEY: string;
@@ -27,6 +29,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 
 // Core middleware pipeline
 app.use("*", cors());
+app.use("*", traceContextMiddleware());
 app.use("*", prettyJSON());
 app.use("*", logger());
 app.use("*", structuredLogger());
@@ -49,10 +52,14 @@ app.use("/api/environments/*", idempotencyMiddleware(["POST", "PUT", "DELETE"]))
 // Route imports
 import projectsRouter from "./routes/projects";
 import specsRouter from "./routes/specs";
+import chatRouter from "./routes/chat";
+import { jwksRoute } from "./routes/auth/jwks";
 
 // Mount routes
 app.route("/api/projects", projectsRouter);
 app.route("/api/specs", specsRouter);
+app.route("/api/chat", chatRouter);
+app.get('/api/auth/jwks', jwksRoute);
 // app.route("/api/environments", environmentsRouter);
 // app.route("/api/specs", specsRouter);
 // app.route("/api/chat", chatRouter);

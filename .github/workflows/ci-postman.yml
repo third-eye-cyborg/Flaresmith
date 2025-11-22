@@ -1,0 +1,49 @@
+name: CI - Postman API Tests
+
+on:
+  pull_request:
+    branches: [main, staging, 'feature/*']
+  push:
+    branches: [main, staging]
+
+jobs:
+  postman-tests:
+    name: Postman Collection Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        environment: [dev, staging]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Postman collection for ${{ matrix.environment }}
+        run: |
+          if [ -f "postman/tests/integration.postman_collection.json" ]; then
+            newman run postman/tests/integration.postman_collection.json \
+              --environment postman/environments/${{ matrix.environment }}.postman_environment.json \
+              --reporters cli,htmlextra \
+              --reporter-htmlextra-export newman-report-${{ matrix.environment }}.html \
+              --bail
+          else
+            echo "Postman collection not found, skipping..."
+          fi
+
+      - name: Upload Postman test report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: postman-report-${{ matrix.environment }}
+          path: newman-report-${{ matrix.environment }}.html
+          retention-days: 7

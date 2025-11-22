@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { EnvironmentService } from "../../services/environmentService";
+import { circuitBreakerRegistry } from "@cloudmake/utils/src/reliability/externalPolicy";
 import { getDb } from "../../../db/connection";
 import { getEnv } from "@cloudmake/utils";
 
@@ -30,8 +31,32 @@ app.get(
     try {
       const environments = await environmentService.getEnvironmentsWithStatus(projectId);
 
+      // Collect circuit breaker metrics
+      const circuitBreakers = Array.from(circuitBreakerRegistry.getAll().entries()).map(([name, breaker]) => {
+        const metrics = breaker.getMetrics();
+        return {
+          name,
+            state: metrics.state,
+            failures: metrics.failures,
+            lastFailureTime: metrics.lastFailureTime || null,
+            halfOpenAttempts: metrics.halfOpenAttempts,
+            halfOpenSuccesses: metrics.halfOpenSuccesses,
+        };
+      });
+
+      // Rate limit remaining tokens (set by rateLimitMiddleware)
+      const userRemaining = (c as any).get("rateLimitUserRemaining") as number | undefined;
+      const projectRemaining = (c as any).get("rateLimitProjectRemaining") as number | undefined;
+
       return c.json({
         environments,
+        meta: {
+          rateLimit: {
+            userRemaining: typeof userRemaining === "number" ? userRemaining : null,
+            projectRemaining: typeof projectRemaining === "number" ? projectRemaining : null,
+          },
+          circuitBreakers,
+        },
       });
     } catch (error) {
       console.error("Error fetching environments:", error);

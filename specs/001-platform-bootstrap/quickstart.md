@@ -52,15 +52,26 @@ pnpm exec ts-node scripts/provision/createProject.ts --name "demo" --org default
 Returns project JSON with environment matrix.
 
 ## Apply Spec Changes
-Edit spec files under `specs/001-platform-bootstrap/`. Then:
+Edit feature spec under `specs/001-platform-bootstrap/spec.md`. Then:
 ```bash
 pnpm exec ts-node scripts/spec/apply.ts --project <projectId>
 ```
-Generates/updates:
-- Zod schemas (packages/types)
-- Drizzle models (apps/api/db/schema.ts)
-- Postman collections (base + env-specific; export + API sync)
+Generates/updates (idempotent):
+- Zod schemas (packages/types/src/api/*)
+- Drizzle models (apps/api/db/schema/*)
+- Hono route stubs (apps/api/src/routes/*)
+- Postman collections (base + env-specific)
 - MCP tool descriptors (`mcp/servers/*/*.json`)
+- OpenAPI contract fragments (specs/001-platform-bootstrap/contracts/openapi.yaml)
+
+Produces drift report with:
+```jsonc
+{
+	"changedFiles": [ { "path": "...", "changeType": "modified" } ],
+	"summary": { "totalFiles": 12, "filesCreated": 2, "filesModified": 10, "filesDeleted": 0, "hasConflicts": false },
+	"appliedAt": "2025-11-21T10:15:30Z"
+}
+```
 
 ## Run Tests
 ```bash
@@ -81,16 +92,19 @@ Open apps/web, navigate to /project/<id>/editor. Start chat session (backend spa
 - Prod: Cloudflare Workers (Hono) + Neon serverless
 
 ## Observability
-Structured logs with correlationId; environment dashboard surfaces latest deployment and build status.
+Structured logs with correlationId. Environment dashboard surfaces latest deployment/build plus:
+- Rate limit remaining tokens (`meta.rateLimit.userRemaining` / `projectRemaining`)
+- Circuit breaker states (`meta.circuitBreakers[]`) for external services
 
 ## Rollback
 Initiate via UI: selects previous successful Deployment → creates rollback Deployment referencing commitSha.
 
 ## MCP Tool Refresh
-Whenever integrations added or spec apply runs:
+After adding integrations or applying spec changes:
 ```bash
 pnpm exec ts-node scripts/mcp/syncTools.ts --project <projectId>
 ```
+Validates descriptor schema refs; regenerates missing tools; skips unchanged artifacts.
 
 ## Security Notes
 - No secrets committed
@@ -98,7 +112,10 @@ pnpm exec ts-node scripts/mcp/syncTools.ts --project <projectId>
 - All provisioning actions logged with actor + correlationId
 
 ## Next Steps
-1. Implement code generation scripts under `scripts/`
-2. Add CI workflows in `.github/workflows/`
-3. Flesh out Workers deployment and bindings
-4. Expand test coverage (Playwright + Postman)
+1. Run initial project provisioning script
+2. Apply spec to generate artifacts
+3. Validate drift report summary
+4. Inspect OpenAPI contract additions
+5. Run Postman test collection (`pnpm postman:test`)
+6. Review rate limit headers on API responses (X-RateLimit-*)
+7. Observe circuit breaker headers (X-CircuitBreaker-*) under failure simulation

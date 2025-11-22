@@ -7,3 +7,6 @@ export * from "./base";
 export * from "./idempotency";
 export * from "./build";
 export * from "./specArtifact";
+export * from "./chatSession";
+export * from "./secrets";
+export * from "./specVersion";

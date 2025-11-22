@@ -1,0 +1,10 @@
+{
+  "name": "chat.sendMessage",
+  "description": "Send a chat message to the spec-aware assistant and receive a streaming response with optional diffs.",
+  "inputSchema": {
+    "$ref": "packages/types/src/api/chat.ts#ChatClientEvent"
+  },
+  "outputSchema": {
+    "$ref": "packages/types/src/api/chat.ts#ChatServerEvent"
+  }
+}

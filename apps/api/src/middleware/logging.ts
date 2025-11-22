@@ -1,6 +1,7 @@
-import { Context, Next } from "hono";
+import type { Context, Next } from "hono";
 import pino from "pino";
 import { v4 as uuidv4 } from "uuid";
+import { redactLogPayload } from "../lib/loggerRedaction";
 
 /**
  * T024: Structured Logging Middleware
@@ -21,6 +22,12 @@ const logger = pino({
     ],
     censor: "[REDACTED]",
   },
+  formatters: {
+    // Apply deep redaction on every log object (message, merged bindings)
+    log(obj) {
+      return redactLogPayload(obj) as typeof obj;
+    },
+  },
 });
 
 export function structuredLogger() {
@@ -31,23 +38,29 @@ export function structuredLogger() {
     c.set("requestId", requestId);
     c.set("logger", logger);
 
-    logger.info({
-      requestId,
-      method: c.req.method,
-      path: c.req.path,
-      userAgent: c.req.header("user-agent"),
-    }, "Incoming request");
+    logger.info(
+      {
+        requestId,
+        method: c.req.method,
+        path: c.req.path,
+        userAgent: c.req.header("user-agent"),
+      },
+      "Incoming request"
+    );
 
     await next();
 
     const duration = Date.now() - startTime;
-    logger.info({
-      requestId,
-      method: c.req.method,
-      path: c.req.path,
-      status: c.res.status,
-      durationMs: duration,
-    }, "Request completed");
+    logger.info(
+      {
+        requestId,
+        method: c.req.method,
+        path: c.req.path,
+        status: c.res.status,
+        durationMs: duration,
+      },
+      "Request completed"
+    );
   };
 }
 

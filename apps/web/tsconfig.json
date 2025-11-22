@@ -1,13 +1,16 @@
 {
-  "extends": "@cloudmake/config/tsconfig/react.json",
+  "extends": "@cloudmake/config-tsconfig/react.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./app/*"],
+      "@/*": ["./src/*", "./app/*"],
       "@cloudmake/api-client": ["../../packages/api-client/src"],
       "@cloudmake/types": ["../../packages/types/src"],
-      "@cloudmake/utils": ["../../packages/utils/src"]
+      "@cloudmake/utils": ["../../packages/utils/src"],
+      "@cloudmake/ui": ["../../packages/ui/src"]
     },
+    "rootDir": "../..",
+    "jsx": "react-jsx",
     "plugins": [
       {
         "name": "next"

@@ -32,12 +32,15 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.9.0
         version: 0.9.5
+      '@opentelemetry/api':
+        specifier: ^1.8.0
+        version: 1.9.0
       better-auth:
         specifier: ^0.1.0
         version: 0.1.0(@babel/core@7.28.5)(react@18.3.1)(solid-js@1.9.10)(vue@3.5.24(typescript@5.9.3))
       drizzle-orm:
         specifier: ^0.29.0
-        version: 0.29.5(@cloudflare/workers-types@4.20251121.0)(@neondatabase/serverless@0.9.5)(@types/pg@8.11.6)(@types/react@18.3.27)(better-sqlite3@11.10.0)(kysely@0.27.6)(mysql2@3.15.3)(pg@8.16.3)(postgres@3.4.7)(react@18.3.1)
+        version: 0.29.5(@cloudflare/workers-types@4.20251121.0)(@neondatabase/serverless@0.9.5)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@18.3.27)(better-sqlite3@11.10.0)(kysely@0.27.6)(mysql2@3.15.3)(pg@8.16.3)(postgres@3.4.7)(react@18.3.1)
       hono:
         specifier: ^4.0.0
         version: 4.10.6
@@ -159,7 +162,7 @@ importers:
         version: 5.90.10(react@18.3.1)
       next:
         specifier: ^14.2.0
-        version: 14.2.33(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.33(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -2330,6 +2333,10 @@ packages:
   '@npmcli/fs@3.1.1':
     resolution: {integrity: sha512-q9CRWjpHCMIh5sVyefoD1cA7PkvILqCZsnSOEUUivORLjxCO/Irmue2DprETiNgEqktDBZaM1Bi+jrarx1XdCg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
+  '@opentelemetry/api@1.9.0':
+    resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
+    engines: {node: '>=8.0.0'}
 
   '@oslojs/asn1@0.2.2':
     resolution: {integrity: sha512-/c7DTaOdmk3Xb482b4CFnPdWLo5e2WQuozhc89KVb91kohA+VvVNTd9IPyLsZpDUf9u3iwP4HcuMEXBcYmGFnQ==}
@@ -9994,6 +10001,8 @@ snapshots:
     dependencies:
       semver: 7.7.3
 
+  '@opentelemetry/api@1.9.0': {}
+
   '@oslojs/asn1@0.2.2':
     dependencies:
       '@oslojs/binary': 0.2.3
@@ -12061,10 +12070,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.29.5(@cloudflare/workers-types@4.20251121.0)(@neondatabase/serverless@0.9.5)(@types/pg@8.11.6)(@types/react@18.3.27)(better-sqlite3@11.10.0)(kysely@0.27.6)(mysql2@3.15.3)(pg@8.16.3)(postgres@3.4.7)(react@18.3.1):
+  drizzle-orm@0.29.5(@cloudflare/workers-types@4.20251121.0)(@neondatabase/serverless@0.9.5)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@18.3.27)(better-sqlite3@11.10.0)(kysely@0.27.6)(mysql2@3.15.3)(pg@8.16.3)(postgres@3.4.7)(react@18.3.1):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20251121.0
       '@neondatabase/serverless': 0.9.5
+      '@opentelemetry/api': 1.9.0
       '@types/pg': 8.11.6
       '@types/react': 18.3.27
       better-sqlite3: 11.10.0
@@ -14297,7 +14307,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@14.2.33(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.33(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.33
       '@swc/helpers': 0.5.5
@@ -14318,6 +14328,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.33
       '@next/swc-win32-ia32-msvc': 14.2.33
       '@next/swc-win32-x64-msvc': 14.2.33
+      '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros

@@ -6,6 +6,7 @@ import { CloudflareStatusService } from "../integrations/cloudflare/statusServic
 import { NeonStatusService } from "../integrations/neon/statusService";
 import { PostmanEnvironmentService } from "../integrations/postman/environmentService";
 import type { EnvironmentStatus } from "../../../../packages/types/src/api/environments";
+import { withSpan } from "../lib/telemetry";
 
 /**
  * Environment Service
@@ -18,6 +19,7 @@ export class EnvironmentService {
   constructor(private db: DbConnection) {}
 
   async getEnvironmentsWithStatus(projectId: string): Promise<EnvironmentStatus[]> {
+    return withSpan('EnvironmentService.getEnvironmentsWithStatus', { attributes: { projectId } }, async () => {
     // Fetch all environments for the project
     const envRecords = await this.db
       .select()
@@ -146,5 +148,6 @@ export class EnvironmentService {
     );
 
     return environmentStatuses;
+    });
   }
 }

@@ -1,4 +1,5 @@
 import { pgTable, uuid, varchar, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { specVersions } from "./specVersion";
 import { projects } from "./base";
 
 // Enum for generated artifact types produced by spec apply
@@ -28,6 +29,10 @@ export const specArtifacts = pgTable("spec_artifacts", {
   artifactPath: varchar("artifact_path", { length: 1024 }).notNull(),
   // Content checksum (e.g., sha256 hex) of the generated artifact for drift detection
   checksum: varchar("checksum", { length: 128 }).notNull(),
+  // Link to specVersions row capturing spec + constitution version at generation time
+  specVersionId: uuid("spec_version_id").references(() => specVersions.id),
+  // Cached constitution version string (denormalized for faster reporting)
+  constitutionVersion: varchar("constitution_version", { length: 32 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

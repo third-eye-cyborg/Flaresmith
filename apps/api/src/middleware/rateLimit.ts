@@ -1,9 +1,11 @@
-import { Context, Next } from "hono";
+import type { Context, Next } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { circuitBreakerRegistry } from "@cloudmake/utils/src/reliability/externalPolicy";
+import { incrementCounter, METRICS, observeHistogram } from "../lib/metrics";
 
 /**
- * T029: Rate Limiting Middleware
- * Implements token bucket algorithm per-user and per-project
+ * T139: Rate Limiting Middleware (enhanced)
+ * Implements token bucket algorithm per-user and per-project with endpoint weights & standardized headers.
  */
 
 interface RateLimitBucket {
@@ -18,14 +20,15 @@ const projectBuckets = new Map<string, RateLimitBucket>();
 
 const USER_RATE_LIMIT = {
   maxTokens: 120, // burst capacity
-  refillRate: 1, // 60 per minute
+  refillRate: 1, // 60 per minute steady state
   costMap: {
     provision: 5,
     chat: 3,
-    stream: 0.1, // per 10s
+    stream: 0.1, // streaming sustain cost (approx per 10s)
+    read: 1,
     default: 1,
   },
-};
+} as const;
 
 const PROJECT_RATE_LIMIT = {
   maxTokens: 600, // burst capacity
@@ -57,20 +60,32 @@ function consumeTokens(bucket: RateLimitBucket, cost: number): boolean {
 }
 
 function getCost(path: string, method: string): number {
-  if (path.includes("/provision") || method === "POST") {
+  // Provisioning endpoints
+  if (method === "POST" && path === "/projects") {
     return USER_RATE_LIMIT.costMap.provision;
   }
-  if (path.includes("/chat")) {
+  // Spec apply heavy operation
+  if (method === "POST" && path === "/specs/apply") {
+    return USER_RATE_LIMIT.costMap.provision;
+  }
+  // Chat operations
+  if (method === "POST" && /\/chat\/(stream|apply-diff)$/.test(path)) {
     return USER_RATE_LIMIT.costMap.chat;
   }
-  if (path.includes("/stream")) {
+  // Streaming sustain token consumption (handled by periodic calls)
+  if (/\/stream$/.test(path)) {
     return USER_RATE_LIMIT.costMap.stream;
+  }
+  // Reads
+  if (method === "GET") {
+    return USER_RATE_LIMIT.costMap.read;
   }
   return USER_RATE_LIMIT.costMap.default;
 }
 
 export function rateLimitMiddleware() {
   return async (c: Context, next: Next) => {
+    const start = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     const userId = c.get("userId") as string;
     const projectId = c.req.param("projectId") || c.req.query("projectId");
     const path = c.req.path;
@@ -94,13 +109,13 @@ export function rateLimitMiddleware() {
     const cost = getCost(path, method);
 
     if (!consumeTokens(userBucket, cost)) {
+      incrementCounter(METRICS.rateLimitExceeded);
       const retryAfter = Math.ceil(cost / userBucket.refillRate);
       c.header("Retry-After", retryAfter.toString());
+      c.header("X-RateLimit-Limit-User", USER_RATE_LIMIT.maxTokens.toString());
       c.header("X-RateLimit-Remaining-User", Math.floor(userBucket.tokens).toString());
-      
-      throw new HTTPException(429, { 
-        message: "User rate limit exceeded",
-      });
+      c.header("X-RateLimit-Reset-User", (Date.now() + retryAfter * 1000).toString());
+      throw new HTTPException(429, { message: "User rate limit exceeded" });
     }
 
     // Project-level rate limiting
@@ -117,19 +132,37 @@ export function rateLimitMiddleware() {
       const projectBucket = projectBuckets.get(projectId)!;
       
       if (!consumeTokens(projectBucket, cost)) {
+        incrementCounter(METRICS.rateLimitExceeded);
         const retryAfter = Math.ceil(cost / projectBucket.refillRate);
         c.header("Retry-After", retryAfter.toString());
+        c.header("X-RateLimit-Limit-Project", PROJECT_RATE_LIMIT.maxTokens.toString());
         c.header("X-RateLimit-Remaining-Project", Math.floor(projectBucket.tokens).toString());
-        
-        throw new HTTPException(429, { 
-          message: "Project rate limit exceeded",
-        });
+        c.header("X-RateLimit-Reset-Project", (Date.now() + retryAfter * 1000).toString());
+        throw new HTTPException(429, { message: "Project rate limit exceeded" });
       }
-
+      c.header("X-RateLimit-Limit-Project", PROJECT_RATE_LIMIT.maxTokens.toString());
       c.header("X-RateLimit-Remaining-Project", Math.floor(projectBucket.tokens).toString());
+      c.set("rateLimitProjectRemaining", Math.floor(projectBucket.tokens));
     }
 
+    incrementCounter(METRICS.rateLimitHits);
+    c.header("X-RateLimit-Limit-User", USER_RATE_LIMIT.maxTokens.toString());
     c.header("X-RateLimit-Remaining-User", Math.floor(userBucket.tokens).toString());
+    c.set("rateLimitUserRemaining", Math.floor(userBucket.tokens));
+
+    // Overhead measurement ends BEFORE invoking downstream handler; the latency cost of rate limiting logic itself
+    const end = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+    const overheadMs = end - start;
+    observeHistogram(METRICS.rateLimitOverheadMs, overheadMs);
     await next();
+
+    // Attach circuit breaker states as headers for observability
+    const breakers = circuitBreakerRegistry.getAll();
+    breakers.forEach((breaker, name) => {
+      const metrics = breaker.getMetrics();
+      c.header(`X-CircuitBreaker-${name}`, metrics.state);
+      if (metrics.state === 'open') incrementCounter(METRICS.circuitBreakerOpen);
+      if (metrics.state === 'half_open') incrementCounter(METRICS.circuitBreakerHalfOpen);
+    });
   };
 }

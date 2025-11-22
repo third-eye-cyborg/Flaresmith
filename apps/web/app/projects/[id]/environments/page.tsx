@@ -2,6 +2,7 @@
 
 import React from "react";
 import { EnvironmentDashboard } from "@/components/environments/EnvironmentDashboard";
+import { PromotionHistory } from "@/components/environments/PromotionHistory";
 import { usePollingStatus } from "@cloudmake/utils";
 import { useParams, useRouter } from "next/navigation";
 
@@ -87,6 +88,7 @@ export default function EnvironmentsPage() {
         onPromote={handlePromote}
         loading={isLoading}
       />
+      <PromotionHistory environments={data?.environments || []} />
     </div>
   );
 }

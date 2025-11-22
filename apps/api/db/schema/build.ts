@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar, timestamp } from "drizzle-orm/pg-core";
-import { projects } from "./project";
-import { environments } from "./environment";
+// Adjusted imports: projects & environments are defined in base.ts (previously referenced missing files)
+import { projects, environments } from "./base";
 
 export const builds = pgTable("builds", {
   id: uuid("id").primaryKey().defaultRandom(),

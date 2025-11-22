@@ -38,6 +38,13 @@ paths:
                   nextCursor:
                     type: string
                     nullable: true
+          headers:
+            X-Trace-Id:
+              description: Distributed trace identifier
+              schema: { type: string }
+            X-Request-Id:
+              description: Correlation identifier for this request
+              schema: { type: string }
         '401': { $ref: '#/components/responses/Unauthorized' }
     post:
       summary: Create project
@@ -55,6 +62,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+          headers:
+            X-Trace-Id:
+              description: Distributed trace identifier
+              schema: { type: string }
+            X-Request-Id:
+              description: Correlation identifier for this request
+              schema: { type: string }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '409': { $ref: '#/components/responses/Conflict' }
@@ -73,6 +87,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+          headers:
+            X-Trace-Id:
+              description: Distributed trace identifier
+              schema: { type: string }
+            X-Request-Id:
+              description: Correlation identifier for this request
+              schema: { type: string }
         '404': { $ref: '#/components/responses/NotFound' }
         '401': { $ref: '#/components/responses/Unauthorized' }
   /projects/{id}/environments:
@@ -83,15 +104,52 @@ paths:
           name: id
           required: true
           schema: { type: string, format: uuid }
+        - in: header
+          name: X-Request-Id
+          required: false
+          schema: { type: string }
+          description: Optional caller-provided idempotency / correlation identifier.
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Environment'
+                $ref: '#/components/schemas/EnvironmentMatrixResponse'
+          headers:
+            X-RateLimit-Limit-User:
+              description: Maximum burst tokens allowed for the authenticated user.
+              schema: { type: integer }
+            X-RateLimit-Remaining-User:
+              description: Remaining user-scoped tokens after this request.
+              schema: { type: integer }
+            X-RateLimit-Reset-User:
+              description: Epoch milliseconds when user bucket will fully reset if exhausted.
+              schema: { type: string }
+            X-RateLimit-Limit-Project:
+              description: Maximum burst tokens allowed for the targeted project.
+              schema: { type: integer }
+            X-RateLimit-Remaining-Project:
+              description: Remaining project-scoped tokens after this request.
+              schema: { type: integer }
+            X-RateLimit-Reset-Project:
+              description: Epoch milliseconds when project bucket will fully reset if exhausted.
+              schema: { type: string }
+            Retry-After:
+              description: Seconds to wait before retrying (present only on 429 responses normally; documented here for completeness).
+              schema: { type: integer }
+            X-CircuitBreaker-GitHub:
+              description: Current state of GitHub circuit breaker (closed|open|half_open).
+              schema: { type: string }
+            X-CircuitBreaker-Cloudflare:
+              description: Current state of Cloudflare circuit breaker (closed|open|half_open).
+              schema: { type: string }
+            X-CircuitBreaker-Neon:
+              description: Current state of Neon circuit breaker (closed|open|half_open).
+              schema: { type: string }
+            X-CircuitBreaker-Postman:
+              description: Current state of Postman circuit breaker (closed|open|half_open).
+              schema: { type: string }
         '404': { $ref: '#/components/responses/NotFound' }
         '401': { $ref: '#/components/responses/Unauthorized' }
   /projects/{id}/promote:
@@ -118,7 +176,15 @@ paths:
                   enum: [staging, prod]
               required: [from, to]
       responses:
-        '202': { description: Promotion started }
+        '202':
+          description: Promotion started
+          headers:
+            X-Trace-Id:
+              description: Distributed trace identifier
+              schema: { type: string }
+            X-Request-Id:
+              description: Correlation identifier for this request
+              schema: { type: string }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
   /specs/apply:
@@ -137,6 +203,13 @@ paths:
       responses:
         '202':
           description: Apply started
+          headers:
+            X-Trace-Id:
+              description: Distributed trace identifier
+              schema: { type: string }
+            X-Request-Id:
+              description: Correlation identifier for this request
+              schema: { type: string }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
   /chat/apply-diff:
@@ -158,6 +231,13 @@ paths:
                 properties:
                   commitSha:
                     type: string
+          headers:
+            X-Trace-Id:
+              description: Distributed trace identifier
+              schema: { type: string }
+            X-Request-Id:
+              description: Correlation identifier for this request
+              schema: { type: string }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
 components:
@@ -195,11 +275,26 @@ components:
     Error:
       type: object
       properties:
-        code: { type: string }
-        message: { type: string }
-        correlationId: { type: string }
-        details: { type: object, additionalProperties: true, nullable: true }
-      required: [code, message, correlationId]
+        error:
+          type: object
+          properties:
+            code: { type: string, description: Stable machine-readable error code }
+            message: { type: string, description: Human-readable message }
+            severity: { type: string, enum: [info, warning, error, critical] }
+            retryPolicy: { type: string, enum: [none, safe, idempotent] }
+            requestId: { type: string }
+            timestamp: { type: string, format: date-time }
+            context: { type: object, additionalProperties: true, description: Additional context (traceId, category, etc.) }
+            hint: { type: string, description: Optional remediation hint }
+            causeChain:
+              type: array
+              items: { type: string }
+            details:
+              type: object
+              additionalProperties: true
+              description: Structured detail map (validation issues, etc.)
+          required: [code, message, severity, retryPolicy, requestId, timestamp]
+      required: [error]
     Project:
       type: object
       properties:
@@ -223,9 +318,41 @@ components:
         neonBranchId: { type: string }
         postmanEnvironmentId: { type: string }
         lastDeploymentId: { type: string, format: uuid, nullable: true }
+        ttlExpiresAt: { type: string, format: date-time, nullable: true }
+        kind: { type: string, enum: [core, preview] }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
       required: [id, projectId, name, githubBranch, createdAt, updatedAt]
+    CircuitBreakerState:
+      type: object
+      properties:
+        name: { type: string }
+        state: { type: string, enum: [closed, open, half_open] }
+        failures: { type: integer }
+        lastFailureTime: { type: integer, nullable: true, description: Unix epoch ms }
+        halfOpenAttempts: { type: integer }
+        halfOpenSuccesses: { type: integer }
+      required: [name, state, failures, halfOpenAttempts, halfOpenSuccesses]
+    EnvironmentMatrixMeta:
+      type: object
+      properties:
+        rateLimit:
+          type: object
+          properties:
+            userRemaining: { type: integer, nullable: true }
+            projectRemaining: { type: integer, nullable: true }
+        circuitBreakers:
+          type: array
+          items: { $ref: '#/components/schemas/CircuitBreakerState' }
+      required: [rateLimit, circuitBreakers]
+    EnvironmentMatrixResponse:
+      type: object
+      properties:
+        environments:
+          type: array
+          items: { $ref: '#/components/schemas/Environment' }
+        meta: { $ref: '#/components/schemas/EnvironmentMatrixMeta' }
+      required: [environments, meta]
     CreateProjectRequest:
       type: object
       properties:

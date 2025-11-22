@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { EnvironmentSchema } from "../entities/environment";
 
 export const GetEnvironmentsRequestSchema = z.object({
   projectId: z.string().uuid(),

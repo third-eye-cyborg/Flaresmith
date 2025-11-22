@@ -184,25 +184,25 @@ Based on plan.md structure:
 
 ### Implementation for User Story 4
 
-- [ ] T096 [P] [US4] Create ChatSession Drizzle model schema in apps/api/db/schema/chatSession.ts
-- [ ] T097 [P] [US4] Define WebSocket chat message Zod schemas in packages/types/src/api/chat.ts
-- [ ] T098 [US4] Implement GitHub file tree fetching service in apps/api/src/integrations/github/fileService.ts
-- [ ] T099 [US4] Implement GitHub file content fetching with range support in apps/api/src/integrations/github/fileService.ts
-- [ ] T100 [US4] Implement GitHub commit creation service in apps/api/src/integrations/github/commitService.ts
-- [ ] T101 [US4] Create Copilot CLI wrapper service for chat in apps/api/src/services/copilotService.ts
-- [ ] T102 [US4] Implement spec-first context injection for chat prompts in apps/api/src/services/chatContextService.ts
-- [ ] T103 [US4] Create WebSocket chat endpoint with streaming support in apps/api/src/routes/chat/stream.ts
-- [ ] T104 [US4] Implement ChatService for session management in apps/api/src/services/chatService.ts
-- [ ] T105 [US4] Create POST /chat/apply-diff endpoint for committing edits in apps/api/src/routes/chat/applyDiff.ts
-- [ ] T106 [US4] Create MCP tool descriptor for chat.sendMessage in mcp/servers/chat/sendMessage.json
-- [ ] T107 [US4] Implement CodeMirror editor component with lazy loading in apps/web/src/components/editor/CodeEditor.tsx
-- [ ] T108 [US4] Implement file tree browser component in apps/web/src/components/editor/FileTree.tsx
-- [ ] T109 [US4] Implement chat panel UI component in apps/web/src/components/chat/ChatPanel.tsx
-- [ ] T110 [US4] Implement diff preview component in apps/web/src/components/chat/DiffPreview.tsx
-- [ ] T111 [US4] Create integrated editor page with chat in apps/web/app/projects/[id]/editor/page.tsx
-- [ ] T112 [US4] Implement WebSocket client with reconnection logic in packages/api-client/src/websocket.ts
-- [ ] T113 [US4] Add typed API client methods for chat operations in packages/api-client/src/resources/chat.ts
-- [ ] T114 [US4] Implement optimistic locking with commit SHA verification in apps/api/src/services/chatService.ts
+ - [X] T096 [P] [US4] Create ChatSession Drizzle model schema in apps/api/db/schema/chatSession.ts
+ - [X] T097 [P] [US4] Define WebSocket chat message Zod schemas in packages/types/src/api/chat.ts
+ - [X] T098 [US4] Implement GitHub file tree fetching service in apps/api/src/integrations/github/fileService.ts
+ - [X] T099 [US4] Implement GitHub file content fetching with range support in apps/api/src/integrations/github/fileService.ts
+ - [X] T100 [US4] Implement GitHub commit creation service in apps/api/src/integrations/github/commitService.ts
+ - [X] T101 [US4] Create Copilot CLI wrapper service for chat in apps/api/src/services/copilotService.ts
+ - [X] T102 [US4] Implement spec-first context injection for chat prompts in apps/api/src/services/chatContextService.ts
+ - [X] T103 [US4] Create WebSocket chat endpoint with streaming support in apps/api/src/routes/chat/stream.ts
+ - [X] T104 [US4] Implement ChatService for session management in apps/api/src/services/chatService.ts
+ - [X] T105 [US4] Create POST /chat/apply-diff endpoint for committing edits in apps/api/src/routes/chat/applyDiff.ts
+ - [X] T106 [US4] Create MCP tool descriptor for chat.sendMessage in mcp/servers/chat/sendMessage.json
+ - [X] T107 [US4] Implement CodeMirror editor component with lazy loading in apps/web/src/components/editor/CodeEditor.tsx
+ - [X] T108 [US4] Implement file tree browser component in apps/web/src/components/editor/FileTree.tsx
+ - [X] T109 [US4] Implement chat panel UI component in apps/web/src/components/chat/ChatPanel.tsx
+ - [X] T110 [US4] Implement diff preview component in apps/web/src/components/chat/DiffPreview.tsx
+ - [X] T111 [US4] Create integrated editor page with chat in apps/web/app/projects/[id]/editor/page.tsx
+ - [X] T112 [US4] Implement WebSocket client with reconnection logic in packages/api-client/src/websocket.ts
+ - [X] T113 [US4] Add typed API client methods for chat operations in packages/api-client/src/resources/chat.ts
+ - [X] T114 [US4] Implement optimistic locking with commit SHA verification in apps/api/src/services/chatService.ts
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -212,75 +212,73 @@ Based on plan.md structure:
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T115 [P] Configure Cloudflare Workers deployment settings in apps/api/wrangler.toml
-- [ ] T116 [P] Create GitHub Actions workflow for lint and typecheck in .github/workflows/ci-lint.yml
-- [ ] T117 [P] Create GitHub Actions workflow for tests in .github/workflows/ci-test.yml
-- [ ] T118 [P] Create GitHub Actions workflow for Postman collection testing in .github/workflows/ci-postman.yml
-- [ ] T119 Create GitHub Actions workflow for staging deployment in .github/workflows/deploy-staging.yml
-- [ ] T120 Create GitHub Actions workflow for production deployment in .github/workflows/deploy-prod.yml
-- [ ] T121 [P] Implement deployment rollback functionality in apps/api/src/services/rollbackService.ts
-- [ ] T122 [P] Add pagination support for GET /projects endpoint in apps/api/src/routes/projects/list.ts
-- [ ] T123 [P] Implement branch-based preview URL generation in apps/api/src/services/previewService.ts
-- [ ] T124 [P] Add spec versioning tracking in apps/api/db/schema/specVersion.ts
-- [ ] T125 [P] Create MCP tool sync script in scripts/mcp/syncTools.ts
-- [ ] T126 Implement PostHog analytics integration in packages/utils/src/analytics.ts
-- [ ] T127 Add comprehensive error messages and user feedback across all endpoints in apps/api/src/middleware/errorHandler.ts
-- [ ] T128 Performance optimization: implement caching for environment status queries in apps/api/src/services/environmentService.ts
-- [ ] T129 Security hardening: validate all external API responses in apps/api/src/integrations/common/validateResponse.ts
-- [ ] T130 [P] Update documentation in README.md with complete feature overview
-- [ ] T131 Run quickstart.md validation and update with accurate commands
-- [ ] T132 [P] Implement performance & reliability test suite validating SC-001 through SC-010 (provisioning, dashboard latency, spec apply time, retry convergence, chat diff latency, secret scan zero findings, uptime simulation, circuit breaker efficacy, rate limit behavior) using Vitest in apps/api/tests/performance/ (addresses coverage gap C4)
-- [ ] T133 [P] Create Postman test collection with assertions for critical endpoints in postman/tests/integration.postman_collection.json (addresses coverage gap C5)
-- [ ] T134 [P] Implement spec versioning metadata in SpecArtifact entity referencing Constitution version (addresses FR-027 and coverage gap C6)
-- [ ] T135 Implement PATCH /projects/{id}/integrations endpoint for partial integration updates in apps/api/src/routes/projects/updateIntegrations.ts (addresses FR-022 and coverage gap C7)
-- [ ] T136 [P] Define drift report response schema in packages/types/src/api/specs.ts with fields: changedFiles[], conflicts[], summary (addresses underspecification U1)
- - [ ] T137 [P] Implement health check scheduler (30s interval) and failover logic (Neon standby branch promotion) in apps/api/src/services/healthCheckService.ts (FR-031)
- - [ ] T138 [P] Implement retry/backoff + circuit breaker module in packages/utils/src/reliability/externalPolicy.ts (FR-032)
- - [ ] T139 [P] Implement rate limiting middleware (token buckets) in apps/api/src/middleware/rateLimit.ts with headers & endpoint weights (FR-033)
- - [ ] T140 [P] Surface circuit breaker state & remaining rate limit tokens in GET /projects/:id/environments response (extend service + update openapi) (FR-032, FR-033)
- - [ ] T141 [P] Extend OpenAPI spec (`contracts/openapi.yaml`) to include environment matrix schema reference in FR-007 and rate limit headers for relevant endpoints (addresses U2)
- - [ ] T142 [P] Implement spec apply conflict detection for uncommitted changes in scripts/spec/driftDetector.ts (Edge Case resolution A5)
- - [ ] T143 [P] Add secrets mapping overview endpoint GET /projects/:id/secrets in apps/api/src/routes/projects/secrets.ts (FR-023 explicit coverage)
- - [ ] T144 [P] Add reliability metrics emission (rate_limit_hits, circuit_breaker_open_total, health_check_failures) in apps/api/src/lib/metrics.ts and integrate into services (FR-031, FR-032, FR-033)
- - [ ] T145 [P] Implement telemetry base module (OpenTelemetry setup & OTLP exporter) in apps/api/src/lib/telemetry.ts (FR-035)
- - [ ] T146 [P] Implement trace context propagation middleware in apps/api/src/middleware/traceContext.ts (FR-035)
- - [ ] T147 [P] Instrument core services (projectService, environmentService, specApplyService) with spans in apps/api/src/services/ (FR-035)
- - [ ] T148 [P] Implement metrics catalog (counters/histograms/gauges) in apps/api/src/lib/metricsCatalog.ts (FR-035)
- - [ ] T149 [P] Implement sampling & forced error/slow sampling logic in apps/api/src/middleware/errorHandler.ts (FR-035)
- - [ ] T150 [P] Extend error envelope middleware to include traceId/requestId mapping in apps/api/src/middleware/errorHandler.ts (FR-035)
- - [ ] T151 [P] Add pgcrypto migration for secrets metadata encryption in apps/api/db/migrations/001_add_secrets_encryption.sql (FR-036)
- - [ ] T152 [P] Create Drizzle schema for encrypted secrets metadata in apps/api/db/schema/secrets.ts (FR-036)
- - [ ] T153 [P] Implement secret audit logging service in apps/api/src/services/secretAuditService.ts (FR-036)
- - [ ] T154 [P] Implement JWT key rotation job script in scripts/security/rotateJwtKey.ts and JWKS manifest endpoint in apps/api/src/routes/auth/jwks.ts (FR-036)
- - [ ] T155 [P] Implement master encryption key rotation job in scripts/security/rotateMasterKey.ts (FR-036)
- - [ ] T156 [P] Emit security metrics (key_rotation_total, secret_access_total) in apps/api/src/lib/metrics.ts (FR-036)
- - [ ] T157 [P] Extend OpenAPI spec contracts/openapi.yaml with error envelope schema & rate limit + trace headers (FR-035, FR-033)
- - [ ] T158 [P] Implement logger redaction denylist scanner in apps/api/src/lib/loggerRedaction.ts (FR-036)
- - [ ] T159 [P] Implement JWKS manifest generation service in apps/api/src/services/jwksService.ts (FR-036)
- - [ ] T160 [P] Enforce preview environment cap (≤15) in apps/api/src/services/previewService.ts (Data Scale & Limits)
- - [ ] T161 [P] Implement archival job for expired preview environments in scripts/preview/archiveExpiredPreviews.ts (Data Scale & Limits)
- - [ ] T162 [P] Implement preview environment metrics updater (preview_env_active_total gauge) in apps/api/src/services/previewMetricsUpdater.ts (FR-035)
+- [X] T115 [P] Configure Cloudflare Workers deployment settings in apps/api/wrangler.toml
+- [X] T116 [P] Create GitHub Actions workflow for lint and typecheck in .github/workflows/ci-lint.yml
+- [X] T117 [P] Create GitHub Actions workflow for tests in .github/workflows/ci-test.yml
+- [X] T118 [P] Create GitHub Actions workflow for Postman collection testing in .github/workflows/ci-postman.yml
+- [X] T119 Create GitHub Actions workflow for staging deployment in .github/workflows/deploy-staging.yml
+- [X] T120 Create GitHub Actions workflow for production deployment in .github/workflows/deploy-prod.yml
+- [X] T121 [P] Implement deployment rollback functionality in apps/api/src/services/rollbackService.ts
+- [X] T122 [P] Add pagination support for GET /projects endpoint in apps/api/src/routes/projects/list.ts
+- [X] T123 [P] Implement branch-based preview URL generation in apps/api/src/services/previewService.ts
+- [X] T124 [P] Add spec versioning tracking in apps/api/db/schema/specVersion.ts
+- [X] T125 [P] Create MCP tool sync script in scripts/mcp/syncTools.ts
+- [X] T126 Implement PostHog analytics integration in packages/utils/src/analytics.ts
+- [X] T127 Add comprehensive error messages and user feedback across all endpoints in apps/api/src/middleware/errorHandler.ts
+- [X] T129 Security hardening: validate all external API responses in apps/api/src/integrations/common/validateResponse.ts
+ - [X] T131 Run quickstart.md validation and update with accurate commands
+ - [X] T132 [P] Implement performance & reliability test suite validating SC-001 through SC-010 (provisioning, dashboard latency, spec apply time, retry convergence, chat diff latency, secret scan zero findings, uptime simulation, circuit breaker efficacy, rate limit behavior) using Vitest in apps/api/tests/performance/ (addresses coverage gap C4)
+ - [X] T133 [P] Create Postman test collection with assertions for critical endpoints in postman/tests/integration.postman_collection.json (addresses coverage gap C5)
+ - [X] T134 [P] Implement spec versioning metadata in SpecArtifact entity referencing Constitution version (addresses FR-027 and coverage gap C6)
+ - [X] T135 Implement PATCH /projects/{id}/integrations endpoint for partial integration updates in apps/api/src/routes/projects/updateIntegrations.ts (addresses FR-022 and coverage gap C7)
+ - [X] T136 [P] Define drift report response schema in packages/types/src/api/specs.ts with fields: changedFiles[], conflicts[], summary (addresses underspecification U1)
+- [X] T137 [P] Implement health check scheduler (30s interval) and failover logic (Neon standby branch promotion) in apps/api/src/services/healthCheckService.ts (FR-031)
+- [X] T138 [P] Implement retry/backoff + circuit breaker module in packages/utils/src/reliability/externalPolicy.ts (FR-032)
+ - [X] T139 [P] Implement rate limiting middleware (token buckets) in apps/api/src/middleware/rateLimit.ts with headers & endpoint weights (FR-033)
+ - [X] T140 [P] Surface circuit breaker state & remaining rate limit tokens in GET /projects/:id/environments response (extend service + update openapi) (FR-032, FR-033)
+ - [X] T141 [P] Extend OpenAPI spec (`contracts/openapi.yaml`) to include environment matrix schema reference in FR-007 and rate limit headers for relevant endpoints (addresses U2)
+ - [X] T142 [P] Implement spec apply conflict detection for uncommitted changes in scripts/spec/driftDetector.ts (Edge Case resolution A5)
+ - [X] T143 [P] Add secrets mapping overview endpoint GET /projects/:id/secrets in apps/api/src/routes/projects/secrets.ts (FR-023 explicit coverage)
+ - [X] T144 [P] Add reliability metrics emission (rate_limit_hits, circuit_breaker_open_total, health_check_failures) in apps/api/src/lib/metrics.ts and integrate into services (FR-031, FR-032, FR-033)
+ - [X] T145 [P] Implement telemetry base module (OpenTelemetry setup & OTLP exporter) in apps/api/src/lib/telemetry.ts (FR-035)
+ - [X] T146 [P] Implement trace context propagation middleware in apps/api/src/middleware/traceContext.ts (FR-035)
+ - [X] T147 [P] Instrument core services (projectService, environmentService, specApplyService) with spans in apps/api/src/services/ (FR-035)
+ - [X] T148 [P] Implement metrics catalog (counters/histograms/gauges) in apps/api/src/lib/metricsCatalog.ts (FR-035)
+ - [X] T149 [P] Implement sampling & forced error/slow sampling logic in apps/api/src/middleware/errorHandler.ts (FR-035)
+ - [X] T150 [P] Extend error envelope middleware to include traceId/requestId mapping in apps/api/src/middleware/errorHandler.ts (FR-035)
+ - [X] T151 [P] Add pgcrypto migration for secrets metadata encryption in apps/api/db/migrations/001_add_secrets_encryption.sql (FR-036)
+ - [X] T152 [P] Create Drizzle schema for encrypted secrets metadata in apps/api/db/schema/secrets.ts (FR-036)
+ - [X] T153 [P] Implement secret audit logging service in apps/api/src/services/secretAuditService.ts (FR-036)
+ - [X] T154 [P] Implement JWT key rotation job script in scripts/security/rotateJwtKey.ts and JWKS manifest endpoint in apps/api/src/routes/auth/jwks.ts (FR-036)
+ - [X] T155 [P] Implement master encryption key rotation job in scripts/security/rotateMasterKey.ts (FR-036)
+ - [X] T156 [P] Emit security metrics (key_rotation_total, secret_access_total) in apps/api/src/lib/metrics.ts (FR-036)
+ - [X] T157 [P] Extend OpenAPI spec contracts/openapi.yaml with error envelope schema & rate limit + trace headers (FR-035, FR-033)
+ - [X] T158 [P] Implement logger redaction denylist scanner in apps/api/src/lib/loggerRedaction.ts (FR-036)
+ - [X] T159 [P] Implement JWKS manifest generation service in apps/api/src/services/jwksService.ts (FR-036)
+ - [X] T160 [P] Enforce preview environment cap (≤15) in apps/api/src/services/previewService.ts (Data Scale & Limits)
+ - [X] T161 [P] Implement archival job for expired preview environments in scripts/preview/archiveExpiredPreviews.ts (Data Scale & Limits)
+ - [X] T162 [P] Implement preview environment metrics updater (preview_env_active_total gauge) in apps/api/src/services/previewMetricsUpdater.ts (FR-035)
 
   # Added Test & Coverage Enhancement Tasks (Refinements 2025-11-21)
   # All new tasks address previously identified gaps (SC-011, redaction, TTL expiry, state machine, rate limit overhead, promotion lineage, drift/audit schemas)
- - [ ] T163 [P] Implement SC-011 key rotation compliance test suite in apps/api/tests/security/keyRotation.test.ts
- - [ ] T164 [P] Implement logger redaction & secret leakage prevention tests in apps/api/tests/security/redaction.test.ts
- - [ ] T165 [P] Implement preview environment TTL expiry & archival tests in apps/api/tests/environments/previewTtl.test.ts
- - [ ] T166 [P] Implement environment state machine transition tests (pending→provisioning→active etc.) in apps/api/tests/environments/stateMachine.test.ts
- - [ ] T167 [P] Implement rate limit overhead latency histogram & test (<5ms p95) in apps/api/tests/performance/rateLimitLatency.test.ts
- - [ ] T168 [P] Add promotion lineage visualization component in apps/web/src/components/environments/PromotionHistory.tsx
- - [ ] T169 [P] Add drift report schema validation tests (FR-010) in apps/api/tests/spec/driftReportSchema.test.ts
- - [ ] T170 [P] Add secret audit record schema validation tests (FR-036) in apps/api/tests/security/secretAuditSchema.test.ts
+ - [X] T163 [P] Implement SC-011 key rotation compliance test suite in apps/api/tests/security/keyRotation.test.ts
+ - [X] T164 [P] Implement logger redaction & secret leakage prevention tests in apps/api/tests/security/redaction.test.ts
+ - [X] T165 [P] Implement preview environment TTL expiry & archival tests in apps/api/tests/environments/previewTtl.test.ts
+ - [X] T166 [P] Implement environment state machine transition tests (pending→provisioning→active etc.) in apps/api/tests/environments/stateMachine.test.ts
+ - [X] T167 [P] Implement rate limit overhead latency histogram & test (<5ms p95) in apps/api/tests/performance/rateLimitLatency.test.ts
+ - [X] T168 [P] Add promotion lineage visualization component in apps/web/src/components/environments/PromotionHistory.tsx
+ - [X] T169 [P] Add drift report schema validation tests (FR-010) in apps/api/tests/spec/driftReportSchema.test.ts
+ - [X] T170 [P] Add secret audit record schema validation tests (FR-036) in apps/api/tests/security/secretAuditSchema.test.ts
 
   # Additional Test Tasks from Analysis (Session 2 2025-11-21)
   # These tasks address coverage gaps identified during specification analysis
- - [ ] T171 [P] Implement rollback integration test (FR-016) validating deployment rollback flows in apps/api/tests/integration/rollback.test.ts
- - [ ] T172 [P] Implement circuit breaker half-open transition test (FR-032) verifying open→half-open→closed cycle in apps/api/tests/reliability/circuitBreakerTransitions.test.ts
- - [ ] T173 [P] Implement idempotency convergence test (FR-021) asserting repeat POST /projects with same key returns existing resource in apps/api/tests/integration/idempotency.test.ts
- - [ ] T174 [P] Implement pagination correctness test (FR-025) validating opaque cursor behavior and hasMore logic in apps/api/tests/integration/pagination.test.ts
- - [ ] T175 [P] Implement Postman hybrid collection validation test (FR-029) verifying base + environment collections with variable linkage in apps/api/tests/integration/postmanStructure.test.ts
- - [ ] T176 [P] Implement preview environment cap enforcement test (FR-034) verifying 15-env limit and 409 ENV_PREVIEW_LIMIT_REACHED response in apps/api/tests/environments/previewCap.test.ts
- - [ ] T177 [P] Implement audit functional operations test (FR-036) verifying audit log entries on secret read/update/rotate actions in apps/api/tests/security/auditOperations.test.ts
+ - [X] T171 [P] Implement rollback integration test (FR-016) validating deployment rollback flows in apps/api/tests/integration/rollback.test.ts
+ - [X] T172 [P] Implement circuit breaker half-open transition test (FR-032) verifying open→half-open→closed cycle in apps/api/tests/reliability/circuitBreakerTransitions.test.ts
+ - [X] T173 [P] Implement idempotency convergence test (FR-021) asserting repeat POST /projects with same key returns existing resource in apps/api/tests/integration/idempotency.test.ts
+ - [X] T174 [P] Implement pagination correctness test (FR-025) validating opaque cursor behavior and hasMore logic in apps/api/tests/integration/pagination.test.ts
+ - [X] T175 [P] Implement Postman hybrid collection validation test (FR-029) verifying base + environment collections with variable linkage in apps/api/tests/integration/postmanStructure.test.ts
+ - [X] T176 [P] Implement preview environment cap enforcement test (FR-034) verifying 15-env limit and 409 ENV_PREVIEW_LIMIT_REACHED response in apps/api/tests/environments/previewCap.test.ts
+ - [X] T177 [P] Implement audit functional operations test (FR-036) verifying audit log entries on secret read/update/rotate actions in apps/api/tests/security/auditOperations.test.ts
 
 ---
 

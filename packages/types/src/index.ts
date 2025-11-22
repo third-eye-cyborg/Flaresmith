@@ -7,6 +7,7 @@ export * from "./entities/build";
 export * from "./api/projects";
 export * from "./api/environments";
 export * from "./api/specs";
+export * from "./api/security";
 export * from "./api/chat";
 export * from "./common/error";
 export * from "./common/pagination";

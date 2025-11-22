@@ -9,6 +9,7 @@ import { generatePostmanCollections } from "../../../scripts/spec/generators/pos
 import { generateMcpToolDescriptors } from "../../../scripts/spec/generators/mcpToolGenerator";
 import { computeDrift } from "../../../scripts/spec/driftDetector";
 import type { ApplySpecResponse } from "@cloudmake/types";
+import { withSpan } from "../lib/telemetry";
 
 /**
  * T088: SpecApplyService orchestrates spec parsing, generation, and drift
@@ -17,6 +18,7 @@ export class SpecApplyService {
   constructor(private db: DbConnection) {}
 
   async apply(projectId: string, featureDir: string): Promise<ApplySpecResponse> {
+    return withSpan('SpecApplyService.apply', { attributes: { projectId, featureDir } }, async () => {
     // 1) Parse spec endpoints
     const endpoints = await parseEndpoints(featureDir);
 
@@ -57,7 +59,7 @@ export class SpecApplyService {
           artifactPath: file.path,
           checksum: "", // TODO: compute checksum once content is real
         });
-      } else {
+      } else if (existing[0]) {
         await this.db
           .update(specArtifacts)
           .set({ checksum: "" })
@@ -66,6 +68,7 @@ export class SpecApplyService {
     }
 
     return drift;
+    });
   }
 }
 
