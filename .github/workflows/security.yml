@@ -1,0 +1,40 @@
+name: Security Scan
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main, staging]
+
+jobs:
+  secret-scan:
+    name: Scan for Secrets
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run secret scanner
+        run: pnpm exec ts-node scripts/security/scanSecrets.ts .
+
+      - name: Report results
+        if: failure()
+        run: |
+          echo "❌ Secret scan failed"
+          echo "Secrets were detected in the codebase"
+          echo "Review the scan output above and remove any secrets before merging"
+          exit 1

@@ -1,0 +1,15 @@
+{
+  "extends": "@cloudmake/config/tsconfig/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./app/*"],
+      "@cloudmake/api-client": ["../../packages/api-client/src"],
+      "@cloudmake/types": ["../../packages/types/src"],
+      "@cloudmake/utils": ["../../packages/utils/src"],
+      "@cloudmake/ui": ["../../packages/ui/src"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules"]
+}

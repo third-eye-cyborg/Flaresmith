@@ -1,0 +1,14 @@
+{
+  "extends": "./packages/config/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@cloudmake/ui": ["./packages/ui/src"],
+      "@cloudmake/types": ["./packages/types/src"],
+      "@cloudmake/api-client": ["./packages/api-client/src"],
+      "@cloudmake/utils": ["./packages/utils/src"],
+      "@cloudmake/config": ["./packages/config"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", ".next", ".turbo"]
+}

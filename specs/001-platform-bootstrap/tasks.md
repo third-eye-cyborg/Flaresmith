@@ -28,20 +28,20 @@ Based on plan.md structure:
 
 **Purpose**: Project initialization and basic monorepo structure
 
-- [ ] T001 Initialize monorepo with Turborepo and pnpm workspace (create root `package.json`, `turbo.json`, `pnpm-workspace.yaml`)
-- [ ] T002 [P] Create base tsconfig.json configurations in packages/config/tsconfig/
-- [ ] T003 [P] Setup ESLint and Prettier configurations in packages/config/eslint/
-- [ ] T004 [P] Configure NativeWind and Tailwind theme tokens in packages/config/tailwind/
-- [ ] T005 Create root package.json with workspace scripts (dev, build, lint, typecheck, test)
-- [ ] T006 Configure turbo.json with pipeline for build, dev, lint, typecheck, test tasks
-- [ ] T007 [P] Create packages/ui structure with base React Native primitives
-- [ ] T008 [P] Create packages/types structure for shared TypeScript types
-- [ ] T009 [P] Create packages/utils structure with hooks and helper functions
- - [ ] T010 [P] Create packages/api-client structure with typed fetch wrapper (include Zod validation layer + retry/backoff integration points)
-- [ ] T011 Create devcontainer.json for Codespaces with Node 20.x tooling
-- [ ] T012 Create root README.md with overview and quickstart instructions
-- [ ] T013 [P] Create SECURITY.md documenting secrets policy and security practices
-- [ ] T014 [P] Create CONTRIBUTING.md with spec-first workflow guidelines
+- [X] T001 Initialize monorepo with Turborepo and pnpm workspace (create root `package.json`, `turbo.json`, `pnpm-workspace.yaml`)
+- [X] T002 [P] Create base tsconfig.json configurations in packages/config/tsconfig/
+- [X] T003 [P] Setup ESLint and Prettier configurations in packages/config/eslint/
+- [X] T004 [P] Configure NativeWind and Tailwind theme tokens in packages/config/tailwind/
+- [X] T005 Create root package.json with workspace scripts (dev, build, lint, typecheck, test)
+- [X] T006 Configure turbo.json with pipeline for build, dev, lint, typecheck, test tasks
+- [X] T007 [P] Create packages/ui structure with base React Native primitives
+- [X] T008 [P] Create packages/types structure for shared TypeScript types
+- [X] T009 [P] Create packages/utils structure with hooks and helper functions
+ - [X] T010 [P] Create packages/api-client structure with typed fetch wrapper (include Zod validation layer + retry/backoff integration points)
+- [X] T011 Create devcontainer.json for Codespaces with Node 20.x tooling
+- [X] T012 Create root README.md with overview and quickstart instructions
+- [X] T013 [P] Create SECURITY.md documenting secrets policy and security practices
+- [X] T014 [P] Create CONTRIBUTING.md with spec-first workflow guidelines
 
 ---
 
@@ -51,27 +51,27 @@ Based on plan.md structure:
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T015 Setup Neon Postgres connection with serverless driver in apps/api/db/connection.ts
-- [ ] T016 Initialize Drizzle ORM configuration and migration system in apps/api/db/drizzle.config.ts
-- [ ] T017 Create base database schema for core entities in apps/api/db/schema/base.ts
-- [ ] T018 Implement BetterAuth authentication configuration in apps/api/auth/config.ts
-- [ ] T019 [P] Create Zod schema definitions for Project entity in packages/types/src/entities/project.ts
-- [ ] T020 [P] Create Zod schema definitions for Environment entity in packages/types/src/entities/environment.ts
-- [ ] T021 [P] Create Zod schema definitions for IntegrationConfig entity in packages/types/src/entities/integration.ts
-- [ ] T022 [P] Create Zod schema definitions for User and Organization entities in packages/types/src/entities/auth.ts
-- [ ] T023 Setup Hono app with middleware pipeline in apps/api/src/app.ts
-- [ ] T024 Implement structured logging with correlation IDs using Pino in apps/api/src/lib/logger.ts
-- [ ] T025 Create error handling middleware in apps/api/src/middleware/errorHandler.ts
-- [ ] T026 Implement role-based authorization middleware in apps/api/src/middleware/auth.ts
-- [ ] T027 Create idempotency tracking table schema in apps/api/db/schema/idempotency.ts
-- [ ] T028 Implement idempotency key validation service in apps/api/src/services/idempotency.ts
-- [ ] T029 Setup environment configuration management in packages/utils/src/env.ts
-- [ ] T030 Create OpenAPI spec generation setup in apps/api/src/openapi/setup.ts
-- [ ] T031 Initialize Next.js app structure with app router in apps/web/
-- [ ] T032 [P] Initialize Expo app structure with Expo Router in apps/mobile/
-- [ ] T033 Setup MCP config.json structure and server registry in mcp/config.json
-- [ ] T034 Create typed API client base with Zod validation in packages/api-client/src/client.ts
-- [ ] T035 Implement pre-commit hook for secret scanning with automated CI validation stage in .github/workflows/security.yml and scripts/security/scanSecrets.ts (addresses FR-013 security enforcement)
+- [X] T015 Setup Neon Postgres connection with serverless driver in apps/api/db/connection.ts
+- [X] T016 Initialize Drizzle ORM configuration and migration system in apps/api/db/drizzle.config.ts
+- [X] T017 Create base database schema for core entities in apps/api/db/schema/base.ts
+- [X] T018 Implement BetterAuth authentication configuration in apps/api/auth/config.ts
+- [X] T019 [P] Create Zod schema definitions for Project entity in packages/types/src/entities/project.ts
+- [X] T020 [P] Create Zod schema definitions for Environment entity in packages/types/src/entities/environment.ts
+- [X] T021 [P] Create Zod schema definitions for IntegrationConfig entity in packages/types/src/entities/integration.ts
+- [X] T022 [P] Create Zod schema definitions for User and Organization entities in packages/types/src/entities/auth.ts
+- [X] T023 Setup Hono app with middleware pipeline in apps/api/src/app.ts
+- [X] T024 Implement structured logging with correlation IDs using Pino in apps/api/src/lib/logger.ts
+- [X] T025 Create error handling middleware in apps/api/src/middleware/errorHandler.ts
+- [X] T026 Implement role-based authorization middleware in apps/api/src/middleware/auth.ts
+- [X] T027 Create idempotency tracking table schema in apps/api/db/schema/idempotency.ts
+- [X] T028 Implement idempotency key validation service in apps/api/src/services/idempotency.ts
+- [X] T029 Setup environment configuration management in packages/utils/src/env.ts
+- [X] T030 Create OpenAPI spec generation setup in apps/api/src/openapi/setup.ts
+- [X] T031 Initialize Next.js app structure with app router in apps/web/
+- [X] T032 [P] Initialize Expo app structure with Expo Router in apps/mobile/
+- [X] T033 Setup MCP config.json structure and server registry in mcp/config.json
+- [X] T034 Create typed API client base with Zod validation in packages/api-client/src/client.ts
+- [X] T035 Implement pre-commit hook for secret scanning with automated CI validation stage in .github/workflows/security.yml and scripts/security/scanSecrets.ts (addresses FR-013 security enforcement)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
