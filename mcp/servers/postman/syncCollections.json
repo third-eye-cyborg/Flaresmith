@@ -1,0 +1,38 @@
+{
+  "name": "postman.syncCollections",
+  "description": "Syncs Postman collections with API specifications",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "collectionId": {
+        "type": "string",
+        "description": "Postman collection ID to sync"
+      },
+      "schema": {
+        "type": "object",
+        "description": "Collection schema (Postman Collection v2.1.0 format)",
+        "additionalProperties": true
+      }
+    },
+    "required": ["collectionId", "schema"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether sync was successful"
+      },
+      "collectionId": {
+        "type": "string",
+        "description": "Synced collection ID"
+      },
+      "updatedAt": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Last update timestamp"
+      }
+    },
+    "required": ["success", "collectionId"]
+  }
+}

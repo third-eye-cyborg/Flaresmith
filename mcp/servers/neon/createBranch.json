@@ -1,0 +1,40 @@
+{
+  "name": "neon.createBranch",
+  "description": "Creates a new Neon database branch from an existing branch",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "projectId": {
+        "type": "string",
+        "description": "Neon project ID"
+      },
+      "name": {
+        "type": "string",
+        "description": "Branch name (e.g., dev, staging, prod)"
+      },
+      "parentBranchId": {
+        "type": "string",
+        "description": "Parent branch ID to branch from"
+      }
+    },
+    "required": ["projectId", "name"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "branchId": {
+        "type": "string",
+        "description": "Created branch ID"
+      },
+      "name": {
+        "type": "string",
+        "description": "Branch name"
+      },
+      "connectionString": {
+        "type": "string",
+        "description": "Database connection string for this branch"
+      }
+    },
+    "required": ["branchId", "name", "connectionString"]
+  }
+}

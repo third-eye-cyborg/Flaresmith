@@ -1,0 +1,54 @@
+{
+  "name": "codespaces.create",
+  "description": "Creates a GitHub Codespace for a repository",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "owner": {
+        "type": "string",
+        "description": "Repository owner"
+      },
+      "repo": {
+        "type": "string",
+        "description": "Repository name"
+      },
+      "branch": {
+        "type": "string",
+        "description": "Branch to create codespace from",
+        "default": "main"
+      },
+      "machine": {
+        "type": "string",
+        "description": "Machine type",
+        "default": "basicLinux32gb"
+      },
+      "displayName": {
+        "type": "string",
+        "description": "Display name for the codespace"
+      }
+    },
+    "required": ["owner", "repo"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Codespace ID"
+      },
+      "name": {
+        "type": "string",
+        "description": "Codespace name"
+      },
+      "url": {
+        "type": "string",
+        "description": "Codespace web URL"
+      },
+      "status": {
+        "type": "string",
+        "description": "Codespace status (starting, available, stopped, error)"
+      }
+    },
+    "required": ["id", "name", "url", "status"]
+  }
+}

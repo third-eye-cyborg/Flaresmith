@@ -85,31 +85,31 @@ Based on plan.md structure:
 
 ### Implementation for User Story 1
 
-- [ ] T036 [P] [US1] Create Project Drizzle model schema in apps/api/db/schema/project.ts
-- [ ] T037 [P] [US1] Create Environment Drizzle model schema in apps/api/db/schema/environment.ts
-- [ ] T038 [P] [US1] Create IntegrationConfig Drizzle model schema in apps/api/db/schema/integration.ts
-- [ ] T039 [P] [US1] Create Deployment Drizzle model schema in apps/api/db/schema/deployment.ts
-- [ ] T040 [P] [US1] Define POST /projects request/response Zod schemas in packages/types/src/api/projects.ts
-- [ ] T041 [P] [US1] Define GET /projects/:id request/response Zod schemas in packages/types/src/api/projects.ts
-- [ ] T042 [US1] Implement GitHub integration service for repo creation in apps/api/src/integrations/github/repoService.ts
-- [ ] T043 [US1] Implement GitHub template monorepo cloning logic in apps/api/src/integrations/github/templateService.ts
-- [ ] T044 [US1] Implement GitHub Codespaces provisioning service in apps/api/src/integrations/github/codespaceService.ts
-- [ ] T045 [US1] Implement Neon integration service for project and branch creation in apps/api/src/integrations/neon/projectService.ts
-- [ ] T046 [US1] Implement Cloudflare Workers/Pages provisioning service in apps/api/src/integrations/cloudflare/deployService.ts
-- [ ] T047 [US1] Implement Postman workspace and collection creation service in apps/api/src/integrations/postman/workspaceService.ts
-- [ ] T048 [US1] Create ProjectService orchestrating all provisioning steps in apps/api/src/services/projectService.ts
-- [ ] T049 [US1] Implement POST /projects endpoint with validation and idempotency in apps/api/src/routes/projects/create.ts
-- [ ] T050 [US1] Implement GET /projects/:id endpoint in apps/api/src/routes/projects/get.ts
-- [ ] T051 [US1] Add project creation audit logging in apps/api/src/services/projectService.ts
-- [ ] T052 [US1] Create MCP tool descriptor for github.createRepo in mcp/servers/github/createRepo.json
-- [ ] T053 [P] [US1] Create MCP tool descriptor for neon.createBranch in mcp/servers/neon/createBranch.json
-- [ ] T054 [P] [US1] Create MCP tool descriptor for cloudflare.deployWorker in mcp/servers/cloudflare/deployWorker.json
-- [ ] T055 [P] [US1] Create MCP tool descriptor for postman.syncCollections in mcp/servers/postman/syncCollections.json
-- [ ] T056 [P] [US1] Create MCP tool descriptor for codespaces.create in mcp/servers/github/createCodespace.json
-- [ ] T057 [US1] Create project creation form UI component in apps/web/src/components/projects/CreateProjectForm.tsx
-- [ ] T058 [US1] Create project creation page with integration selection in apps/web/app/projects/new/page.tsx
-- [ ] T059 [US1] Implement typed API client methods for project creation in packages/api-client/src/resources/projects.ts
-- [ ] T060 [US1] Add CLI script for project provisioning in scripts/provision/createProject.ts
+- [X] T036 [P] [US1] Create Project Drizzle model schema in apps/api/db/schema/project.ts
+- [X] T037 [P] [US1] Create Environment Drizzle model schema in apps/api/db/schema/environment.ts
+- [X] T038 [P] [US1] Create IntegrationConfig Drizzle model schema in apps/api/db/schema/integration.ts
+- [X] T039 [P] [US1] Create Deployment Drizzle model schema in apps/api/db/schema/deployment.ts
+- [X] T040 [P] [US1] Define POST /projects request/response Zod schemas in packages/types/src/api/projects.ts
+- [X] T041 [P] [US1] Define GET /projects/:id request/response Zod schemas in packages/types/src/api/projects.ts
+- [X] T042 [US1] Implement GitHub integration service for repo creation in apps/api/src/integrations/github/repoService.ts
+- [X] T043 [US1] Implement GitHub template monorepo cloning logic in apps/api/src/integrations/github/templateService.ts
+- [X] T044 [US1] Implement GitHub Codespaces provisioning service in apps/api/src/integrations/github/codespaceService.ts
+- [X] T045 [US1] Implement Neon integration service for project and branch creation in apps/api/src/integrations/neon/projectService.ts
+- [X] T046 [US1] Implement Cloudflare Workers/Pages provisioning service in apps/api/src/integrations/cloudflare/deployService.ts
+- [X] T047 [US1] Implement Postman workspace and collection creation service in apps/api/src/integrations/postman/workspaceService.ts
+- [X] T048 [US1] Create ProjectService orchestrating all provisioning steps in apps/api/src/services/projectService.ts
+- [X] T049 [US1] Implement POST /projects endpoint with validation and idempotency in apps/api/src/routes/projects/create.ts
+- [X] T050 [US1] Implement GET /projects/:id endpoint in apps/api/src/routes/projects/get.ts
+- [X] T051 [US1] Add project creation audit logging in apps/api/src/services/projectService.ts
+- [X] T052 [US1] Create MCP tool descriptor for github.createRepo in mcp/servers/github/createRepo.json
+- [X] T053 [P] [US1] Create MCP tool descriptor for neon.createBranch in mcp/servers/neon/createBranch.json
+- [X] T054 [P] [US1] Create MCP tool descriptor for cloudflare.deployWorker in mcp/servers/cloudflare/deployWorker.json
+- [X] T055 [P] [US1] Create MCP tool descriptor for postman.syncCollections in mcp/servers/postman/syncCollections.json
+- [X] T056 [P] [US1] Create MCP tool descriptor for codespaces.create in mcp/servers/github/createCodespace.json
+- [X] T057 [US1] Create project creation form UI component in apps/web/src/components/projects/CreateProjectForm.tsx
+- [X] T058 [US1] Create project creation page with integration selection in apps/web/app/projects/new/page.tsx
+- [X] T059 [US1] Implement typed API client methods for project creation in packages/api-client/src/resources/projects.ts
+- [X] T060 [US1] Add CLI script for project provisioning in scripts/provision/createProject.ts
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

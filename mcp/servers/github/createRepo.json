@@ -1,0 +1,54 @@
+{
+  "name": "github.createRepo",
+  "description": "Creates a GitHub repository from template or blank",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Repository name"
+      },
+      "orgName": {
+        "type": "string",
+        "description": "Organization or owner name"
+      },
+      "description": {
+        "type": "string",
+        "description": "Repository description"
+      },
+      "isPrivate": {
+        "type": "boolean",
+        "description": "Whether the repository should be private",
+        "default": true
+      },
+      "defaultBranch": {
+        "type": "string",
+        "description": "Default branch name",
+        "default": "main"
+      }
+    },
+    "required": ["name", "orgName"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "fullName": {
+        "type": "string",
+        "description": "Full repository name (owner/repo)"
+      },
+      "cloneUrl": {
+        "type": "string",
+        "description": "Git clone URL"
+      },
+      "defaultBranch": {
+        "type": "string",
+        "description": "Default branch name"
+      },
+      "htmlUrl": {
+        "type": "string",
+        "description": "Repository web URL"
+      }
+    },
+    "required": ["fullName", "cloneUrl", "defaultBranch", "htmlUrl"]
+  }
+}
