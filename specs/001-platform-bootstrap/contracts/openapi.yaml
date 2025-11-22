@@ -1,0 +1,248 @@
+openapi: 3.1.0
+info:
+  title: CloudMake Platform API
+  version: 0.1.0
+  description: API for project provisioning, environment dashboard, spec-driven sync, and chat operations.
+servers:
+  - url: https://api.cloudmake.example.com
+security:
+  - bearerAuth: []
+paths:
+  /projects:
+    get:
+      summary: List projects
+      description: Returns a cursor-paginated list of projects.
+      parameters:
+        - in: query
+          name: cursor
+          schema: { type: string, nullable: true }
+          required: false
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+          required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  hasMore:
+                    type: boolean
+                  nextCursor:
+                    type: string
+                    nullable: true
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      summary: Create project
+      description: Provisions a new project and dependent resources.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /projects/{id}:
+    get:
+      summary: Get project by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404': { $ref: '#/components/responses/NotFound' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /projects/{id}/environments:
+    get:
+      summary: Get environment matrix for project
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Environment'
+        '404': { $ref: '#/components/responses/NotFound' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /projects/{id}/promote:
+    post:
+      summary: Promote from current environment
+      description: Promote dev→staging or staging→prod based on request body.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                  enum: [dev, staging]
+                to:
+                  type: string
+                  enum: [staging, prod]
+              required: [from, to]
+      responses:
+        '202': { description: Promotion started }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /specs/apply:
+    post:
+      summary: Apply spec changes
+      description: Regenerate schemas/routes/tools from spec diffs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId: { type: string, format: uuid }
+              required: [projectId]
+      responses:
+        '202':
+          description: Apply started
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /chat/apply-diff:
+    post:
+      summary: Apply a code diff from chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyDiffRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  commitSha:
+                    type: string
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        code: { type: string }
+        message: { type: string }
+        correlationId: { type: string }
+        details: { type: object, additionalProperties: true, nullable: true }
+      required: [code, message, correlationId]
+    Project:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        orgId: { type: string, format: uuid }
+        defaultBranch: { type: string }
+        status: { type: string, enum: [provisioning, active, failed] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      required: [id, name, slug, orgId, status, createdAt, updatedAt]
+    Environment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        projectId: { type: string, format: uuid }
+        name: { type: string, enum: [dev, staging, prod] }
+        githubBranch: { type: string }
+        cloudflareUrl: { type: string }
+        neonBranchId: { type: string }
+        postmanEnvironmentId: { type: string }
+        lastDeploymentId: { type: string, format: uuid, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      required: [id, projectId, name, githubBranch, createdAt, updatedAt]
+    CreateProjectRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 3, maxLength: 64 }
+        orgId: { type: string, format: uuid }
+        integrations:
+          type: object
+          properties:
+            github: { type: boolean }
+            cloudflare: { type: boolean }
+            neon: { type: boolean }
+            postman: { type: boolean }
+      required: [name, orgId]
+    ApplyDiffRequest:
+      type: object
+      properties:
+        projectId: { type: string, format: uuid }
+        baseSha: { type: string }
+        patch: { type: string }
+      required: [projectId, baseSha, patch]

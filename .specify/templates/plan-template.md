@@ -31,7 +31,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+The following MUST be explicitly addressed referencing the CloudMake Constitution principles:
+
+1. Spec-First Orchestration: Confirm spec directory exists for this feature with user stories, requirements, success criteria. List spec file paths.
+2. Environment Parity & Idempotent Automation: Enumerate any new resources per env (dev/staging/prod) and describe idempotent creation strategy.
+3. Tool-/MCP-Centric AI Workflow: List required MCP tool additions/updates (name, purpose). Provide input/output schema summaries.
+4. Security, Observability & Audit: List secrets/credentials touched; confirm least-privilege approach; define required logs/metrics.
+5. Monorepo Simplicity & Reusable Primitives: Justify any new package/folder beyond existing `apps` / `packages` primitives; if added, fill complexity table below.
+
+If any gate fails, STOP and revise the spec or propose an amendment.
 
 ## Project Structure
 
