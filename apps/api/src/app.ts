@@ -48,9 +48,11 @@ app.use("/api/environments/*", idempotencyMiddleware(["POST", "PUT", "DELETE"]))
 
 // Route imports
 import projectsRouter from "./routes/projects";
+import specsRouter from "./routes/specs";
 
 // Mount routes
 app.route("/api/projects", projectsRouter);
+app.route("/api/specs", specsRouter);
 // app.route("/api/environments", environmentsRouter);
 // app.route("/api/specs", specsRouter);
 // app.route("/api/chat", chatRouter);

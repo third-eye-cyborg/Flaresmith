@@ -154,23 +154,23 @@ Based on plan.md structure:
 
 ### Implementation for User Story 3
 
-- [ ] T079 [P] [US3] Create SpecArtifact Drizzle model schema in apps/api/db/schema/specArtifact.ts
-- [ ] T080 [P] [US3] Define POST /specs/apply request/response Zod schema in packages/types/src/api/specs.ts
-- [ ] T081 [US3] Implement spec file parser for endpoint definitions in scripts/spec/parser.ts
-- [ ] T082 [US3] Implement Zod schema code generator in scripts/spec/generators/zodSchemaGenerator.ts
-- [ ] T083 [US3] Implement Drizzle model code generator in scripts/spec/generators/drizzleModelGenerator.ts
-- [ ] T084 [US3] Implement Hono route stub generator in scripts/spec/generators/routeGenerator.ts
-- [ ] T085 [US3] Implement Postman collection generator in scripts/spec/generators/postmanGenerator.ts
-- [ ] T086 [US3] Implement MCP tool descriptor generator in scripts/spec/generators/mcpToolGenerator.ts
-- [ ] T087 [US3] Implement AST-based drift detection for code artifacts in scripts/spec/driftDetector.ts
-- [ ] T088 [US3] Create SpecApplyService orchestrating all generators in apps/api/src/services/specApplyService.ts
-- [ ] T089 [US3] Implement POST /specs/apply endpoint in apps/api/src/routes/specs/apply.ts
-- [ ] T090 [US3] Create MCP tool descriptor for specs.apply in mcp/servers/specs/apply.json
-- [ ] T091 [US3] Create spec file editor UI component with CodeMirror in apps/web/src/components/specs/SpecEditor.tsx
-- [ ] T092 [US3] Create spec sync trigger UI in apps/web/src/components/specs/SyncButton.tsx
-- [ ] T093 [US3] Create spec drift report viewer in apps/web/src/components/specs/DriftReport.tsx
-- [ ] T094 [US3] Add CLI script for spec apply in scripts/spec/apply.ts
-- [ ] T095 [US3] Add typed API client methods for spec operations in packages/api-client/src/resources/specs.ts
+ - [X] T079 [P] [US3] Create SpecArtifact Drizzle model schema in apps/api/db/schema/specArtifact.ts
+ - [X] T080 [P] [US3] Define POST /specs/apply request/response Zod schema in packages/types/src/api/specs.ts
+ - [X] T081 [US3] Implement spec file parser for endpoint definitions in scripts/spec/parser.ts
+ - [X] T082 [US3] Implement Zod schema code generator in scripts/spec/generators/zodSchemaGenerator.ts
+ - [X] T083 [US3] Implement Drizzle model code generator in scripts/spec/generators/drizzleModelGenerator.ts
+ - [X] T084 [US3] Implement Hono route stub generator in scripts/spec/generators/routeGenerator.ts
+ - [X] T085 [US3] Implement Postman collection generator in scripts/spec/generators/postmanGenerator.ts
+ - [X] T086 [US3] Implement MCP tool descriptor generator in scripts/spec/generators/mcpToolGenerator.ts
+ - [X] T087 [US3] Implement AST-based drift detection for code artifacts in scripts/spec/driftDetector.ts
+ - [X] T088 [US3] Create SpecApplyService orchestrating all generators in apps/api/src/services/specApplyService.ts
+ - [X] T089 [US3] Implement POST /specs/apply endpoint in apps/api/src/routes/specs/apply.ts
+ - [X] T090 [US3] Create MCP tool descriptor for specs.apply in mcp/servers/specs/apply.json
+- [X] T091 [US3] Create spec file editor UI component with CodeMirror in apps/web/src/components/specs/SpecEditor.tsx
+- [X] T092 [US3] Create spec sync trigger UI in apps/web/src/components/specs/SyncButton.tsx
+- [X] T093 [US3] Create spec drift report viewer in apps/web/src/components/specs/DriftReport.tsx
+- [X] T094 [US3] Add CLI script for spec apply in scripts/spec/apply.ts
+- [X] T095 [US3] Add typed API client methods for spec operations in packages/api-client/src/resources/specs.ts
 
 **Checkpoint**: All three core user stories should now be independently functional
 

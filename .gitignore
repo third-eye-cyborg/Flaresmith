@@ -1,3 +1,45 @@
+# Node/TypeScript monorepo
+node_modules/
+.pnpm-store/
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+coverage/
+.cache/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Environment files
+.env
+.env.*
+
+# Next.js (web)
+.next/
+out/
+.vercel/
+
+# Expo (mobile)
+.expo/
+*.expo/
+
+# Cloudflare Workers
+.wrangler/
+.wrangler/state/
+
+# Playwright / test artifacts
+playwright-report/
+test-results/
+
+# Turbo repo cache
+.turbo/
 # Dependencies
 node_modules/
 .pnp

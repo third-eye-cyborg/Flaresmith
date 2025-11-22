@@ -1,0 +1,30 @@
+# Dependencies & builds
+node_modules/
+dist/
+build/
+coverage/
+
+# Framework outputs
+.next/
+out/
+.expo/
+.expo-shared/
+.turbo/
+
+# Locks (formatting stability)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Env & local
+.env*
+.dev.vars
+
+# Caches
+.cache/
+.parcel-cache/
+.wrangler/
+
+# IDE
+.vscode/
+.idea/
