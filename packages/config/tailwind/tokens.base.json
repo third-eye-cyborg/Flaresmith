@@ -189,8 +189,8 @@
         "destructive-fg": "#ffffff"
       },
       "status": {
-        "success": "var(--color-success-600)",
-        "warning": "var(--color-warning-600)",
+        "success": "var(--color-success-700)",
+        "warning": "var(--color-warning-700)",
         "error": "var(--color-error-600)",
         "info": "var(--color-info-600)"
       }

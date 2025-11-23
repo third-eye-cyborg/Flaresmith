@@ -83,11 +83,16 @@ function buildPairs(mode: 'light'|'dark', base: TokenBase) {
   pairs.push({ fgToken: 'action.destructive-fg', fgColor: resolveCssVar(action['destructive-fg'], colors)!, bgToken: 'action.destructive-bg', bgColor: resolveCssVar(action['destructive-bg'], colors)! });
 
   // Status tokens vs primary background
-  const status = base.tokens.semantic.status;
   const primaryBg = colors.neutral[map.bg[0]];
-  for (const key of Object.keys(status)) {
-    const hex = resolveCssVar(status[key], colors) || resolveCssVar(status[key], colors) || status[key];
-    pairs.push({ fgToken: `status.${key}`, fgColor: hex, bgToken: 'background.primary', bgColor: primaryBg });
+  // Mode-specific status shades (light uses darker, dark uses lighter for contrast)
+  const statusPalette = {
+    success: mode === 'dark' ? colors.success['400'] : colors.success['700'],
+    warning: mode === 'dark' ? colors.warning['400'] : colors.warning['700'],
+    error: mode === 'dark' ? colors.error['400'] : colors.error['600'],
+    info: mode === 'dark' ? colors.info['400'] : colors.info['600'],
+  };
+  for (const key of Object.keys(statusPalette)) {
+    pairs.push({ fgToken: `status.${key}`, fgColor: statusPalette[key as keyof typeof statusPalette], bgToken: 'background.primary', bgColor: primaryBg });
   }
   return pairs;
 }
