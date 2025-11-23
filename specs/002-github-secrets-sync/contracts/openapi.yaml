@@ -1,0 +1,856 @@
+openapi: 3.1.0
+info:
+  title: Flaresmith GitHub Secrets Sync API
+  version: 1.0.0
+  description: |
+    API endpoints for automated GitHub secret synchronization across repository scopes
+    (Actions, Codespaces, Dependabot) and environment-specific configuration management.
+    
+    **Key Features**:
+    - Idempotent secret sync operations
+    - Environment-specific secret management (dev/staging/prod)
+    - Secret validation and conflict detection
+    - Comprehensive audit logging
+    
+    **Rate Limits**:
+    - Sync operations: 5 tokens per request
+    - Validation: 1 token per request
+    - Status queries: 1 token per request
+
+servers:
+  - url: https://api.flaresmith.dev
+    description: Production API
+  - url: https://api-staging.flaresmith.dev
+    description: Staging API
+  - url: http://localhost:8787
+    description: Local development
+
+tags:
+  - name: Secrets
+    description: Secret synchronization operations
+  - name: Environments
+    description: GitHub environment provisioning and configuration
+  - name: Validation
+    description: Secret validation and conflict detection
+
+paths:
+  /github/secrets/sync:
+    post:
+      summary: Synchronize repository secrets across scopes
+      description: |
+        Synchronizes secrets from GitHub Actions repository scope to Codespaces and/or
+        Dependabot scopes. Supports selective sync (specific secrets) or full sync (all secrets).
+        
+        **Behavior**:
+        - Idempotent: Repeated calls converge to same state
+        - Excludes platform-managed secrets (GITHUB_TOKEN, ACTIONS_*, etc.)
+        - Retries up to 3 times with exponential backoff on transient failures
+        - Respects GitHub API rate limits (blocks if quota exhausted)
+        
+        **Performance**: Typically completes within 5 minutes for up to 50 secrets.
+      operationId: syncSecrets
+      tags:
+        - Secrets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretSyncRequest'
+            examples:
+              fullSync:
+                summary: Sync all secrets to all scopes
+                value:
+                  projectId: 123e4567-e89b-12d3-a456-426614174000
+              selectiveSync:
+                summary: Sync specific secrets to Codespaces only
+                value:
+                  projectId: 123e4567-e89b-12d3-a456-426614174000
+                  secretNames: ["DATABASE_URL", "API_KEY"]
+                  targetScopes: ["codespaces"]
+              forceSync:
+                summary: Force sync even with conflicts
+                value:
+                  projectId: 123e4567-e89b-12d3-a456-426614174000
+                  force: true
+      responses:
+        '200':
+          description: Sync completed (may include partial failures)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretSyncResponse'
+              examples:
+                success:
+                  summary: All secrets synced successfully
+                  value:
+                    syncedCount: 15
+                    skippedCount: 3
+                    errors: []
+                    correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                    durationMs: 4532
+                partialFailure:
+                  summary: Some secrets failed to sync
+                  value:
+                    syncedCount: 12
+                    skippedCount: 3
+                    errors:
+                      - secretName: "CLOUDFLARE_API_TOKEN"
+                        scope: "dependabot"
+                        error: "Rate limit exceeded"
+                        code: "GITHUB_SECRETS_RATE_LIMIT_EXHAUSTED"
+                    correlationId: "550e8400-e29b-41d4-a716-446655440001"
+                    durationMs: 7821
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      security:
+        - bearerAuth: []
+
+  /github/secrets/sync/status:
+    get:
+      summary: Get secret sync status
+      description: |
+        Returns current synchronization status for a project, including last sync timestamp,
+        pending/error counts, and GitHub API quota remaining.
+        
+        **Use Cases**:
+        - Dashboard status display
+        - Pre-deployment validation
+        - Monitoring/alerting
+      operationId: getSecretSyncStatus
+      tags:
+        - Secrets
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Project ID to query sync status for
+      responses:
+        '200':
+          description: Sync status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretSyncStatusResponse'
+              examples:
+                synced:
+                  summary: All secrets synced
+                  value:
+                    lastSyncAt: "2025-11-22T10:30:00Z"
+                    status: "synced"
+                    pendingCount: 0
+                    errorCount: 0
+                    nextScheduledSyncAt: "2025-11-22T16:30:00Z"
+                    quotaRemaining:
+                      core: 4850
+                      secrets: 95
+                pending:
+                  summary: Sync pending
+                  value:
+                    lastSyncAt: "2025-11-22T08:00:00Z"
+                    status: "pending"
+                    pendingCount: 5
+                    errorCount: 0
+                    nextScheduledSyncAt: "2025-11-22T14:00:00Z"
+                    quotaRemaining:
+                      core: 4900
+                      secrets: 98
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - bearerAuth: []
+
+  /github/environments:
+    post:
+      summary: Create or update GitHub environments
+      description: |
+        Provisions GitHub environments (dev, staging, production) with environment-specific
+        secrets and protection rules. Links environments to corresponding Cloudflare and Neon resources.
+        
+        **Behavior**:
+        - Idempotent: Creating existing environment updates configuration
+        - Sets protection rules (reviewers, branch restrictions, wait timers)
+        - Configures environment-specific secrets (NEON_BRANCH_ID, CLOUDFLARE_WORKER_NAME, etc.)
+        - Links to Cloudflare Workers/Pages and Neon database branches
+        
+        **Typical Use**: Called during project provisioning to set up multi-environment workflow.
+      operationId: createEnvironments
+      tags:
+        - Environments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEnvironmentsRequest'
+            examples:
+              threeEnvironments:
+                summary: Provision dev, staging, and production
+                value:
+                  projectId: "123e4567-e89b-12d3-a456-426614174000"
+                  environments:
+                    - name: "dev"
+                      protectionRules:
+                        requiredReviewers: 0
+                        restrictToMainBranch: false
+                      secrets:
+                        - name: "NEON_BRANCH_ID"
+                          value: "br-dev-abc123"
+                        - name: "CLOUDFLARE_WORKER_NAME"
+                          value: "myproject-api-dev"
+                      linkedResources:
+                        neonBranchId: "br-dev-abc123"
+                        cloudflareWorkerName: "myproject-api-dev"
+                    - name: "staging"
+                      protectionRules:
+                        requiredReviewers: 1
+                        reviewerIds: [12345678]
+                        restrictToMainBranch: false
+                      secrets:
+                        - name: "NEON_BRANCH_ID"
+                          value: "br-staging-def456"
+                        - name: "CLOUDFLARE_WORKER_NAME"
+                          value: "myproject-api-staging"
+                      linkedResources:
+                        neonBranchId: "br-staging-def456"
+                        cloudflareWorkerName: "myproject-api-staging"
+                    - name: "production"
+                      protectionRules:
+                        requiredReviewers: 1
+                        reviewerIds: [12345678]
+                        restrictToMainBranch: true
+                      secrets:
+                        - name: "NEON_BRANCH_ID"
+                          value: "br-prod-ghi789"
+                        - name: "CLOUDFLARE_WORKER_NAME"
+                          value: "myproject-api"
+                      linkedResources:
+                        neonBranchId: "br-prod-ghi789"
+                        cloudflareWorkerName: "myproject-api"
+      responses:
+        '200':
+          description: Environments created/updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateEnvironmentsResponse'
+              examples:
+                success:
+                  summary: All environments provisioned
+                  value:
+                    created: ["dev", "staging", "production"]
+                    updated: []
+                    errors: []
+                    correlationId: "660e9500-f39c-51e5-b827-557766551111"
+                partialSuccess:
+                  summary: Some environments failed
+                  value:
+                    created: ["dev", "staging"]
+                    updated: []
+                    errors:
+                      - environment: "production"
+                        error: "Reviewer user ID 12345678 not found"
+                        code: "GITHUB_ENV_REVIEWER_NOT_FOUND"
+                    correlationId: "660e9500-f39c-51e5-b827-557766551112"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      security:
+        - bearerAuth: []
+
+  /github/secrets/validate:
+    post:
+      summary: Validate secret presence and consistency
+      description: |
+        Validates that all required secrets exist across all scopes (Actions, Codespaces, Dependabot)
+        and detects conflicts (value mismatches between scopes).
+        
+        **Validation Checks**:
+        - Missing secrets: Required secrets not present in one or more scopes
+        - Conflicts: Secret has different values in different scopes (hash comparison)
+        - Orphaned secrets: Secrets in Codespaces/Dependabot but not in Actions (source of truth)
+        
+        **Remediation Guidance**: Response includes actionable steps to fix issues.
+      operationId: validateSecrets
+      tags:
+        - Validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretValidationRequest'
+            examples:
+              allSecrets:
+                summary: Validate all secrets
+                value:
+                  projectId: "123e4567-e89b-12d3-a456-426614174000"
+              specificSecrets:
+                summary: Validate specific secrets only
+                value:
+                  projectId: "123e4567-e89b-12d3-a456-426614174000"
+                  requiredSecrets: ["DATABASE_URL", "API_KEY", "JWT_SECRET"]
+      responses:
+        '200':
+          description: Validation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretValidationResponse'
+              examples:
+                allValid:
+                  summary: All secrets valid
+                  value:
+                    valid: true
+                    missing: []
+                    conflicts: []
+                    summary:
+                      totalSecrets: 15
+                      missingCount: 0
+                      conflictCount: 0
+                      validCount: 15
+                    remediationSteps: []
+                hasIssues:
+                  summary: Validation issues detected
+                  value:
+                    valid: false
+                    missing:
+                      - secretName: "POSTMAN_API_KEY"
+                        scope: "codespaces"
+                      - secretName: "POSTMAN_API_KEY"
+                        scope: "dependabot"
+                    conflicts:
+                      - secretName: "DATABASE_URL"
+                        scopes: ["actions", "codespaces"]
+                        valueHashes:
+                          actions: "a1b2c3d4..."
+                          codespaces: "e5f6g7h8..."
+                    summary:
+                      totalSecrets: 15
+                      missingCount: 1
+                      conflictCount: 1
+                      validCount: 13
+                    remediationSteps:
+                      - "Run sync command to copy POSTMAN_API_KEY to Codespaces and Dependabot scopes"
+                      - "DATABASE_URL has conflicting values - verify correct value in Actions scope and run sync with force=true"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    SecretSyncRequest:
+      type: object
+      required:
+        - projectId
+      properties:
+        projectId:
+          type: string
+          format: uuid
+          description: Project ID to sync secrets for
+        secretNames:
+          type: array
+          description: Optional list of specific secret names to sync (omit for full sync)
+          items:
+            type: string
+            pattern: '^[A-Z][A-Z0-9_]*$'
+        targetScopes:
+          type: array
+          description: Target scopes to sync to (default - both codespaces and dependabot)
+          items:
+            type: string
+            enum:
+              - codespaces
+              - dependabot
+        force:
+          type: boolean
+          default: false
+          description: Force sync even if conflicts detected (overwrites target scopes with Actions values)
+
+    SecretSyncResponse:
+      type: object
+      required:
+        - syncedCount
+        - skippedCount
+        - errors
+        - correlationId
+        - durationMs
+      properties:
+        syncedCount:
+          type: integer
+          minimum: 0
+          description: Number of secrets successfully synced
+        skippedCount:
+          type: integer
+          minimum: 0
+          description: Number of secrets skipped (excluded patterns, already synced, etc.)
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - secretName
+              - scope
+              - error
+              - code
+            properties:
+              secretName:
+                type: string
+              scope:
+                type: string
+                enum: [codespaces, dependabot]
+              error:
+                type: string
+              code:
+                type: string
+          description: List of errors encountered during sync
+        correlationId:
+          type: string
+          format: uuid
+          description: Correlation ID for tracing this operation across logs
+        durationMs:
+          type: integer
+          minimum: 0
+          description: Total operation duration in milliseconds
+
+    SecretSyncStatusResponse:
+      type: object
+      required:
+        - status
+        - pendingCount
+        - errorCount
+      properties:
+        lastSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp of last successful sync (null if never synced)
+        status:
+          type: string
+          enum: [synced, pending, error, never_synced]
+          description: Current sync status
+        pendingCount:
+          type: integer
+          minimum: 0
+          description: Number of secrets pending sync
+        errorCount:
+          type: integer
+          minimum: 0
+          description: Number of secrets with sync errors
+        nextScheduledSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp of next scheduled automatic sync
+        quotaRemaining:
+          type: object
+          required:
+            - core
+            - secrets
+          properties:
+            core:
+              type: integer
+              minimum: 0
+              description: Remaining GitHub API core quota
+            secrets:
+              type: integer
+              minimum: 0
+              description: Remaining GitHub Secrets API quota
+
+    CreateEnvironmentsRequest:
+      type: object
+      required:
+        - projectId
+        - environments
+      properties:
+        projectId:
+          type: string
+          format: uuid
+          description: Project ID to create environments for
+        environments:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/EnvironmentConfig'
+
+    EnvironmentConfig:
+      type: object
+      required:
+        - name
+        - protectionRules
+        - secrets
+        - linkedResources
+      properties:
+        name:
+          type: string
+          enum: [dev, staging, production]
+          description: Environment name (must be dev, staging, or production)
+        protectionRules:
+          type: object
+          properties:
+            requiredReviewers:
+              type: integer
+              minimum: 0
+              default: 0
+              description: Number of required approvals before deployment
+            reviewerIds:
+              type: array
+              items:
+                type: integer
+              description: GitHub user IDs of reviewers
+            restrictToMainBranch:
+              type: boolean
+              default: false
+              description: Only allow deployments from main branch
+            waitTimer:
+              type: integer
+              minimum: 0
+              default: 0
+              description: Wait time in minutes before deployment
+        secrets:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - value
+            properties:
+              name:
+                type: string
+                pattern: '^[A-Z][A-Z0-9_]*$'
+              value:
+                type: string
+          description: Environment-specific secrets
+        linkedResources:
+          type: object
+          properties:
+            neonBranchId:
+              type: string
+              description: Neon database branch ID for this environment
+            cloudflareWorkerName:
+              type: string
+              description: Cloudflare Worker name for this environment
+            cloudflarePagesProject:
+              type: string
+              description: Cloudflare Pages project name for this environment
+
+    CreateEnvironmentsResponse:
+      type: object
+      required:
+        - created
+        - updated
+        - errors
+        - correlationId
+      properties:
+        created:
+          type: array
+          items:
+            type: string
+          description: Names of environments created
+        updated:
+          type: array
+          items:
+            type: string
+          description: Names of existing environments updated
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - environment
+              - error
+              - code
+            properties:
+              environment:
+                type: string
+              error:
+                type: string
+              code:
+                type: string
+          description: Errors encountered during environment provisioning
+        correlationId:
+          type: string
+          format: uuid
+          description: Correlation ID for tracing
+
+    SecretValidationRequest:
+      type: object
+      required:
+        - projectId
+      properties:
+        projectId:
+          type: string
+          format: uuid
+          description: Project ID to validate secrets for
+        requiredSecrets:
+          type: array
+          items:
+            type: string
+          description: Optional list of specific secrets to validate (omit for all secrets)
+
+    SecretValidationResponse:
+      type: object
+      required:
+        - valid
+        - missing
+        - conflicts
+        - summary
+        - remediationSteps
+      properties:
+        valid:
+          type: boolean
+          description: True if all secrets are valid (no missing or conflicts)
+        missing:
+          type: array
+          items:
+            type: object
+            required:
+              - secretName
+              - scope
+            properties:
+              secretName:
+                type: string
+              scope:
+                type: string
+          description: Secrets missing from one or more scopes
+        conflicts:
+          type: array
+          items:
+            type: object
+            required:
+              - secretName
+              - scopes
+              - valueHashes
+            properties:
+              secretName:
+                type: string
+              scopes:
+                type: array
+                items:
+                  type: string
+              valueHashes:
+                type: object
+                additionalProperties:
+                  type: string
+          description: Secrets with conflicting values across scopes
+        summary:
+          type: object
+          required:
+            - totalSecrets
+            - missingCount
+            - conflictCount
+            - validCount
+          properties:
+            totalSecrets:
+              type: integer
+              minimum: 0
+            missingCount:
+              type: integer
+              minimum: 0
+            conflictCount:
+              type: integer
+              minimum: 0
+            validCount:
+              type: integer
+              minimum: 0
+        remediationSteps:
+          type: array
+          items:
+            type: string
+          description: Actionable steps to fix validation issues
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+            - severity
+            - retryPolicy
+            - requestId
+            - timestamp
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code (e.g., GITHUB_SECRETS_RATE_LIMIT_EXHAUSTED)
+            message:
+              type: string
+              description: Human-readable error message
+            severity:
+              type: string
+              enum: [info, warn, error, critical]
+            retryPolicy:
+              type: string
+              enum: [none, safe, idempotent]
+            requestId:
+              type: string
+              format: uuid
+            timestamp:
+              type: string
+              format: date-time
+            context:
+              type: object
+              additionalProperties: true
+              description: Additional error context
+            hint:
+              type: string
+              description: Suggestion for resolving the error
+            causeChain:
+              type: array
+              items:
+                type: string
+              description: Chain of error codes leading to this error
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "GITHUB_SECRETS_NAME_INVALID"
+              message: "Secret name must be uppercase with underscores and start with a letter."
+              severity: "error"
+              retryPolicy: "none"
+              requestId: "770f0611-g40d-62f6-c938-668877662222"
+              timestamp: "2025-11-22T10:45:00Z"
+              context:
+                secretName: "my-secret"
+                pattern: "^[A-Z][A-Z0-9_]*$"
+              hint: "Use uppercase letters, numbers, and underscores only. Example: MY_SECRET"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "AUTH_TOKEN_MISSING"
+              message: "Authorization token is missing or invalid."
+              severity: "error"
+              retryPolicy: "none"
+              requestId: "880g1722-h51e-73g7-d049-779988773333"
+              timestamp: "2025-11-22T10:46:00Z"
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "AUTH_ROLE_DENIED"
+              message: "User role 'viewer' cannot perform secret sync operations. Required role: 'developer' or 'admin'."
+              severity: "error"
+              retryPolicy: "none"
+              requestId: "990h2833-i62f-84h8-e15a-880099884444"
+              timestamp: "2025-11-22T10:47:00Z"
+              context:
+                userRole: "viewer"
+                requiredRole: "developer"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "PROJECT_NOT_FOUND"
+              message: "Project with ID 123e4567-e89b-12d3-a456-426614174000 not found."
+              severity: "error"
+              retryPolicy: "none"
+              requestId: "aa1i3944-j73g-95i9-f26b-991100995555"
+              timestamp: "2025-11-22T10:48:00Z"
+              context:
+                projectId: "123e4567-e89b-12d3-a456-426614174000"
+
+    RateLimited:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until rate limit resets
+        X-RateLimit-Remaining-User:
+          schema:
+            type: integer
+          description: Remaining user quota
+        X-RateLimit-Remaining-Project:
+          schema:
+            type: integer
+          description: Remaining project quota
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "RATE_LIMIT_PROJECT"
+              message: "Project rate limit exceeded. Try again in 45 seconds."
+              severity: "error"
+              retryPolicy: "safe"
+              requestId: "bb2j4a55-k84h-a6ja-g37c-aa2211aa6666"
+              timestamp: "2025-11-22T10:49:00Z"
+              context:
+                retryAfter: 45
+                quotaType: "project"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "INTERNAL_UNEXPECTED"
+              message: "An unexpected error occurred. Our team has been notified."
+              severity: "critical"
+              retryPolicy: "safe"
+              requestId: "cc3k5b66-l95i-b7kb-h48d-bb3322bb7777"
+              timestamp: "2025-11-22T10:50:00Z"
+              hint: "Please try again in a few moments. If the issue persists, contact support with this request ID."
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from authentication endpoint
