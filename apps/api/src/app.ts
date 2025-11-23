@@ -8,6 +8,8 @@ import { authMiddleware } from "./middleware/auth";
 import { idempotencyMiddleware } from "./middleware/idempotency";
 import { rateLimitMiddleware } from "./middleware/rateLimit";
 import { traceContextMiddleware } from "./middleware/traceContext";
+import { analyticsMiddleware } from "./middleware/analytics";
+import { secretRedactionMiddleware } from "./middleware/secretRedaction";
 import type { Env, Variables } from "./types/env";
 
 /**
@@ -19,7 +21,9 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 // Core middleware pipeline
 app.use("*", cors());
+app.use("*", secretRedactionMiddleware); // T014: Secret redaction before all logging
 app.use("*", traceContextMiddleware());
+app.use("*", analyticsMiddleware);
 app.use("*", prettyJSON());
 app.use("*", logger());
 app.use("*", structuredLogger());

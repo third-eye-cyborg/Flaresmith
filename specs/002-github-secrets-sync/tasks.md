@@ -34,13 +34,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Create GitHub client wrapper at apps/api/src/integrations/github/client.ts with Octokit initialization and authentication
-- [ ] T009 [P] Implement secret encryption helper at apps/api/src/integrations/github/encryption.ts using sodium.seal() with repo public key caching (5min TTL)
-- [ ] T010 [P] Implement secret redaction middleware at apps/api/src/middleware/secretRedaction.ts with regex patterns for API keys, tokens, connection strings
-- [ ] T011 [P] Create base service class at apps/api/src/services/github/baseGitHubService.ts with retry logic (exponential backoff, max 3 attempts, jitter)
-- [ ] T012 Implement GitHub API quota service at apps/api/src/services/github/quotaService.ts with methods: checkQuota(), updateQuota(), blockIfInsufficient()
-- [ ] T013 Create audit service at apps/api/src/services/github/auditService.ts with method logSecretSyncEvent() to insert into secret_sync_events table
-- [ ] T014 Add secret redaction middleware to Hono middleware pipeline in apps/api/src/app.ts before all routes
+- [X] T008 Create GitHub client wrapper at apps/api/src/integrations/github/client.ts with Octokit initialization and authentication
+- [X] T009 [P] Implement secret encryption helper at apps/api/src/integrations/github/encryption.ts using sodium.seal() with repo public key caching (5min TTL)
+- [X] T010 [P] Implement secret redaction middleware at apps/api/src/middleware/secretRedaction.ts with regex patterns for API keys, tokens, connection strings
+- [X] T011 [P] Create base service class at apps/api/src/services/github/baseGitHubService.ts with retry logic (exponential backoff, max 3 attempts, jitter)
+- [X] T012 Implement GitHub API quota service at apps/api/src/services/github/quotaService.ts with methods: checkQuota(), updateQuota(), blockIfInsufficient()
+- [X] T013 Create audit service at apps/api/src/services/github/auditService.ts with method logSecretSyncEvent() to insert into secret_sync_events table
+- [X] T014 Add secret redaction middleware to Hono middleware pipeline in apps/api/src/app.ts before all routes
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
