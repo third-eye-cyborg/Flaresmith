@@ -25,6 +25,25 @@
       "args": ["./mcp/servers/postman/index.js"],
       "tools": []
     },
+    "posthog": {
+      "command": "npx",
+      "args": ["-y", "@posthog/mcp-server-posthog"],
+      "env": {
+        "POSTHOG_API_KEY": "${POSTHOG_API_KEY}",
+        "POSTHOG_HOST": "${POSTHOG_HOST}"
+      },
+      "tools": [
+        "posthog.createOrganization",
+        "posthog.createProject",
+        "posthog.getProjects",
+        "posthog.createFeatureFlag",
+        "posthog.getFeatureFlags",
+        "posthog.captureEvent",
+        "posthog.identifyUser",
+        "posthog.getInsights",
+        "posthog.createDashboard"
+      ]
+    },
     "specs": {
       "command": "node",
       "args": ["./mcp/servers/specs/index.js"],
