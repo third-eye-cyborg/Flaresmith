@@ -181,18 +181,18 @@
         "focus": "var(--color-primary-600)"
       },
       "action": {
-        "primary-bg": "var(--color-primary-600)",
+        "primary-bg": "var(--color-primary-700)",
         "primary-fg": "#ffffff",
         "secondary-bg": "var(--color-neutral-100)",
         "secondary-fg": "var(--color-neutral-900)",
-        "destructive-bg": "var(--color-error-600)",
+        "destructive-bg": "var(--color-error-700)",
         "destructive-fg": "#ffffff"
       },
       "status": {
-        "success": "var(--color-success-700)",
-        "warning": "var(--color-warning-700)",
-        "error": "var(--color-error-700)",
-        "info": "var(--color-info-700)"
+        "success": "var(--color-success-600)",
+        "warning": "var(--color-warning-600)",
+        "error": "var(--color-error-600)",
+        "info": "var(--color-info-600)"
       }
     }
   }
