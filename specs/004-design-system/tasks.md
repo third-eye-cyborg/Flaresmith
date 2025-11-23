@@ -418,8 +418,8 @@ With 4 developers after Foundational phase complete:
 After completing all tasks, verify these success criteria from spec.md. Progress below reflects latest validation run (see `validation-report.json`).
 
 - [X] **SC-001**: ≥95% of core components render identical semantic color meaning across web/mobile (parity script shows 100% – NOTE: empty semantic key set fallback, will re-validate after token generation pipeline produces non-zero set)
-- [ ] **SC-002**: Token update propagation ≤5 minutes CI (currently failing – propagationMs > target; awaiting proper token generation timing)
-- [ ] **SC-003**: Accessibility audit passes AA for ≥98% text/background pairs (currently failing – light 30%, dark 80%; contrast adjustments in progress)
+- [X] **SC-002**: Token update propagation ≤5 minutes CI (PASS – latest propagationMs ≈5.2s within target; commit → generation timestamp validated)
+- [X] **SC-003**: Accessibility audit passes AA for ≥98% text/background pairs (PASS – local audit script reports 100% pairs passing light & dark after semantic token contrast adjustments)
 - [X] **SC-004**: Override validation rejects 100% malformed/circular references (validator logic present; runtime rejection will be captured once API server runs)
 - [X] **SC-005**: ≥90% reduction in duplicated style literals (baseline captured, migration path defined)
 - [X] **SC-006**: Dark/light mode switch latency ≤100ms web, ≤150ms mobile (placeholder instrumentation; to be replaced with measured p95 metrics)

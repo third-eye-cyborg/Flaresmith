@@ -16,6 +16,144 @@ Enable cross-platform (Web/Next.js, Mobile/Expo) consumption of unified design t
 4. Detect drift vs spec
 5. Rollback if regression identified
 
+## End-to-End Workflow Examples (Expanded)
+
+### 1. Add / Modify a Semantic Token (FR-012, FR-017)
+Goal: Introduce or adjust a semantic token (e.g. `semantic.primary.bg`) and verify propagation across web + mobile within SC-002 target (≤5m) and parity (SC-001 ≥95%).
+
+Steps:
+1. Update token source (either DB via admin UI or migration) – new/changed entry in `design_tokens`.
+2. (Optional) Bump version manually via tokenService `createTokenVersion()` if grouping multiple changes.
+3. Run generation script:
+	```bash
+	pnpm exec tsx scripts/design/generateTokenConfigs.ts
+	```
+4. Track propagation latency (commit → generation):
+	```bash
+	pnpm exec tsx scripts/design/trackPropagation.ts
+	```
+5. Build apps (web + mobile) or run dev:
+	```bash
+	pnpm dev
+	```
+6. Run parity validation (color meaning check):
+	```bash
+	pnpm exec tsx scripts/design/validateTokenParity.ts
+	```
+7. Confirm output JSON shows ≥95% parity and propagation `withinTarget:true`.
+
+Rollback Path (if regression): Use rollback endpoint (see workflow 5) citing SC-010.
+
+### 2. Apply a Theme Override (FR-024 / FR-025)
+Goal: Safely customize subset of tokens for an environment (`staging`) with size policy enforcement.
+
+Steps:
+1. Draft override diff JSON (only changed tokens): `override.diff.json`.
+2. Submit override:
+	```bash
+	curl -X POST $API/design/overrides \
+	  -H 'Content-Type: application/json' \
+	  -d @override.diff.json
+	```
+3. Inspect response: fields `size_pct`, `requires_approval`, `status`.
+4. If `status=pending-approval` acquire approval:
+	```bash
+	curl -X PATCH $API/design/overrides/<id>/approve
+	```
+5. Regenerate tokens (script auto-merges active overrides):
+	```bash
+	pnpm exec tsx scripts/design/generateTokenConfigs.ts
+	```
+6. Run bundle impact analyzer (SC-009):
+	```bash
+	pnpm exec tsx scripts/design/analyzeBundleSize.ts
+	```
+7. Verify thresholds (≤10% web, ≤5% mobile). If exceeded → consider reducing override scope.
+
+### 3. Run Accessibility Audit (SC-003)
+Goal: Validate contrast compliance for both light and dark modes.
+
+Steps:
+1. Trigger audit light:
+	```bash
+	curl -X POST $API/design/audits/run -d '{"mode":"light"}' -H 'Content-Type: application/json'
+	```
+2. Trigger audit dark:
+	```bash
+	curl -X POST $API/design/audits/run -d '{"mode":"dark"}' -H 'Content-Type: application/json'
+	```
+3. Poll latest results:
+	```bash
+	curl $API/design/audits/latest?mode=light
+	curl $API/design/audits/latest?mode=dark
+	```
+4. Confirm `passed_pct >= 0.98` (≥98%). Investigate failures: adjust semantic mappings or contrast pairs.
+
+### 4. Detect & Resolve Drift (SC-008)
+Goal: Ensure implementation matches baseline spec snapshot.
+
+Steps:
+1. Invoke drift endpoint pre-merge:
+	```bash
+	curl $API/design/drift
+	```
+2. If `hasDrift=true`: inspect `diff.categories[]` for root cause.
+3. Resolve by either updating spec (`spec.md` + baseline snapshot) or reverting unintended token edits.
+4. Re-run drift check until `hasDrift=false`.
+5. CI should block merge automatically (integrate GET /design/drift in pipeline).
+
+### 5. Rollback Tokens (SC-010)
+Goal: Revert to previous stable version ≤60s.
+
+Steps:
+1. Identify target version (from version history UI or DB). Example: `targetVersion=14`.
+2. Execute rollback:
+	```bash
+	curl -X POST $API/design/rollback -d '{"targetVersion":14,"rationale":"Revert experimental contrast"}' \
+	  -H 'Content-Type: application/json'
+	```
+3. Response includes `durationMs` – ensure `durationMs <= 60000`.
+4. Regenerate tokens (script may run automatically via build hook).
+5. Re-run parity + drift to confirm restored state.
+
+### 6. Preview Layer Experiment (FR-019)
+Goal: Test experimental tokens (e.g. `accent.475`) safely.
+
+Steps:
+1. Enable env var:
+	```bash
+	DESIGN_PREVIEW=true pnpm exec tsx scripts/design/generateTokenConfigs.ts
+	```
+2. Run component showcase (after T117) to visually inspect experimental tokens.
+3. Accessibility audit with preview enabled (repeat workflow 3).
+4. Disable preview and regenerate to return to convergent hash.
+
+### 7. Dark / Light Mode Latency Benchmark (SC-006)
+Goal: Confirm mode switch latency p95 within targets.
+
+Steps:
+1. Open web app and toggle theme 25 times → capture `window.__themeLatencyStats.web`.
+2. Compute p95 manually:
+	```js
+	const arr = window.__themeLatencyStats.web; arr.sort((a,b)=>a-b); const p95 = arr[Math.floor(arr.length*0.95)];
+	```
+3. For mobile run similar script via dev menu (arr in `global.__themeLatencyStats.mobile`).
+4. If p95 over target: profile components for heavy synchronous work, ensure token retrieval is cached.
+
+### 8. Full Validation Aggregate (T116 Placeholder)
+Will be automated by `runFullValidation.ts` (see upcoming script). Manual interim approach:
+
+```bash
+pnpm exec tsx scripts/design/validateTokenParity.ts
+pnpm exec tsx scripts/design/trackPropagation.ts
+curl $API/design/audits/latest?mode=light
+curl $API/design/drift
+pnpm exec tsx scripts/design/analyzeBundleSize.ts
+curl -X POST $API/design/rollback -d '{"targetVersion":<prev>,"dryRun":true}'
+```
+
+Combine results into a JSON artifact for CI gating.
+
 ## Commands (Planned Scripts)
 ```bash
 # Validate token schema integrity
@@ -144,11 +282,8 @@ See `data-model.md` for event list; confirm presence in structured logger output
 4. Add MCP tool descriptors (`mcp/servers/design-system/*.json`)
 5. Write tests (Vitest) for overrides, drift, rollback, audit
 
-## Success Criteria Mapping
-- SC-001: Token generation time — measure in script runtime logs
-- SC-004: Accessibility pass % — from latest audit report
-- SC-006: Override decision latency — timestamp diff (submitted vs applied)
-- SC-010: Rollback completion < 2s — measure durationMs in rollback event
+## Deprecated / Consolidated Notes
+Previous duplicate success criteria mapping section consolidated above. Override decision latency now part of audit + workflow logs; rollback timing unified under SC-010 (≤60s).
 
 ---
 Refer back to spec for any change justification; all modifications MUST cite FR or SC identifier.

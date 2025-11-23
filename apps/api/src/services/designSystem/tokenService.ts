@@ -17,6 +17,14 @@ import { BaseDesignSystemService } from './auditService';
  * Token service for design system operations
  */
 export class TokenService extends BaseDesignSystemService {
+  // Performance counters (T107)
+  private perf = {
+    calls: 0,
+    cachedHits: 0,
+    totalDurationMs: 0,
+  };
+  private cache: { snapshot?: { version: number; tokens: DesignToken[]; ts: number } } = {};
+
   /**
    * Get all tokens or filter by category/version
    * 
@@ -33,6 +41,7 @@ export class TokenService extends BaseDesignSystemService {
   }> {
     const correlationId = options?.correlationId || crypto.randomUUID();
     const start = Date.now();
+    this.perf.calls++;
     return this.withRetry(async () => {
       let query = db.select().from(designTokens);
 
@@ -44,6 +53,22 @@ export class TokenService extends BaseDesignSystemService {
       // If specific version requested, filter by version
       if (options?.version) {
         query = query.where(eq(designTokens.version, options.version)) as typeof query;
+      }
+
+      // Simple 2s cache for unfiltered latest tokens (SC-009 prep)
+      if (!options?.category && !options?.version && this.cache.snapshot && Date.now() - this.cache.snapshot.ts < 2000) {
+        this.perf.cachedHits++;
+        const durationMs = Date.now() - start;
+        this.perf.totalDurationMs += durationMs;
+        await this.logAuditEvent({
+          // Use existing event type with cache flag (DesignAuditEventType constraint)
+          type: 'design.tokens.retrieved',
+          correlationId,
+          version: this.cache.snapshot.version,
+          metadata: { count: this.cache.snapshot.tokens.length, durationMs, cache: true },
+          durationMs,
+        });
+        return { version: this.cache.snapshot.version, tokens: this.cache.snapshot.tokens };
       }
 
       const tokens = await query;
@@ -61,9 +86,14 @@ export class TokenService extends BaseDesignSystemService {
           requestedVersion: options?.version,
           count: mapped.length,
           durationMs,
+          cache: false,
         },
         durationMs,
       });
+      if (!options?.category && !options?.version) {
+        this.cache.snapshot = { version, tokens: mapped, ts: Date.now() };
+      }
+      this.perf.totalDurationMs += durationMs;
       return { version, tokens: mapped };
     });
   }
@@ -273,6 +303,19 @@ export class TokenService extends BaseDesignSystemService {
       accessibility_meta: record.accessibilityMeta as Record<string, unknown> | undefined,
       created_at: record.createdAt.toISOString(),
       updated_at: record.updatedAt.toISOString(),
+    };
+  }
+
+  /**
+   * Get current performance snapshot (calls, cache hits, avg duration)
+   */
+  getPerformanceMetrics() {
+    const avg = this.perf.calls > 0 ? this.perf.totalDurationMs / this.perf.calls : 0;
+    return {
+      calls: this.perf.calls,
+      cacheHits: this.perf.cachedHits,
+      avgDurationMs: Number(avg.toFixed(2)),
+      cacheHitRatePct: this.perf.calls > 0 ? Math.round((this.perf.cachedHits / this.perf.calls) * 100) : 0,
     };
   }
 }

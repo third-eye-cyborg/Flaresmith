@@ -106,11 +106,12 @@ function computeContrastRatio(L1: number, L2: number): number {
 export async function runAudit(options: AuditOptions = {}): Promise<AuditJobResult> {
   const auditId = uuidv4();
   const mode = options.mode || 'light';
+  const start = Date.now();
 
   // Trigger async audit (in real implementation, use job queue like BullMQ)
   // For now, run synchronously
   setImmediate(() => {
-    generateAuditReport(auditId, mode, options.version, options.focusComponents).catch(
+    generateAuditReport(auditId, mode, options.version, options.focusComponents, start).catch(
       (error) => {
         console.error(`Audit ${auditId} failed:`, error);
       }
@@ -127,7 +128,8 @@ export async function generateAuditReport(
   auditId: string,
   mode: ThemeMode,
   version?: number,
-  _focusComponents?: string[] // Future: filter audit to specific components
+  _focusComponents?: string[], // Future: filter audit to specific components
+  startTime?: number
 ): Promise<void> {
   // Load semantic tokens (text/background pairs)
   const tokenRecords = await db
@@ -179,6 +181,7 @@ export async function generateAuditReport(
   const passedCount = results.filter((r) => r.status === 'pass').length;
   const passedPct = results.length > 0 ? Math.round((passedCount / results.length) * 100) : 0;
 
+  const durationMs = startTime ? Date.now() - startTime : 0;
   // Persist to database
   await db.insert(accessibilityAuditResults).values({
     id: auditId,
@@ -186,6 +189,7 @@ export async function generateAuditReport(
     mode,
     report: results as any, // JSONB field
     passedPct,
+    durationMs
   });
 
   // Log audit completion event
@@ -196,10 +200,11 @@ export async function generateAuditReport(
     mode,
     passed_pct: passedPct,
     total_pairs: results.length,
+    durationMs,
     timestamp: new Date().toISOString(),
   }));
 
-  console.log(`✅ Audit ${auditId} completed: ${passedPct}% passed (${passedCount}/${results.length})`);
+  console.log(`✅ Audit ${auditId} completed: ${passedPct}% passed (${passedCount}/${results.length}) in ${durationMs}ms`);
 }
 
 /**

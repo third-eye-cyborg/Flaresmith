@@ -497,6 +497,95 @@ export const DESIGN_ERRORS: Record<string, ErrorDefinition> = {
     retryPolicy: RetryPolicy.MANUAL,
     httpStatus: 200,
     hint: 'Review contrast ratios: ≥4.5:1 for normal text, ≥3:1 for large text.'
+  },
+
+  ROLLBACK_PERMISSION_DENIED: {
+    code: 'DESIGN_ROLLBACK_PERMISSION_DENIED',
+    message: 'Insufficient permissions to rollback tokens for this environment.',
+    severity: ErrorSeverity.ERROR,
+    retryPolicy: RetryPolicy.NONE,
+    httpStatus: 403,
+    hint: 'Only platformOwner or designDelegate roles may rollback production tokens.'
+  },
+  ROLLBACK_TARGET_NOT_FOUND: {
+    code: 'DESIGN_ROLLBACK_TARGET_NOT_FOUND',
+    message: 'Requested rollback target version not found.',
+    severity: ErrorSeverity.ERROR,
+    retryPolicy: RetryPolicy.NONE,
+    httpStatus: 404,
+    hint: 'Verify version exists in design_token_versions snapshot history.'
+  },
+  ROLLBACK_FAILED: {
+    code: 'DESIGN_ROLLBACK_FAILED',
+    message: 'Rollback operation failed due to snapshot integrity or persistence error.',
+    severity: ErrorSeverity.CRITICAL,
+    retryPolicy: RetryPolicy.EXPONENTIAL_BACKOFF,
+    httpStatus: 500,
+    hint: 'Retry rollback; if persistent contact support with correlationId.'
+  },
+  ENV_PROMOTION_BLOCKED: {
+    code: 'DESIGN_ENV_PROMOTION_BLOCKED',
+    message: 'Environment promotion blocked due to pending approval override.',
+    severity: ErrorSeverity.WARNING,
+    retryPolicy: RetryPolicy.MANUAL,
+    httpStatus: 409,
+    hint: 'Approve or reject the pending override before promoting staging → prod.'
+  },
+  PREVIEW_NOT_ALLOWED_IN_PRODUCTION: {
+    code: 'DESIGN_PREVIEW_NOT_ALLOWED_IN_PRODUCTION',
+    message: 'Preview token layer cannot be enabled in production builds.',
+    severity: ErrorSeverity.ERROR,
+    retryPolicy: RetryPolicy.NONE,
+    httpStatus: 400,
+    hint: 'Remove DESIGN_PREVIEW env variable for production CI runs.'
+  },
+  ACCESSIBILITY_AUDIT_TIMEOUT: {
+    code: 'DESIGN_ACCESSIBILITY_AUDIT_TIMEOUT',
+    message: 'Accessibility audit exceeded maximum allowed duration.',
+    severity: ErrorSeverity.ERROR,
+    retryPolicy: RetryPolicy.EXPONENTIAL_BACKOFF,
+    httpStatus: 504,
+    hint: 'Reduce audit scope or investigate performance regressions in token contrast calculations.'
+  },
+  TOKEN_VERSION_HASH_MISMATCH: {
+    code: 'DESIGN_TOKEN_VERSION_HASH_MISMATCH',
+    message: 'Computed token hash does not match recorded snapshot hash.',
+    severity: ErrorSeverity.CRITICAL,
+    retryPolicy: RetryPolicy.NONE,
+    httpStatus: 500,
+    hint: 'Potential data corruption. Recreate snapshot from canonical token set.'
+  },
+  TOKEN_GENERATION_FAILED: {
+    code: 'DESIGN_TOKEN_GENERATION_FAILED',
+    message: 'Token generation script failed to produce output artifacts.',
+    severity: ErrorSeverity.ERROR,
+    retryPolicy: RetryPolicy.EXPONENTIAL_BACKOFF,
+    httpStatus: 500,
+    hint: 'Inspect script logs for failing layer (base, semantic, mode, override, preview).'
+  },
+  OVERRIDE_EMPTY_DIFF: {
+    code: 'DESIGN_OVERRIDE_EMPTY_DIFF',
+    message: 'Override submission contains no token changes.',
+    severity: ErrorSeverity.ERROR,
+    retryPolicy: RetryPolicy.NONE,
+    httpStatus: 400,
+    hint: 'Provide at least one token diff entry with name and newValue.'
+  },
+  MODE_SWITCH_LATENCY_TARGET_EXCEEDED: {
+    code: 'DESIGN_MODE_SWITCH_LATENCY_TARGET_EXCEEDED',
+    message: 'Mode switch latency exceeded performance target.',
+    severity: ErrorSeverity.WARNING,
+    retryPolicy: RetryPolicy.MANUAL,
+    httpStatus: 200,
+    hint: 'Profile component renders; ensure tokenService caching functioning (2s window).' 
+  },
+  TOKEN_CACHE_INCONSISTENT: {
+    code: 'DESIGN_TOKEN_CACHE_INCONSISTENT',
+    message: 'Cached token set inconsistent with latest version state.',
+    severity: ErrorSeverity.CRITICAL,
+    retryPolicy: RetryPolicy.NONE,
+    httpStatus: 500,
+    hint: 'Invalidate cache and regenerate tokens; investigate concurrent writes.'
   }
 };
 

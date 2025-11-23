@@ -465,3 +465,67 @@ Patterns include generic API keys, AWS keys, GitHub tokens, connection strings. 
 | Prod deploy allowed | Validation report clean AND environments provisioned |
 
 ---
+
+## Design System: Agent Usage Patterns (Feature 004)
+
+### Core Concepts
+- Layer precedence: `base → semantic → mode(light|dark) → override → preview` (preview is experimental, non-persistent)
+- Version snapshots: immutable historical records; rollback creates new snapshot (SC-010).
+- Overrides: governed by size policy (≤5% auto, 5–10% approval, >10% reject) and rate limits.
+- Accessibility audits: contrast compliance (≥98% AA pass pairs, SC-003) across modes.
+- Drift detection: baseline vs current hash diff blocking merges (SC-008).
+- Performance: propagation (commit→availability ≤5m, SC-002), mode switch latency (p95 targets), tokenService caching (2s window) and counters.
+
+### Recommended Agent Flow Examples
+1. **Add Semantic Token**
+  - Confirm spec FR in `specs/004-design-system/spec.md`.
+  - Invoke token generation script (or endpoint if exposed) then parity validation script.
+  - Collect propagation metrics via `scripts/design/trackPropagation.ts`.
+2. **Apply Override**
+  - Submit override diff (POST /design/overrides).
+  - If `requires_approval` approve (PATCH /design/overrides/:id/approve).
+  - Regenerate tokens; run bundle analyzer (SC-009 thresholds).
+3. **Run Accessibility Audit**
+  - POST /design/audits/run (light & dark).
+  - Poll latest audits; enforce passed_pct ≥ 0.98.
+4. **Drift Check Before Merge**
+  - GET /design/drift; if `hasDrift` decide: update spec or revert changes.
+5. **Rollback**
+  - POST /design/rollback with `targetVersion` + rationale.
+  - Verify `durationMs ≤ 60000` and parity restored.
+6. **Preview Experiment**
+  - Set `DESIGN_PREVIEW=true` for generation.
+  - Run showcase & audits; unset for convergence.
+
+### Key Error Codes (DESIGN_*)
+- OVERRIDE_TOO_LARGE / OVERRIDE_RATE_LIMIT / OVERRIDE_CIRCULAR_REFERENCE / OVERRIDE_INVALID_COLOR
+- DRIFT_DETECTED (blocking merge until resolved)
+- ACCESSIBILITY_AUDIT_FAILED / ACCESSIBILITY_AUDIT_TIMEOUT
+- ROLLBACK_PERMISSION_DENIED / ROLLBACK_TARGET_NOT_FOUND / ROLLBACK_FAILED
+- PREVIEW_NOT_ALLOWED_IN_PRODUCTION (guard production builds)
+- TOKEN_GENERATION_FAILED / TOKEN_VERSION_HASH_MISMATCH / TOKEN_CACHE_INCONSISTENT
+- MODE_SWITCH_LATENCY_TARGET_EXCEEDED (performance advisory)
+
+### Success Criteria Quick Map
+| SC | Metric Source |
+|----|---------------|
+| SC-001 | `validateTokenParity.ts` parity % |
+| SC-002 | `trackPropagation.ts` propagationMs |
+| SC-003 | audit passed_pct |
+| SC-006 | mode switch latency arrays p95 |
+| SC-007 | capabilityDetection fallback counters |
+| SC-008 | drift endpoint hasDrift flag |
+| SC-009 | bundle analyzer size deltas |
+| SC-010 | rollback durationMs |
+
+### Agent Safeguards
+- Never enable preview in production CI (`DESIGN_PREVIEW` must be absent).
+- Avoid executing destructive rollback without rationale + version existence check.
+- Gather accessibility + drift results before approving large overrides.
+- Use cached token retrieval for repeated reads; watch for TOKEN_CACHE_INCONSISTENT.
+
+### MCP Tool Invocation Order
+Typical parity validation sequence:
+1. getTokens → detectDrift → auditAccessibility → getLatestAudit → (optional) applyOverride or rollbackTokens.
+
+---
