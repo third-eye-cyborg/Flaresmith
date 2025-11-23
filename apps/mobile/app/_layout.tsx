@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { AnalyticsProvider } from "../src/contexts/AnalyticsProvider";
 import "../global.css";
 
 export default function RootLayout() {
@@ -18,9 +19,11 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack>
-        <Stack.Screen name="index" options={{ title: "CloudMake" }} />
-      </Stack>
+      <AnalyticsProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ title: "Flaresmith" }} />
+        </Stack>
+      </AnalyticsProvider>
     </QueryClientProvider>
   );
 }

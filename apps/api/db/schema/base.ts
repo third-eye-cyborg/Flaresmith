@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, jsonb, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, timestamp, jsonb, pgEnum, integer } from "drizzle-orm/pg-core";
 
 /**
  * T017: Create base database schema for core entities
@@ -75,6 +75,10 @@ export const environments = pgTable("environments", {
   cloudflareUrl: varchar("cloudflare_url", { length: 512 }),
   neonBranchId: varchar("neon_branch_id", { length: 255 }),
   postmanEnvironmentId: varchar("postman_environment_id", { length: 255 }),
+    // T032: GitHub Secrets Sync fields
+    githubEnvironmentId: integer("github_environment_id"),
+    secretsLastSyncedAt: timestamp("secrets_last_synced_at"),
+    syncStatus: varchar("sync_status", { length: 20 }),
   lastDeploymentId: uuid("last_deployment_id"),
   ttlExpiresAt: timestamp("ttl_expires_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

@@ -8,9 +8,13 @@ import {
   SecretSyncRequestSchema,
   SecretSyncResponseSchema,
   SecretSyncStatusResponseSchema,
+    CreateEnvironmentsRequestSchema,
+    CreateEnvironmentsResponseSchema,
   type SecretSyncRequest,
   type SecretSyncResponse,
   type SecretSyncStatusResponse,
+  type CreateEnvironmentsRequest,
+  type CreateEnvironmentsResponse,
 } from '@flaresmith/types';
 
 export class GitHubResource {
@@ -35,3 +39,11 @@ export class GitHubResource {
     );
   }
 }
+
+  /**
+   * Create GitHub environments with protection rules and secrets
+   * POST /github/environments
+   */
+  async createEnvironments(request: CreateEnvironmentsRequest): Promise<CreateEnvironmentsResponse> {
+    return this.client.post('/github/environments', CreateEnvironmentsResponseSchema, request);
+  }

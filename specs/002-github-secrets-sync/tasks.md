@@ -83,22 +83,22 @@
 
 ### Implementation for User Story 2
 
-- [ ] T031 [P] [US2] Create GitHubEnvironmentConfig Drizzle model in apps/api/db/schema/secretSync.ts with JSONB fields for protectionRules, secrets, linkedResources
-- [ ] T032 [P] [US2] Extend existing Environment entity with fields: githubEnvironmentId (integer), secretsLastSyncedAt (datetime), syncStatus (enum)
-- [ ] T033 [US2] Implement environment service at apps/api/src/services/github/environmentService.ts with methods: createEnvironment(), applyProtectionRules(), setEnvironmentSecrets()
-- [ ] T034 [US2] Add GitHub API integration in environmentService.ts: createGitHubEnvironment() using PUT /repos/{owner}/{repo}/environments/{environment_name}
-- [ ] T035 [US2] Implement protection rules logic in environmentService.ts: setReviewers(), setWaitTimer(), setBranchRestrictions() according to tiered structure (dev=none, staging=1 reviewer, prod=1 reviewer+main branch)
-- [ ] T036 [US2] Implement environment secret management in environmentService.ts: writeEnvironmentSecret() using PUT /repos/{owner}/{repo}/environments/{env}/secrets/{name}
-- [ ] T037 [US2] Add linked resource validation in environmentService.ts: validateNeonBranchId(), validateCloudflareWorkerName() to ensure resources exist before linking
-- [ ] T038 [US2] Create POST /github/environments route at apps/api/src/routes/github/createEnvironments.ts with request validation using CreateEnvironmentsRequestSchema
-- [ ] T039 [US2] Implement environment creation endpoint handler in createEnvironments.ts: iterate over environments array, call environmentService.createEnvironment() for each
-- [ ] T040 [US2] Add idempotency handling in createEnvironments.ts: check if environment exists, update if present (return in 'updated' array), create if not (return in 'created' array)
-- [ ] T041 [US2] Add error handling in createEnvironments.ts for reviewer not found (GITHUB_ENV_REVIEWER_NOT_FOUND), protection rule conflicts, API failures
+- [X] T031 [P] [US2] Create GitHubEnvironmentConfig Drizzle model in apps/api/db/schema/secretSync.ts with JSONB fields for protectionRules, secrets, linkedResources (COMPLETED in Phase 1)
+- [X] T032 [P] [US2] Extend existing Environment entity with fields: githubEnvironmentId (integer), secretsLastSyncedAt (datetime), syncStatus (enum)
+- [X] T033 [US2] Implement environment service at apps/api/src/services/github/environmentService.ts with methods: createEnvironment(), applyProtectionRules(), setEnvironmentSecrets()
+- [X] T034 [US2] Add GitHub API integration in environmentService.ts: createGitHubEnvironment() using PUT /repos/{owner}/{repo}/environments/{environment_name}
+- [X] T035 [US2] Implement protection rules logic in environmentService.ts: setReviewers(), setWaitTimer(), setBranchRestrictions() according to tiered structure (dev=none, staging=1 reviewer, prod=1 reviewer+main branch)
+- [X] T036 [US2] Implement environment secret management in environmentService.ts: writeEnvironmentSecret() using PUT /repos/{owner}/{repo}/environments/{env}/secrets/{name}
+- [X] T037 [US2] Add linked resource validation in environmentService.ts: validateNeonBranchId(), validateCloudflareWorkerName() to ensure resources exist before linking
+- [X] T038 [US2] Create POST /github/environments route at apps/api/src/routes/github/createEnvironments.ts with request validation using CreateEnvironmentsRequestSchema
+- [X] T039 [US2] Implement environment creation endpoint handler in createEnvironments.ts: iterate over environments array, call environmentService.createEnvironment() for each
+- [X] T040 [US2] Add idempotency handling in createEnvironments.ts: check if environment exists, update if present (return in 'updated' array), create if not (return in 'created' array)
+- [X] T041 [US2] Add error handling in createEnvironments.ts for reviewer not found (GITHUB_ENV_REVIEWER_NOT_FOUND), protection rule conflicts, API failures
 - [ ] T042 [US2] Integrate environment creation into project provisioning workflow at apps/api/src/services/provision/projectProvisioningService.ts: call createEnvironments after GitHub repo creation
-- [ ] T043 [US2] Update API client at packages/api-client/src/resources/github.ts with method: createEnvironments()
-- [ ] T044 [US2] Add audit logging for environment operations in environmentService.ts with operation type (create|update), environment names, reviewer IDs
+-  [X] T043 [US2] Update API client at packages/api-client/src/resources/github.ts with method: createEnvironments()
+- [X] T044 [US2] Add audit logging for environment operations in environmentService.ts with operation type (create|update), environment names, reviewer IDs
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work - secrets sync automatically AND environments are provisioned during project setup
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work - secrets sync automatically AND environments are provisioned during project setup ✅ MOSTLY COMPLETE (T042 pending - requires projectProvisioningService implementation)
 
 ---
 

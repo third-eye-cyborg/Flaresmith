@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "CloudMake",
-    "slug": "cloudmake",
+    "name": "Flaresmith",
+    "slug": "flaresmith",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,14 +14,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cloudmake.app"
+      "bundleIdentifier": "com.flaresmith.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.cloudmake.app"
+      "package": "com.flaresmith.app"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +31,11 @@
     "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "POSTHOG_API_KEY": process.env.POSTHOG_API_KEY,
+      "POSTHOG_HOST": process.env.POSTHOG_HOST || "https://app.posthog.com",
+      "ENVIRONMENT": process.env.ENVIRONMENT || "dev"
     }
   }
 }
