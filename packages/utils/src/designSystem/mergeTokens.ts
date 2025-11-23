@@ -80,30 +80,33 @@ export function mergeTokenLayers(layers: TokenLayer[]): DesignToken[] {
 export function mergeTokenSets(
   base: DesignToken[],
   semantic?: DesignToken[],
-  mode?: DesignToken[],
+  modeLight?: DesignToken[],
+  modeDark?: DesignToken[],
+  currentMode: ThemeMode = 'light',
   override?: DesignToken[],
   preview?: DesignToken[]
 ): DesignToken[] {
   const layers: TokenLayer[] = [
     { name: 'base', tokens: base, priority: 0 },
   ];
-  
+
   if (semantic) {
     layers.push({ name: 'semantic', tokens: semantic, priority: 1 });
   }
-  
-  if (mode) {
-    layers.push({ name: 'mode', tokens: mode, priority: 2 });
+
+  if (modeLight && modeDark) {
+    const selected = currentMode === 'dark' ? modeDark : modeLight;
+    layers.push({ name: `mode-${currentMode}`, tokens: selected, priority: 2 });
   }
-  
+
   if (override) {
     layers.push({ name: 'override', tokens: override, priority: 3 });
   }
-  
+
   if (preview) {
     layers.push({ name: 'preview', tokens: preview, priority: 4 });
   }
-  
+
   return mergeTokenLayers(layers);
 }
 

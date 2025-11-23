@@ -1,0 +1,15 @@
+Inline Style Migration Report
+Total literals found: 12
+Resolvable with token suggestions: 0
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/web/src/components/environments/PromotionHistory.tsx:141  10px  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/web/src/components/environments/PromotionHistory.tsx:147  10px  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/web/src/components/environments/PromotionHistory.tsx:188  10px  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/web/src/components/projects/SecretValidationPanel.tsx:190  10px  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Badge.tsx:51  #0ea5e9  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Badge.tsx:55  #e4e4e7  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Badge.tsx:59  #f4f4f5  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Card.tsx:48  #e4e4e7  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Card.tsx:49  #f4f4f5  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Card.tsx:56  #ffffff  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Card.tsx:59  #fafafa  (no direct token)
+/Users/danialroot/Documents/GitHub/Flaresmith/apps/mobile/src/components/Card.tsx:66  #ffffff  (no direct token)

@@ -39,6 +39,7 @@ import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import type { DesignToken } from '@flaresmith/types';
 import { mergeTokenSets } from '@flaresmith/utils';
+import { readFile } from 'node:fs/promises';
 
 type EnvironmentName = 'dev' | 'staging' | 'prod';
 
@@ -377,14 +378,84 @@ async function main() {
     console.log('ℹ️  No overrides found (using base tokens only)');
   }
 
-  // Merge base tokens with overrides using mergeTokenSets utility
-  console.log('🔀 Merging base tokens with overrides...');
+  // Load mode token layers (light/dark) if present
+  async function loadModeTokens(): Promise<{ light?: DesignToken[]; dark?: DesignToken[] }> {
+    const basePath = join(process.cwd(), 'packages/config/tailwind');
+    const lightPath = join(basePath, 'tokens.light.json');
+    const darkPath = join(basePath, 'tokens.dark.json');
+    const toTokens = (json: any): DesignToken[] => {
+      const out: DesignToken[] = [];
+      function walk(obj: any, prefix: string[] = []) {
+        if (typeof obj !== 'object' || obj === null) return;
+        for (const [k,v] of Object.entries(obj)) {
+          if (typeof v === 'object' && v !== null) {
+            walk(v, [...prefix, k]);
+          } else {
+            const name = ['semantic', ...prefix, k].join('.');
+            out.push({ id: `mode-${name}`, name, category: 'semantic', value: v as any, version: 0, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
+          }
+        }
+      }
+      walk(json.semantic || {});
+      return out;
+    };
+    const result: { light?: DesignToken[]; dark?: DesignToken[] } = {};
+    try {
+      const lightRaw = await readFile(lightPath, 'utf-8');
+      result.light = toTokens(JSON.parse(lightRaw));
+    } catch {}
+    try {
+      const darkRaw = await readFile(darkPath, 'utf-8');
+      result.dark = toTokens(JSON.parse(darkRaw));
+    } catch {}
+    return result;
+  }
+
+  // Load preview tokens if DESIGN_PREVIEW enabled
+  async function loadPreviewTokens(): Promise<DesignToken[] | undefined> {
+    if (!process.env.DESIGN_PREVIEW) return undefined;
+    const previewPath = join(process.cwd(), 'packages/config/tailwind/tokens.preview.json');
+    try {
+      const raw = await readFile(previewPath, 'utf-8');
+      const json = JSON.parse(raw);
+      const out: DesignToken[] = [];
+      function walk(obj: any, prefix: string[] = []) {
+        if (typeof obj !== 'object' || obj === null) return;
+        for (const [k,v] of Object.entries(obj)) {
+          if (typeof v === 'object' && v !== null) {
+            walk(v, [...prefix, k]);
+          } else {
+            const name = [...prefix, k].join('.');
+            // derive category heuristically
+            const category = name.startsWith('glass') ? 'glass' : name.startsWith('elevation') ? 'elevation' : name.startsWith('accent') || name.startsWith('primary') ? 'color' : 'semantic';
+            out.push({ id: `preview-${name}`, name, category, value: v as any, version: 0, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
+          }
+        }
+      }
+      walk(json);
+      return out;
+    } catch { return undefined; }
+  }
+
+  const { light, dark } = await loadModeTokens();
+  const previewTokens = await loadPreviewTokens();
+  if (light && dark) {
+    console.log(`🌗 Loaded mode token layers: light(${light.length}) dark(${dark.length})`);
+  }
+  if (previewTokens) {
+    console.log(`🧪 Loaded preview tokens (${previewTokens.length})`);
+  }
+
+  // Merge base tokens using mode selection (default light for generation)
+  console.log('🔀 Merging token layers...');
   const mergedTokens = mergeTokenSets(
     baseTokens,
-    undefined, // semantic layer (future)
-    undefined, // mode layer (future: T097-T098)
+    undefined,
+    light,
+    dark,
+    'light',
     overrideTokens.length > 0 ? overrideTokens : undefined,
-    undefined  // preview layer (future: T103)
+    previewTokens
   );
 
   console.log(`✅ Final token count: ${mergedTokens.length}`);

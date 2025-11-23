@@ -1,0 +1,18 @@
+{
+  "semantic": {
+    "background": {
+      "primary": "var(--color-neutral-900)",
+      "secondary": "var(--color-neutral-800)",
+      "tertiary": "var(--color-neutral-700)"
+    },
+    "foreground": {
+      "primary": "var(--color-neutral-100)",
+      "secondary": "var(--color-neutral-200)",
+      "tertiary": "var(--color-neutral-300)"
+    },
+    "border": {
+      "default": "var(--color-neutral-700)",
+      "focus": "var(--color-primary-500)"
+    }
+  }
+}

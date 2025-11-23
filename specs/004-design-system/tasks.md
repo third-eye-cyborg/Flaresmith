@@ -191,13 +191,13 @@
 
 **Purpose**: Enforce token usage discipline and migrate legacy inline styles (FR-018, FR-020)
 
-- [ ] T090 [P] Create ESLint plugin at packages/config/eslint/eslint-plugin-design-tokens/index.js with rule no-inline-styles to detect style literals in TSX/JSX
-- [ ] T091 [P] Create ESLint rule no-reserved-namespaces in eslint-plugin-design-tokens to enforce FR-020 reserved namespaces (accent, primary, glass, elevation, semantic.*)
-- [ ] T092 Implement fixer for no-inline-styles rule to suggest token replacements based on color/spacing/typography mappings
-- [ ] T093 Add eslint-plugin-design-tokens to workspace ESLint config at packages/config/eslint/.eslintrc.js with rules enabled
-- [ ] T094 Create migration script at scripts/design/migrateInlineStyles.ts to scan codebase, detect inline styles, generate auto-fix suggestions
-- [ ] T095 Run migration script across apps/web and apps/mobile to measure SC-005 baseline (duplicated style literal count before)
-- [ ] T096 Document token naming conventions in specs/004-design-system/TOKEN_NAMING.md with regex patterns and examples per FR-020
+- [X] T090 [P] Create ESLint plugin at packages/config/eslint/eslint-plugin-design-tokens/index.js with rule no-inline-styles to detect style literals in TSX/JSX
+- [X] T091 [P] Create ESLint rule no-reserved-namespaces in eslint-plugin-design-tokens to enforce FR-020 reserved namespaces (accent, primary, glass, elevation, semantic.*)
+- [X] T092 Implement fixer for no-inline-styles rule to suggest token replacements based on color/spacing/typography mappings (initial suggestion logic implemented; further enhancements pending)
+- [X] T093 Add eslint-plugin-design-tokens to workspace ESLint config at packages/config/eslint/react.js with rules enabled
+- [X] T094 Create migration script at scripts/design/migrateInlineStyles.ts to scan codebase, detect inline styles, generate auto-fix suggestions
+- [X] T095 Run migration script across apps/web and apps/mobile to measure SC-005 baseline (duplicated style literal count before)
+- [X] T096 Document token naming conventions in specs/004-design-system/TOKEN_NAMING.md with regex patterns and examples per FR-020
 
 ---
 
@@ -205,15 +205,15 @@
 
 **Purpose**: Support theme mode switching and experimental token layers (FR-017, FR-019)
 
-- [ ] T097 [P] Create dark mode token layer at packages/config/tailwind/tokens.dark.json with mode-specific semantic overrides
-- [ ] T098 [P] Create light mode token layer at packages/config/tailwind/tokens.light.json (default base)
-- [ ] T099 Extend token merge utility at packages/utils/src/designSystem/mergeTokens.ts to apply mode layer based on theme preference (light/dark)
-- [ ] T100 Add theme mode selector to apps/web layout at apps/web/app/layout.tsx using next-themes package
-- [ ] T101 Add theme mode selector to apps/mobile root at apps/mobile/app/_layout.tsx using React Context
-- [ ] T102 Implement mode switch latency tracking in apps/web and apps/mobile to measure SC-006 (≤100ms web, ≤150ms mobile)
-- [ ] T103 Create experimental preview token layer at packages/config/tailwind/tokens.preview.json for design.preview mode (FR-019)
-- [ ] T104 Add preview mode toggle to token generation script at scripts/design/generateTokenConfigs.ts: inject preview layer when DESIGN_PREVIEW=true environment variable set
-- [ ] T105 Document preview mode workflow in quickstart.md: how to enable, test, and disable experimental tokens
+- [X] T097 [P] Create dark mode token layer at packages/config/tailwind/tokens.dark.json with mode-specific semantic overrides
+- [X] T098 [P] Create light mode token layer at packages/config/tailwind/tokens.light.json (default base)
+- [X] T099 Extend token merge utility at packages/utils/src/designSystem/mergeTokens.ts to apply mode layer based on theme preference (light/dark)
+- [X] T100 Add theme mode selector to apps/web layout at apps/web/app/layout.tsx using next-themes package
+- [X] T101 Add theme mode selector to apps/mobile root at apps/mobile/app/_layout.tsx using React Context
+- [X] T102 Implement mode switch latency tracking in apps/web and apps/mobile to measure SC-006 (≤100ms web, ≤150ms mobile)
+- [X] T103 Create experimental preview token layer at packages/config/tailwind/tokens.preview.json for design.preview mode (FR-019)
+- [X] T104 Add preview mode toggle to token generation script at scripts/design/generateTokenConfigs.ts: inject preview layer when DESIGN_PREVIEW=true environment variable set
+- [X] T105 Document preview mode workflow in quickstart.md: how to enable, test, and disable experimental tokens
 
 ---
 

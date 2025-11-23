@@ -37,6 +37,79 @@ curl -X POST $API/design/rollback -d '{"targetVersion":12,"rationale":"Revert af
 ## Token Layer Merge Order
 `base → semantic → mode (light/dark) → override → preview-experimental`
 
+## Preview Experimental Token Layer (FR-019)
+The preview layer enables time-boxed experimentation with new token definitions (e.g. intermediate accent scales, advanced blur levels) without persisting them to the database.
+
+| File | Purpose |
+|------|---------|
+| `packages/config/tailwind/tokens.preview.json` | Defines experimental tokens (accent.450, accent.475, glass.blur.xxl, glass.opacity.ultra, elevation.3xl) |
+
+### Enable Preview
+Set the environment variable `DESIGN_PREVIEW=true` before running the generation script:
+
+```bash
+DESIGN_PREVIEW=true pnpm exec tsx scripts/design/generateTokenConfigs.ts
+```
+
+The script will log `🧪 Loaded preview tokens` and inject the layer with priority after overrides.
+
+### Disable Preview
+Unset the variable (or set to empty) and regenerate:
+
+```bash
+unset DESIGN_PREVIEW
+pnpm exec tsx scripts/design/generateTokenConfigs.ts
+```
+
+### Safety & Governance
+1. Preview tokens never write to `design_tokens` or version snapshots.
+2. Reserved semantic namespaces (error|warning|success|info) remain protected.
+3. Drift detection compares baseline without preview; enabling preview should temporarily show diff only in preview token names.
+4. Accessibility audits SHOULD be re-run with preview active before enabling in staging.
+5. Production CI MUST run without `DESIGN_PREVIEW` unless explicitly allowed by a feature flag commit tag `[preview]`.
+
+### Rollback / Removal
+Simply regenerate without the env var. Hash should match previous non-preview version (unless other changes were introduced). This validates convergent behavior.
+
+## Mode Switching & Latency (FR-017 / SC-006)
+Dark/Light mode tokens live in:
+* `packages/config/tailwind/tokens.light.json`
+* `packages/config/tailwind/tokens.dark.json`
+
+Merge order selects one of these based on active mode. Web uses `next-themes` and mobile uses a custom React Context. Latency is measured as:
+
+```text
+latencyMs = (post-paint timestamp) - (toggle initiation timestamp)
+```
+
+### Measuring Latency
+Web: `ThemeToggle` logs `[theme-switch] mode=<mode> latencyMs=<ms>` to the console and pushes records into `window.__themeLatencyStats.web`.
+
+Mobile: Toggle logs `[mobile-theme-switch] mode=<mode> latencyMs=<ms>` and stores entries in `global.__themeLatencyStats.mobile`.
+
+### Targets
+| Platform | Target (p95) |
+|----------|--------------|
+| Web | ≤ 100ms |
+| Mobile | ≤ 150ms |
+
+Run a manual benchmark by switching modes 25 times and computing p95 from the collected array. Investigate regressions > target (suspect large re-render regions, heavy layout shifts, or synchronous token recomputation).
+
+## Success Criteria Adjusted Mapping
+| ID | Description | Source |
+|----|-------------|--------|
+| SC-001 | ≥95% semantic color parity web/mobile | snapshot diff script T029 |
+| SC-002 | Token propagation ≤5m CI | future CI metric T111 |
+| SC-003 | Accessibility AA ≥98% pairs | audit report T068 |
+| SC-004 | Override validation blocks malformed/circular 100% | override service T047-T051 |
+| SC-005 | ≥90% reduction duplicated style literals | migration baseline T095 |
+| SC-006 | Mode switch latency ≤ targets | toggle telemetry T100 + T101 + T102 |
+| SC-007 | Liquidglass fallback success ≥99% | capability metrics T045 |
+| SC-008 | Drift blocks all divergent merges | CI gate T072 |
+| SC-009 | Override bundle impact ≤ thresholds | analyzer T109 |
+| SC-010 | Rollback completes ≤60s | rollback timing T079 |
+
+
 ## Override Governance Rules
 - size_pct ≤ 5% AND no new namespaces ⇒ auto-applied
 - size_pct > 5% OR new namespace ⇒ pending-approval
