@@ -9,11 +9,15 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "clean": "turbo run clean && rm -rf node_modules .turbo"
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "import:env-secrets": "ts-node scripts/github/importEnvSecrets.ts"
   },
   "devDependencies": {
     "@turbo/gen": "^2.0.0",
+    "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^20.11.0",
+    "libsodium-wrappers": "^0.7.15",
+    "octokit": "^5.0.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "turbo": "^2.0.0",

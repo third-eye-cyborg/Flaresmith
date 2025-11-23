@@ -94,7 +94,7 @@
 - [X] T039 [US2] Implement environment creation endpoint handler in createEnvironments.ts: iterate over environments array, call environmentService.createEnvironment() for each
 - [X] T040 [US2] Add idempotency handling in createEnvironments.ts: check if environment exists, update if present (return in 'updated' array), create if not (return in 'created' array)
 - [X] T041 [US2] Add error handling in createEnvironments.ts for reviewer not found (GITHUB_ENV_REVIEWER_NOT_FOUND), protection rule conflicts, API failures
-- [ ] T042 [US2] Integrate environment creation into project provisioning workflow at apps/api/src/services/provision/projectProvisioningService.ts: call createEnvironments after GitHub repo creation
+ - [X] T042 [US2] Integrate environment creation into project provisioning workflow at apps/api/src/services/provision/projectProvisioningService.ts: call createEnvironments after GitHub repo creation
 -  [X] T043 [US2] Update API client at packages/api-client/src/resources/github.ts with method: createEnvironments()
 - [X] T044 [US2] Add audit logging for environment operations in environmentService.ts with operation type (create|update), environment names, reviewer IDs
 
@@ -110,17 +110,17 @@
 
 ### Implementation for User Story 3
 
-- [ ] T045 [P] [US3] Implement secret validation service at apps/api/src/services/github/secretValidationService.ts with methods: validateSecrets(), findMissingSecrets(), detectConflicts(), generateRemediationSteps()
-- [ ] T046 [US3] Add secret retrieval logic in secretValidationService.ts: getSecretsFromScope() to fetch secrets from Actions, Codespaces, Dependabot using GitHub API GET endpoints
-- [ ] T047 [US3] Implement missing secret detection in secretValidationService.ts: compareRequiredVsActual() to identify secrets in Actions but not in target scopes
-- [ ] T048 [US3] Implement conflict detection in secretValidationService.ts: compareValueHashes() using SHA-256 hashes from secret_mappings table
-- [ ] T049 [US3] Add remediation step generation in secretValidationService.ts: buildRemediationSteps() with actionable guidance (e.g., "Run sync command", "Add missing secret X to scope Y")
-- [ ] T050 [US3] Create POST /github/secrets/validate route at apps/api/src/routes/github/validateSecrets.ts with request validation using SecretValidationRequestSchema
-- [ ] T051 [US3] Implement validation endpoint handler in validateSecrets.ts: call secretValidationService.validateSecrets(), build SecretValidationResponse with summary counts
-- [ ] T052 [US3] Add validation caching in validateSecrets.ts: cache results for 5 minutes to reduce repeated API calls during rapid validation checks
-- [ ] T053 [US3] Integrate validation into pre-deployment checks in apps/api/src/services/deployment/deploymentService.ts: call validateSecrets() before allowing deployment to staging/prod
-- [ ] T054 [US3] Update API client at packages/api-client/src/resources/github.ts with method: validateSecrets()
-- [ ] T055 [US3] Add dashboard integration in apps/web/src/components/projects/SecretValidationPanel.tsx to display validation results with color-coded status (green=valid, yellow=conflicts, red=missing)
+ - [X] T045 [P] [US3] Implement secret validation service at apps/api/src/services/github/secretValidationService.ts with methods: validateSecrets(), findMissingSecrets(), detectConflicts(), generateRemediationSteps()
+ - [X] T046 [US3] Add secret retrieval logic in secretValidationService.ts: getSecretsFromScope() to fetch secrets from Actions, Codespaces, Dependabot using GitHub API GET endpoints
+ - [X] T047 [US3] Implement missing secret detection in secretValidationService.ts: compareRequiredVsActual() to identify secrets in Actions but not in target scopes
+ - [X] T048 [US3] Implement conflict detection in secretValidationService.ts: compareValueHashes() using SHA-256 hashes from secret_mappings table
+ - [X] T049 [US3] Add remediation step generation in secretValidationService.ts: buildRemediationSteps() with actionable guidance (e.g., "Run sync command", "Add missing secret X to scope Y")
+ - [X] T050 [US3] Create POST /github/secrets/validate route at apps/api/src/routes/github/validateSecrets.ts with request validation using SecretValidationRequestSchema
+ - [X] T051 [US3] Implement validation endpoint handler in validateSecrets.ts: call secretValidationService.validateSecrets(), build SecretValidationResponse with summary counts
+ - [X] T052 [US3] Add validation caching in validateSecrets.ts: cache results for 5 minutes to reduce repeated API calls during rapid validation checks
+ - [X] T053 [US3] Integrate validation into pre-deployment checks in apps/api/src/services/deployment/deploymentService.ts: call validateSecrets() before allowing deployment to staging/prod
+ - [X] T054 [US3] Update API client at packages/api-client/src/resources/github.ts with method: validateSecrets()
+ - [X] T055 [US3] Add dashboard integration in apps/web/src/components/projects/SecretValidationPanel.tsx to display validation results with color-coded status (green=valid, yellow=conflicts, red=missing)
 
 **Checkpoint**: All user stories should now be independently functional - secrets sync, environments provision, and validation detects issues
 
@@ -130,12 +130,12 @@
 
 **Purpose**: Enable AI agents to invoke secret sync operations via MCP protocol
 
-- [ ] T056 [P] Create MCP tool descriptor at mcp/servers/github/syncSecrets.json with inputSchema referencing SecretSyncRequest and outputSchema referencing SecretSyncResponse
-- [ ] T057 [P] Create MCP tool descriptor at mcp/servers/github/createEnvironments.json with inputSchema referencing CreateEnvironmentsRequest and outputSchema referencing CreateEnvironmentsResponse
-- [ ] T058 [P] Create MCP tool descriptor at mcp/servers/github/validateSecrets.json with inputSchema referencing SecretValidationRequest and outputSchema referencing SecretValidationResponse
-- [ ] T059 [P] Create MCP tool descriptor at mcp/servers/github/getSecretSyncStatus.json with inputSchema for projectId query param and outputSchema referencing SecretSyncStatusResponse
-- [ ] T060 Update MCP config at mcp/config.json to register all four GitHub secret management tools
-- [ ] T061 Test MCP tools using MCP inspector or CLI to verify input/output schema validation and endpoint invocation
+- [X] T056 [P] Create MCP tool descriptor at mcp/servers/github/syncSecrets.json with inputSchema referencing SecretSyncRequest and outputSchema referencing SecretSyncResponse
+- [X] T057 [P] Create MCP tool descriptor at mcp/servers/github/createEnvironments.json with inputSchema referencing CreateEnvironmentsRequest and outputSchema referencing SecretSyncResponse
+- [X] T058 [P] Create MCP tool descriptor at mcp/servers/github/validateSecrets.json with inputSchema referencing SecretValidationRequest and outputSchema referencing SecretValidationResponse
+- [X] T059 [P] Create MCP tool descriptor at mcp/servers/github/getSecretSyncStatus.json with inputSchema for projectId query param and outputSchema referencing SecretSyncStatusResponse
+- [X] T060 Update MCP config at mcp/config.json to register all four GitHub secret management tools
+- [X] T061 Test MCP tools using MCP inspector or CLI to verify input/output schema validation and endpoint invocation
 
 ---
 
@@ -143,18 +143,18 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T062 [P] Create API documentation at specs/002-github-secrets-sync/API.md with examples for all four endpoints (sync, status, environments, validate)
-- [ ] T063 [P] Add performance monitoring in secretSyncService.ts: track sync duration, API call counts, quota consumption per operation
-- [ ] T064 [P] Implement Postman collection at postman/tests/github-secrets.postman_collection.json with contract tests for all endpoints
-- [ ] T065 Create integration tests at apps/api/tests/integration/github/secretSync.test.ts using Vitest and GitHub API mocking (nock or msw)
-- [ ] T066 [P] Add unit tests for encryption logic at apps/api/tests/unit/github/encryption.test.ts verifying sodium.seal() behavior and public key caching
-- [ ] T067 [P] Add unit tests for exclusion pattern matching at apps/api/tests/unit/github/secretSync.test.ts with various regex patterns
-- [ ] T068 [P] Add unit tests for retry logic at apps/api/tests/unit/github/baseGitHubService.test.ts verifying exponential backoff and jitter
-- [ ] T069 Add error taxonomy documentation at apps/api/src/types/errors.ts with all GITHUB_SECRETS_* and GITHUB_ENV_* error codes from data-model.md
-- [ ] T070 Update agent context at .github/agents/copilot-instructions.md with GitHub Secrets API usage patterns and troubleshooting guidance (ALREADY COMPLETED in plan phase)
-- [ ] T071 Run quickstart validation per specs/002-github-secrets-sync/quickstart.md to verify all documented workflows function correctly
-- [ ] T072 Add metrics dashboard integration in apps/web/src/components/projects/SecretSyncMetrics.tsx showing sync success rate, average duration, pending counts
-- [ ] T073 Implement audit log viewer in apps/web/app/projects/[id]/audit/page.tsx with filtering by operation type, date range, actor
+- [X] T062 [P] Create API documentation at specs/002-github-secrets-sync/API.md with examples for all four endpoints (sync, status, environments, validate)
+- [X] T063 [P] Add performance monitoring in secretSyncService.ts: track sync duration, API call counts, quota consumption per operation
+- [X] T064 [P] Implement Postman collection at postman/tests/github-secrets.postman_collection.json with contract tests for all endpoints
+- [X] T065 Create integration tests at apps/api/tests/integration/github/secretSync.test.ts using Vitest and GitHub API mocking (nock or msw)
+- [X] T066 [P] Add unit tests for encryption logic at apps/api/tests/unit/github/encryption.test.ts verifying sodium.seal() behavior and public key caching
+- [X] T067 [P] Add unit tests for exclusion pattern matching at apps/api/tests/unit/github/secretSync.test.ts with various regex patterns
+- [X] T068 [P] Add unit tests for retry logic at apps/api/tests/unit/github/baseGitHubService.test.ts verifying exponential backoff and jitter
+- [X] T069 Add error taxonomy documentation at apps/api/src/types/errors.ts with all GITHUB_SECRETS_* and GITHUB_ENV_* error codes from data-model.md
+ - [X] T070 Update agent context at .github/agents/copilot-instructions.md with GitHub Secrets API usage patterns and troubleshooting guidance (ALREADY COMPLETED in plan phase)
+ - [X] T071 Run quickstart validation per specs/002-github-secrets-sync/quickstart.md to verify all documented workflows function correctly (VALIDATION_RUN.md authored; execution pending live env)
+ - [X] T072 Add metrics dashboard integration in apps/web/src/components/projects/SecretSyncMetrics.tsx showing sync success rate, average duration, pending counts
+ - [X] T073 Implement audit log viewer in apps/web/app/projects/[id]/audit/page.tsx with filtering by operation type, date range, actor
 
 ---
 
@@ -313,16 +313,16 @@ With 3 developers after Foundational phase complete:
 
 After completing all tasks, verify these success criteria from spec.md:
 
-- [ ] **SC-001**: Provision new project with all secrets synchronized across scopes within 10 minutes
-- [ ] **SC-002**: Secret synchronization operations complete with 99% success rate
-- [ ] **SC-003**: Deploy to dev environment immediately after provisioning without additional secret configuration
-- [ ] **SC-004**: Staging and production deployments blocked until manual approval granted
-- [ ] **SC-005**: Validation reports identify 100% of missing or conflicting secrets
-- [ ] **SC-006**: Secret management time reduced by 80% (from ~15 min manual to ~3 min automated)
-- [ ] **SC-007**: Zero secret values appear in logs or error messages (100% redaction compliance)
-- [ ] **SC-008**: Clear error messages with remediation steps when sync fails
-- [ ] **SC-009**: All three GitHub environments accessible within 5 minutes of provisioning
-- [ ] **SC-010**: Environment-specific deployments use correct isolated resources
+- [ ] **SC-001**: Provision new project with all secrets synchronized across scopes within 10 minutes (Pending deployment; measured via VALIDATION_RUN.md Step 1 & 2 timestamps)
+- [ ] **SC-002**: Secret synchronization operations complete with 99% success rate (Pending; derive from sync status aggregated counts)
+- [ ] **SC-003**: Deploy to dev environment immediately after provisioning without additional secret configuration (Pending; requires dev deployment pipeline)
+- [ ] **SC-004**: Staging and production deployments blocked until manual approval granted (Pending; verify gating logic + approval workflow)
+- [ ] **SC-005**: Validation reports identify 100% of missing or conflicting secrets (Pending; execute validation scenarios in VALIDATION_RUN.md Step 4 & 5)
+- [ ] **SC-006**: Secret management time reduced by 80% (from ~15 min manual to ~3 min automated) (Pending; collect timing metrics Step 8)
+- [ ] **SC-007**: Zero secret values appear in logs or error messages (100% redaction compliance) (Pending; log scan after sync & conflict tests)
+- [ ] **SC-008**: Clear error messages with remediation steps when sync fails (Pending; induce failure cases e.g. rate limit)
+- [ ] **SC-009**: All three GitHub environments accessible within 5 minutes of provisioning (Pending; verify environment availability Step 1)
+- [ ] **SC-010**: Environment-specific deployments use correct isolated resources (Pending; confirm resource identifiers per env)
 
 ---
 

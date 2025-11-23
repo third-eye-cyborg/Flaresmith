@@ -5,14 +5,18 @@
 
 import { CloudMakeClient } from '../client';
 import {
-  SecretSyncRequestSchema,
   SecretSyncResponseSchema,
   SecretSyncStatusResponseSchema,
-    CreateEnvironmentsRequestSchema,
-    CreateEnvironmentsResponseSchema,
+  SecretValidationResponseSchema,
+  CreateEnvironmentsResponseSchema,
+  SecretSyncRequestSchema,
+  SecretValidationRequestSchema,
+  CreateEnvironmentsRequestSchema,
   type SecretSyncRequest,
   type SecretSyncResponse,
   type SecretSyncStatusResponse,
+  type SecretValidationRequest,
+  type SecretValidationResponse,
   type CreateEnvironmentsRequest,
   type CreateEnvironmentsResponse,
 } from '@flaresmith/types';
@@ -37,6 +41,22 @@ export class GitHubResource {
       `/github/secrets/sync/status?projectId=${encodeURIComponent(projectId)}`,
       SecretSyncStatusResponseSchema
     );
+  }
+
+  /**
+   * Validate secrets presence & conflicts
+   * POST /github/secrets/validate
+   */
+  async validateSecrets(request: SecretValidationRequest): Promise<SecretValidationResponse> {
+    return this.client.post('/github/secrets/validate', SecretValidationResponseSchema, request);
+  }
+
+  /**
+   * Create GitHub environments with protection rules and secrets
+   * POST /github/environments
+   */
+  async createEnvironments(request: CreateEnvironmentsRequest): Promise<CreateEnvironmentsResponse> {
+    return this.client.post('/github/environments', CreateEnvironmentsResponseSchema, request);
   }
 }
 

@@ -359,3 +359,109 @@ Before proposing changes, verify:
 ---
 
 **Remember**: CloudMake is dogfooding itself. Improvements to the platform's template propagate to all future projects. Code with care.
+
+## GitHub Secrets & Environments: Agent Usage Patterns (Feature 002)
+
+### Core Endpoints (Secrets + Validation + Environments)
+
+| Purpose | Method & Path | Typical Input | Typical Output | Idempotent? |
+|---------|---------------|---------------|----------------|-------------|
+| Bulk secret sync (Actions → Codespaces/Dependabot/Cloudflare) | POST /github/secrets/sync | `{ projectId: string, force?: boolean }` | `{ synced: number, skipped: number, conflicts: number, durationMs: number, quotaRemaining: number }` | Yes |
+| Sync status snapshot | GET /github/secrets/sync/status?projectId=... | query `projectId` | Aggregated counts, quota, last sync times | Yes |
+| Environment provisioning (dev/staging/prod) | POST /github/environments | `{ projectId, environments: [ { name: 'dev', reviewers?: string[] } ] }` | `{ created: string[], updated: string[], conflicts?: string[] }` | Yes (create-or-update) |
+| Secret validation + conflict detection | POST /github/secrets/validate | `{ projectId, scopes?: string[] }` | `{ missing: string[], conflicts: Array<{ name: string, scopes: string[] }>, remediation: string[] }` | Cached 5m |
+
+### Agent Invocation Guidance
+
+1. ALWAYS read spec at `specs/002-github-secrets-sync/spec.md` before suggesting changes.
+2. For automation flows: call validation FIRST, then sync if remediation requires it.
+3. For environment provisioning: generate stable idempotency key = `${projectId}-environment-${envName}` internally; do not re-implement.
+4. Back off on sync operations if quota service reports insufficient remaining calls.
+
+### Error Taxonomy Quick Reference (codes defined in `apps/api/src/types/errors.ts`)
+
+| Category | Example Codes | Retry Policy | Agent Action |
+|----------|---------------|--------------|--------------|
+| Secrets | GITHUB_SECRETS_RATE_LIMIT_EXHAUSTED, GITHUB_SECRETS_ENCRYPTION_FAILED | after_delay / exponential_backoff | Surface wait time; schedule retry respecting `Retry-After` |
+| Environments | GITHUB_ENV_REVIEWER_NOT_FOUND, GITHUB_ENV_PROTECTION_CONFLICT | none | Prompt user to adjust reviewers / protection rules |
+| Validation | GITHUB_VALIDATION_CONFLICT_DETECTED | manual | Present remediation steps before deployment |
+| Integration | GITHUB_INTEGRATION_UNAVAILABLE | none | Fail fast; offer diagnostics (check PAT scopes) |
+
+### Troubleshooting Cheatsheet
+
+| Symptom | Probable Cause | Diagnostic Step | Resolution |
+|---------|----------------|-----------------|-----------|
+| Encryption failed | Public key stale or sodium failure | Re-fetch /repos/:owner/:repo/actions/secrets/public-key | Retry with fresh key (cache TTL 5m) |
+| Secrets missing in target scopes | Exclusion pattern matched or prior sync failure | Check secret_exclusion_patterns table & last sync event | Remove pattern or re-run sync with `force` |
+| Validation conflicts persist | Stale hash in secret_mappings | Trigger full sync (not incremental) | Run POST /github/secrets/sync with `force:true` |
+| Rate limit exhaustion | Burst of parallel syncs | Inspect quotaService and GitHub headers | Stagger operations, apply jitter |
+| Environment not updating reviewers | Protection rule mismatch | GET environment details (audit log) | Re-run provisioning; ensure reviewer GitHub IDs valid |
+
+### Safe Operation Rules
+
+1. NEVER log raw secret values; only names + hashed digests (SHA-256) are permitted.
+2. ALWAYS attach correlationId to sync + validate operations for cross-log diffusion.
+3. Respect exponential backoff: base delay 1000ms, multiplier 2, jitter ±20%, max 3 attempts (services already implement).
+4. Treat all sync operations as convergent: no duplicate writes, absence of error implies stable state.
+5. Use validation before deployment gating (staging/prod) to enforce SC-005, SC-008.
+
+### Agent Decision Flow (Pseudocode)
+
+```text
+IF goal == "ensure secrets healthy" THEN
+  validation = POST /github/secrets/validate
+  IF validation.missing.length + validation.conflicts.length == 0 THEN
+     RETURN "Healthy"
+  ELSE
+     sync = POST /github/secrets/sync (force if conflicts)
+     RETURN sync.summary
+ENDIF
+
+IF goal == "provision environments" THEN
+  POST /github/environments (idempotent)
+  VERIFY via GET /github/secrets/sync/status
+ENDIF
+
+IF issue == rate_limit THEN
+  WAIT per `Retry-After` or apply backoff schedule
+  REISSUE previous request with same parameters
+ENDIF
+```
+
+### Data Integrity Guarantees
+
+| Guarantee | Mechanism |
+|-----------|-----------|
+| Idempotent secret sync | Compare value hash before write; skip unchanged |
+| Conflict detection | SHA-256 digest comparison across scopes |
+| Exclusion enforcement | Regex evaluation against DB-driven patterns |
+| Quota safety | quotaService.checkQuota() gating writes |
+| Audit trail | secret_sync_events (operationType, duration, counts) |
+
+### When NOT To Retry Automatically
+
+- Reviewer / protection rule errors (user configuration required)
+- Validation conflict after force sync (indicates external mutation)
+- Integration unavailable (permission / token scope issue)
+
+### Required PAT Scopes for GitHub Operations
+
+| Operation | Required Scopes |
+|-----------|-----------------|
+| Actions secrets read/write | `repo`, `actions` |
+| Codespaces secrets write | `repo`, `codespaces` |
+| Dependabot secrets write | `repo`, `dependabot` |
+| Environment provisioning | `repo` |
+
+### Redaction Patterns (Middleware)
+
+Patterns include generic API keys, AWS keys, GitHub tokens, connection strings. Agents MUST avoid echoing any value matching these patterns back to users.
+
+### Deployment Readiness Gates (Feature 002)
+
+| Gate | Condition |
+|------|-----------|
+| Staging deploy allowed | Validation report has no missing secrets |
+| Prod deploy allowed | Validation report clean AND environments provisioned |
+
+---
