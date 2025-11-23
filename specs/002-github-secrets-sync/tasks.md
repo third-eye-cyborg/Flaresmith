@@ -18,13 +18,13 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create database schema file at apps/api/db/schema/secretSync.ts with all entities from data-model.md
-- [ ] T002 [P] Create Zod schemas for secret sync at packages/types/src/github/secretSync.ts
-- [ ] T003 [P] Create Zod schemas for environments at packages/types/src/github/environments.ts
-- [ ] T004 [P] Create Zod schemas for validation at packages/types/src/github/validation.ts
-- [ ] T005 Create database migration 002-001 at apps/api/db/migrations/002-001-create-secret-sync-tables.sql
-- [ ] T006 Run database migration to create tables (secret_mappings, github_environment_configs, secret_sync_events, secret_exclusion_patterns, github_api_quotas)
-- [ ] T007 Seed global exclusion patterns in secret_exclusion_patterns table (GITHUB_TOKEN, ACTIONS_*, RUNNER_*, CI, etc.)
+- [X] T001 Create database schema file at apps/api/db/schema/secretSync.ts with all entities from data-model.md
+- [X] T002 [P] Create Zod schemas for secret sync at packages/types/src/github/secretSync.ts
+- [X] T003 [P] Create Zod schemas for environments at packages/types/src/github/environments.ts
+- [X] T004 [P] Create Zod schemas for validation at packages/types/src/github/validation.ts
+- [X] T005 Create database migration 002-001 at apps/api/db/migrations/002-001-create-secret-sync-tables.sql
+- [X] T006 Run database migration to create tables (secret_mappings, github_environment_configs, secret_sync_events, secret_exclusion_patterns, github_api_quotas)
+- [X] T007 Seed global exclusion patterns in secret_exclusion_patterns table (GITHUB_TOKEN, ACTIONS_*, RUNNER_*, CI, etc.)
 
 ---
 

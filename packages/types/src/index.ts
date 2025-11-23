@@ -11,6 +11,10 @@ export * from "./api/security";
 export * from "./api/chat";
 export * from "./common/error";
 export * from "./common/pagination";
+// GitHub Schemas
+export * from "./github/secretSync";
+export * from "./github/environments";
+export * from "./github/validation";
 // MCP Schemas
 export * from "./mcp/cloudflare";
 export * from "./mcp/posthog";
