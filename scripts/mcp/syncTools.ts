@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
 /**
  * MCP Tool Sync Script
@@ -9,8 +9,8 @@
  * Usage: pnpm exec ts-node scripts/mcp/syncTools.ts --project <projectId>
  */
 
-import { readdir, readFile } from 'fs/promises';
-import { join } from 'path';
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { z } from 'zod';
 
 const MCPToolSchema = z.object({

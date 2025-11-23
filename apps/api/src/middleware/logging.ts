@@ -9,7 +9,7 @@ import { redactLogPayload } from "../lib/loggerRedaction";
  */
 
 const logger = pino({
-  level: process.env.LOG_LEVEL || "info",
+  level: "info", // Default level, will be overridden from context
   redact: {
     paths: [
       "*.password",

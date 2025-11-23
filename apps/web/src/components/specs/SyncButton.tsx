@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { CloudMakeClient, SpecsResource } from "@cloudmake/api-client";
-import type { ApplySpecResponse } from "@cloudmake/types";
+import { useState } from "react";
+import { CloudMakeClient, SpecsResource } from "@flaresmith/api-client";
+import type { ApplySpecResponse } from "@flaresmith/types";
 
 type SyncButtonProps = {
   projectId: string;

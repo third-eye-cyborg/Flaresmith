@@ -37,7 +37,7 @@ export class NotificationService {
    * Initialize OneSignal
    * Call this in app startup (_layout.tsx)
    */
-  async initialize(appId: string): Promise<void> {
+  async initialize(_appId: string): Promise<void> {
     if (this.initialized) {
       console.warn("NotificationService already initialized");
       return;

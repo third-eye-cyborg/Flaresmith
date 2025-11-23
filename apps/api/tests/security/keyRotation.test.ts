@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateKeyRotationCompliance, JwtKeyRecord } from '../../src/security/keyRotationCompliance';
+import { evaluateKeyRotationCompliance, type JwtKeyRecord } from '../../src/security/keyRotationCompliance';
 
 function daysAgo(days: number): Date {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000);

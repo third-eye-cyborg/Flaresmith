@@ -8,7 +8,12 @@
     "cloudflare": {
       "command": "node",
       "args": ["./mcp/servers/cloudflare/index.js"],
-      "tools": []
+      "tools": [
+        "cloudflare.deployWorker",
+        "cloudflare.deployPages",
+        "cloudflare.workerStatus",
+        "cloudflare.pagesStatus"
+      ]
     },
     "neon": {
       "command": "node",

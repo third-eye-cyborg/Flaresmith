@@ -1,7 +1,5 @@
 "use client";
-
-import React from "react";
-import type { ApplySpecResponse } from "@cloudmake/types";
+import type { ApplySpecResponse } from "@flaresmith/types";
 
 type DriftReportProps = {
   report?: ApplySpecResponse | null;

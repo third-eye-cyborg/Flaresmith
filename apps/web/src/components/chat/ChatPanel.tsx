@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReconnectingWebSocketClient } from "@cloudmake/api-client";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };

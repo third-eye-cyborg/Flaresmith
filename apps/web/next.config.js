@@ -2,9 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: [
-    "@cloudmake/api-client",
-    "@cloudmake/types",
-    "@cloudmake/utils",
+    "@flaresmith/api-client",
+    "@flaresmith/types",
+    "@flaresmith/utils",
   ],
   experimental: {
     typedRoutes: true,

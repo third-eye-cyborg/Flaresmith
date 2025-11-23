@@ -1,5 +1,5 @@
 {
-  "name": "@cloudmake/web",
+  "name": "@flaresmith/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,15 +13,15 @@
     "next": "^14.2.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "@cloudmake/api-client": "workspace:*",
-    "@cloudmake/types": "workspace:*",
-    "@cloudmake/utils": "workspace:*",
+    "@flaresmith/api-client": "workspace:*",
+    "@flaresmith/types": "workspace:*",
+    "@flaresmith/utils": "workspace:*",
     "@tanstack/react-query": "^5.28.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cloudmake/config-eslint": "workspace:*",
-    "@cloudmake/config-tsconfig": "workspace:*",
+    "@flaresmith/config-eslint": "workspace:*",
+    "@flaresmith/config-tsconfig": "workspace:*",
     "@types/node": "^20.11.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",

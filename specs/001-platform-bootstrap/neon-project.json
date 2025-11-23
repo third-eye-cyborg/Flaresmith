@@ -1,0 +1,10 @@
+{
+  "projectId": "autumn-unit-81618590",
+  "branches": {
+    "main": "br-sparkling-silence-ahajm2k2",
+    "dev": "br-misty-base-ah2g935t",
+    "staging": "br-raspy-poetry-ahesy73s",
+    "prod": "br-cool-feather-ahm11boj"
+  },
+  "notes": "Connection credentials omitted intentionally. Use environment variables for secrets."
+}

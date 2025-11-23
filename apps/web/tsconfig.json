@@ -1,13 +1,13 @@
 {
-  "extends": "@cloudmake/config-tsconfig/react.json",
+  "extends": "@flaresmith/config-tsconfig/react.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*", "./app/*"],
-      "@cloudmake/api-client": ["../../packages/api-client/src"],
-      "@cloudmake/types": ["../../packages/types/src"],
-      "@cloudmake/utils": ["../../packages/utils/src"],
-      "@cloudmake/ui": ["../../packages/ui/src"]
+      "@flaresmith/api-client": ["../../packages/api-client/src"],
+      "@flaresmith/types": ["../../packages/types/src"],
+      "@flaresmith/utils": ["../../packages/utils/src"],
+      "@flaresmith/ui": ["../../packages/ui/src"]
     },
     "rootDir": "../..",
     "jsx": "react-jsx",

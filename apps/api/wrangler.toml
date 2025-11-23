@@ -4,7 +4,7 @@ compatibility_date = "2024-01-01"
 
 # Workers configuration
 workers_dev = true
-compatibility_flags = ["nodejs_compat"]
+compatibility_flags = ["nodejs_compat_v2"]
 
 # Observability
 observability = { enabled = true }
@@ -12,31 +12,15 @@ observability = { enabled = true }
 # Routes
 [env.development]
 name = "cloudmake-api-dev"
-vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug" }
-route = { pattern = "api-dev.cloudmake.dev/*", zone_name = "cloudmake.dev" }
-
-[env.development.limits]
-cpu_ms = 50
+vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__" }
 
 [env.staging]
 name = "cloudmake-api-staging"
-vars = { ENVIRONMENT = "staging", LOG_LEVEL = "info" }
-route = { pattern = "api-staging.cloudmake.dev/*", zone_name = "cloudmake.dev" }
-
-[env.staging.limits]
-cpu_ms = 50
+vars = { ENVIRONMENT = "staging", LOG_LEVEL = "info", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__" }
 
 [env.production]
 name = "cloudmake-api-prod"
-vars = { ENVIRONMENT = "production", LOG_LEVEL = "warn" }
-route = { pattern = "api.cloudmake.dev/*", zone_name = "cloudmake.dev" }
-
-[env.production.limits]
-cpu_ms = 50
-
-# Build configuration
-[build]
-command = "pnpm build"
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "warn", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__" }
 
 # Development settings
 [dev]

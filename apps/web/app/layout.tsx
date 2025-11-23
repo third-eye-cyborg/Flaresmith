@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CloudMake - Multi-Environment Orchestration Platform",
+  title: "Flaresmith - Multi-Environment Orchestration Platform",
   description: "Spec-first orchestration for GitHub, Cloudflare, Neon, and Postman",
 };
 

@@ -1,4 +1,4 @@
-import { Context } from "hono";
+import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { currentTraceId } from "../lib/telemetry";
 import { incrementCounter, METRICS } from "../lib/metrics";

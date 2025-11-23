@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: CloudMake Platform API
-  version: 0.1.0
+  title: Flaresmith Platform API
+  version: 0.1.1
   description: API for project provisioning, environment dashboard, spec-driven sync, and chat operations.
 servers:
   - url: https://api.cloudmake.example.com

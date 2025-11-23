@@ -1,10 +1,9 @@
 import { CloudMakeClient } from "../client";
 import {
-  ApplyDiffRequestSchema,
   ApplyDiffResponseSchema,
   type ApplyDiffRequest,
   type ApplyDiffResponse,
-} from "@cloudmake/types";
+} from "@flaresmith/types";
 
 export class ChatResource {
   constructor(private client: CloudMakeClient) {}

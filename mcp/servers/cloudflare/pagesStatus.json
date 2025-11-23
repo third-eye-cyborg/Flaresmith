@@ -1,0 +1,6 @@
+{
+  "name": "cloudflare.pagesStatus",
+  "description": "Fetches deployment status for a Cloudflare Pages project by environment",
+  "inputSchema": { "$ref": "packages/types/src/mcp/cloudflare.ts#PagesStatusInput" },
+  "outputSchema": { "$ref": "packages/types/src/mcp/cloudflare.ts#PagesStatusOutput" }
+}

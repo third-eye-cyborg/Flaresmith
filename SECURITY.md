@@ -2,13 +2,13 @@
 
 ## Reporting Security Issues
 
-If you discover a security vulnerability in CloudMake, please report it by emailing security@cloudmake.example.com. Do not open public issues for security vulnerabilities.
+If you discover a security vulnerability in Flaresmith, please report it by emailing security@flaresmith.example.com. Do not open public issues for security vulnerabilities.
 
 ## Secrets Management
 
 ### Required Secrets
 
-CloudMake requires the following secrets to be configured:
+Flaresmith requires the following secrets to be configured:
 
 - `GITHUB_APP_PRIVATE_KEY` - GitHub App private key for repo and Codespace provisioning
 - `GITHUB_APP_ID` - GitHub App ID
@@ -30,7 +30,7 @@ All tokens and API keys MUST be scoped to minimum required permissions:
 
 ### Secret Scanning
 
-CloudMake enforces automatic secret scanning:
+Flaresmith enforces automatic secret scanning:
 
 1. **Pre-commit Hook**: Scans staged files for secret patterns before commit
 2. **CI Validation**: GitHub Actions workflow validates all commits for leaked secrets
@@ -74,5 +74,5 @@ Discovered vulnerabilities are handled with the following timeline:
 
 ## Security Contacts
 
-- Security Team: security@cloudmake.example.com
+- Security Team: security@flaresmith.example.com
 - GPG Key: [Link to public key]

@@ -1,12 +1,11 @@
 import { CloudMakeClient } from "../client";
 import {
-  CreateProjectRequestSchema,
   CreateProjectResponseSchema,
   GetProjectResponseSchema,
   type CreateProjectRequest,
   type CreateProjectResponse,
   type GetProjectResponse,
-} from "@cloudmake/types";
+} from "@flaresmith/types";
 
 export class ProjectsResource {
   constructor(private client: CloudMakeClient) {}

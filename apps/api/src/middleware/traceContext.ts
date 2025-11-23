@@ -1,4 +1,4 @@
-import { Context, Next } from 'hono';
+import type { Context, Next } from 'hono';
 import { trace, context } from '@opentelemetry/api';
 import { getTracer } from '../lib/telemetry';
 import { incrementCounter, METRICS } from '../lib/metrics';

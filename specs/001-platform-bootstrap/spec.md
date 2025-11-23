@@ -3,7 +3,7 @@
 **Feature Branch**: `001-platform-bootstrap`  
 **Created**: 2025-11-21  
 **Status**: Draft  
-**Input**: User blueprint describing CloudMake orchestration platform
+**Input**: User blueprint describing Flaresmith orchestration platform (formerly CloudMake)
 
 ## Clarifications
 

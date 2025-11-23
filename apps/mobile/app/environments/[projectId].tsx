@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, RefreshControl } from "react-native";
-import { View, Text } from "@cloudmake/ui";
-import { usePollingStatus } from "@cloudmake/utils";
+import { View, Text } from "@flaresmith/ui";
+import { usePollingStatus } from "@flaresmith/utils";
 import { useLocalSearchParams } from "expo-router";
 
 /**

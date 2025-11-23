@@ -37,12 +37,12 @@ describe('Idempotency Convergence (T173 / FR-021)', () => {
   it('returns 201 on first creation and 200 with identical result on second', async () => {
     const first = await app.request('/projects', { method: 'POST', body: JSON.stringify(body) });
     expect(first.status).toBe(201);
-    const firstJson = await first.json();
+    const firstJson = await first.json() as any;
     expect(firstJson.projectId).toBeDefined();
 
     const second = await app.request('/projects', { method: 'POST', body: JSON.stringify(body) });
     expect(second.status).toBe(200);
-    const secondJson = await second.json();
+    const secondJson = await second.json() as any;
     expect(secondJson.projectId).toBe(firstJson.projectId);
     expect(secondJson.slug).toBe(body.slug);
     expect(secondJson.status).toBe('active');

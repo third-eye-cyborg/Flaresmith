@@ -2,8 +2,6 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { GetProjectRequestSchema } from "@cloudmake/types";
 import { ProjectService } from "../../services/projectService";
-import { getDb } from "../../../db/connection";
-import { getEnv } from "@cloudmake/utils";
 
 /**
  * T050: Implement GET /projects/:id endpoint
@@ -32,12 +30,13 @@ app.get("/:id", async (c) => {
       );
     }
 
-    // Get project service
+    // DI: instantiate ProjectService with direct Worker bindings (no global shim)
     const projectService = new ProjectService({
-      githubToken: getEnv("GITHUB_TOKEN"),
-      neonApiKey: getEnv("NEON_API_KEY"),
-      cloudflareToken: getEnv("CLOUDFLARE_API_TOKEN"),
-      postmanApiKey: getEnv("POSTMAN_API_KEY"),
+      githubToken: c.env.GITHUB_TOKEN,
+      neonApiKey: c.env.NEON_API_KEY,
+      cloudflareToken: c.env.CLOUDFLARE_API_TOKEN,
+      postmanApiKey: c.env.POSTMAN_API_KEY,
+      bindings: c.env,
     });
 
     const project = await projectService.getProject(projectId);

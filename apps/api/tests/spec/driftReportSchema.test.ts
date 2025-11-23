@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DriftReportSchema, DriftConflictSchema, DriftChangedFileSchema } from '@cloudmake/types';
+import { DriftReportSchema, DriftConflictSchema, DriftChangedFileSchema } from '@flaresmith/types';
 
 /**
  * T169: Drift Report Schema Validation Tests

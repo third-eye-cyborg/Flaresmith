@@ -47,13 +47,11 @@ const CodeMirror: any = dynamic(
 export function SpecEditor({
   value,
   onChange,
-  language = "markdown",
   readOnly,
   className,
   height = 360,
 }: SpecEditorProps) {
   const handleChange = useCallback(
-    // @ts-expect-error third-party type surface varies; normalize to string
     (val: string) => {
       onChange?.(String(val ?? ""));
     },

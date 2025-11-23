@@ -1,6 +1,6 @@
 import type { Context, Next } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { circuitBreakerRegistry } from "@cloudmake/utils/src/reliability/externalPolicy";
+import { circuitBreakerRegistry } from "@flaresmith/utils/src/reliability/externalPolicy";
 import { incrementCounter, METRICS, observeHistogram } from "../lib/metrics";
 
 /**

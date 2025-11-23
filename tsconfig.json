@@ -3,12 +3,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@cloudmake/ui": ["./packages/ui/src"],
-      "@cloudmake/types": ["./packages/types/src"],
-      "@cloudmake/api-client": ["./packages/api-client/src"],
-      "@cloudmake/utils": ["./packages/utils/src"],
-      "@cloudmake/config": ["./packages/config"]
-    }
+      "@flaresmith/ui": ["./packages/ui/src"],
+      "@flaresmith/types": ["./packages/types/src"],
+      "@flaresmith/api-client": ["./packages/api-client/src"],
+      "@flaresmith/utils": ["./packages/utils/src"],
+      "@flaresmith/config": ["./packages/config"]
+    },
+    "types": ["node"]
   },
   "exclude": ["node_modules", "dist", "build", ".next", ".turbo"]
 }

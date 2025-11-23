@@ -23,7 +23,7 @@ describe('errorHandler traceId inclusion', () => {
     const app = createTestApp();
     const res = await app.request('/validate', { method: 'POST', body: JSON.stringify({}) });
     expect(res.status).toBe(400);
-    const json = await res.json();
+    const json = await res.json() as any;
     expect(json.error).toBeDefined();
     expect(json.error.code).toBe('VALIDATION_ERROR');
     expect(json.error.context).toBeDefined();

@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 
 export function DiffPreview({ diffs }: { diffs: Array<{ path: string; patch: string }> }) {
   if (!diffs?.length) return null;

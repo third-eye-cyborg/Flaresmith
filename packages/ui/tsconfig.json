@@ -1,9 +1,10 @@
 {
-  "extends": "@cloudmake/config-tsconfig/react.json",
+  "extends": "@flaresmith/config-tsconfig/react.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["nativewind/types"]
   },
-  "include": ["src"],
+  "include": ["src", "nativewind-env.d.ts", "nativewind-classname.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

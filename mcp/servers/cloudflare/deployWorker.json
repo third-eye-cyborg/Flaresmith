@@ -1,45 +1,6 @@
 {
   "name": "cloudflare.deployWorker",
-  "description": "Deploys a Cloudflare Worker script",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "accountId": {
-        "type": "string",
-        "description": "Cloudflare account ID"
-      },
-      "name": {
-        "type": "string",
-        "description": "Worker name"
-      },
-      "script": {
-        "type": "string",
-        "description": "Worker script content"
-      },
-      "bindings": {
-        "type": "object",
-        "description": "Worker bindings configuration",
-        "additionalProperties": true
-      }
-    },
-    "required": ["accountId", "name", "script"]
-  },
-  "outputSchema": {
-    "type": "object",
-    "properties": {
-      "workerId": {
-        "type": "string",
-        "description": "Deployed worker ID"
-      },
-      "url": {
-        "type": "string",
-        "description": "Worker URL"
-      },
-      "subdomain": {
-        "type": "string",
-        "description": "Worker subdomain (e.g., worker.workers.dev)"
-      }
-    },
-    "required": ["workerId", "url", "subdomain"]
-  }
+  "description": "Deploys (idempotent) a Cloudflare Worker script and returns deployment metadata",
+  "inputSchema": { "$ref": "packages/types/src/mcp/cloudflare.ts#DeployWorkerInput" },
+  "outputSchema": { "$ref": "packages/types/src/mcp/cloudflare.ts#DeployWorkerOutput" }
 }

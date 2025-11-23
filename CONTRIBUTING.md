@@ -1,10 +1,10 @@
-# Contributing to CloudMake
+# Contributing to Flaresmith
 
-Thank you for your interest in contributing to CloudMake! This guide will help you understand our spec-first development workflow.
+Thank you for your interest in contributing to Flaresmith! This guide will help you understand our spec-first development workflow.
 
 ## Spec-First Development Workflow
 
-**All material changes to CloudMake originate from feature specifications.** Never start with code—always start with a spec.
+**All material changes to Flaresmith originate from feature specifications.** Never start with code—always start with a spec.
 
 ### 1. Create or Update Specification
 
@@ -31,7 +31,7 @@ specs/001-platform-bootstrap/
 
 ### 2. Generate Code from Specs
 
-CloudMake uses automated code generation:
+Flaresmith uses automated code generation:
 
 ```bash
 # Generate Zod schemas, Drizzle models, routes from spec

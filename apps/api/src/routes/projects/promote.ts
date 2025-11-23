@@ -3,7 +3,6 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { PromotionService } from "../../services/promotionService";
 import { getDb } from "../../../db/connection";
-import { getEnv } from "@cloudmake/utils";
 
 /**
  * T070: POST /projects/:id/promote endpoint
@@ -30,7 +29,7 @@ app.post(
     const { id: projectId } = c.req.valid("param");
     const { sourceEnvironment, targetEnvironment } = c.req.valid("json");
 
-    const db = getDb(getEnv("DATABASE_URL"));
+    const db = getDb(c.env.DATABASE_URL);
     const promotionService = new PromotionService(db);
 
     try {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SecretAuditRecordSchema } from '@cloudmake/types';
+import { SecretAuditRecordSchema } from '@flaresmith/types';
 
 describe('SecretAuditRecordSchema (FR-036)', () => {
   const base = {

@@ -52,16 +52,24 @@ export class ProjectService {
     neonApiKey: string;
     cloudflareToken: string;
     postmanApiKey: string;
+    bindings?: Record<string, any>;
   }) {
     this.githubToken = config.githubToken;
     this.neonApiKey = config.neonApiKey;
     this.cloudflareToken = config.cloudflareToken;
     this.postmanApiKey = config.postmanApiKey;
+    this.bindings = config.bindings;
   }
+
+  private bindings?: Record<string, any>;
 
   async createProject(input: CreateProjectInput): Promise<CreateProjectOutput> {
     return withSpan('ProjectService.createProject', { attributes: { projectSlug: input.slug } }, async () => {
-    const db = getDb(getEnv("DATABASE_URL"));
+    const databaseUrl = this.bindings?.DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error("MISSING_DATABASE_URL_BINDING");
+    }
+    const db = getDb(databaseUrl);
     const { name, slug, orgId, integrations: integrationConfig = {} } = input;
 
     try {
@@ -204,7 +212,7 @@ export class ProjectService {
       if (integrationConfig.cloudflare) {
         try {
           const cloudflareService = new CloudflareDeployService(this.cloudflareToken);
-          const accountId = process.env.CLOUDFLARE_ACCOUNT_ID || "";
+          const accountId = this.bindings?.CLOUDFLARE_ACCOUNT_ID || "";
 
           // Create Pages project
           const pages = await cloudflareService.deployPages({
@@ -331,7 +339,11 @@ export class ProjectService {
   async getProject(projectId: string) {
     return withSpan('ProjectService.getProject', { attributes: { projectId } }, async () => {
     try {
-      const db = getDb(getEnv("DATABASE_URL"));
+      const databaseUrl = this.bindings?.DATABASE_URL;
+      if (!databaseUrl) {
+        throw new Error("MISSING_DATABASE_URL_BINDING");
+      }
+      const db = getDb(databaseUrl);
       const [project] = await db.select().from(projects).where(eq(projects.id, projectId));
 
       if (!project) {

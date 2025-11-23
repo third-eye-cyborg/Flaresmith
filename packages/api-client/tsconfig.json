@@ -1,8 +1,10 @@
 {
-  "extends": "@cloudmake/config-tsconfig/base.json",
+  "extends": "@flaresmith/config-tsconfig/base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "lib": ["ES2022", "DOM"],
+    "types": ["node", "react"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

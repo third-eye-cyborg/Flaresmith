@@ -1,7 +1,7 @@
 # Research: Platform Bootstrap
 
 ## Overview
-Phase 0 resolves clarifications and establishes key implementation decisions for adapters, testing strategy, MCP client library selection, and CodeMirror scaling.
+Phase 0 resolves clarifications and establishes key implementation decisions for adapters, testing strategy, MCP client library selection, and CodeMirror scaling. Branding note: Project renamed to Flaresmith (formerly CloudMake) — decisions unaffected.
 
 ## Decisions
 

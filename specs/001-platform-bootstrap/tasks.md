@@ -280,10 +280,27 @@ Based on plan.md structure:
  - [X] T176 [P] Implement preview environment cap enforcement test (FR-034) verifying 15-env limit and 409 ENV_PREVIEW_LIMIT_REACHED response in apps/api/tests/environments/previewCap.test.ts
  - [X] T177 [P] Implement audit functional operations test (FR-036) verifying audit log entries on secret read/update/rotate actions in apps/api/tests/security/auditOperations.test.ts
 
+  # Cloudflare Pages Status Extension (2025-11-22)
+  - [X] T178 [P] Add Cloudflare Pages status input/output schemas (PagesStatusInput/PagesStatusOutput) in packages/types/src/mcp/cloudflare.ts and descriptor mcp/servers/cloudflare/pagesStatus.json
+  - [X] T179 [P] Register cloudflare.pagesStatus in mcp/config.json and implement integration test apps/api/tests/integration/cloudflarePagesStatus.test.ts
+
+    # Dependency Injection Route Refactor (2025-11-22)
+    - [X] T180 [P] Refactor projects/create route to inject bindings via c.env instead of getEnv/global shim
+    - [X] T181 [P] Refactor projects/get route to use DI ProjectService with bindings
+    - [X] T182 [P] Refactor projects/environments route to use direct c.env.DATABASE_URL
+    - [X] T183 [P] Refactor projects/promote route to use direct c.env.DATABASE_URL
+    - [X] T184 [P] Append DI tasks and mark completed; prepare for envShim removal follow-up task (future T185)
+
+    # React Native Web Typing Fix (2025-11-22)
+    - [X] T185 [P] Add React Native Web className type augmentation in packages/ui/src/react-native-web.d.ts to resolve 38 className prop errors
+
+    # Remaining Type Safety Tasks (2025-11-22)
+    - [X] T186 [P] Enable strict mode in apps/api/tsconfig.json and fix remaining 95 TypeScript errors (type narrowing on external API responses, unused variables, type assertions)
+    - [X] T187 [P] Complete environment shim removal: update PreviewService, ProjectService, previewMetricsUpdater to require injected env, delete deprecated shim file
+
 ---
 
 ## Dependencies & Execution Order
-
 ### Phase Dependencies
 
 - **Setup (Phase 1)**: No dependencies - can start immediately
@@ -389,7 +406,7 @@ With multiple developers:
 
 ## Summary Statistics
 
- - **Total Tasks**: 167 (added T163–T170 coverage tasks + T171–T177 analysis-identified test tasks; telemetry & security rotation included; duplicate FR-020 resolved)
+ - **Total Tasks**: 189 (added T185–T187 for type safety completion + env shim removal)
  - **Setup Phase**: 13 tasks (duplicate T010 removed)
 - **Foundational Phase**: 21 tasks (BLOCKS all stories)
 - **User Story 1 (P1)**: 25 tasks

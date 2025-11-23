@@ -1,4 +1,4 @@
-# Quickstart: CloudMake Platform Bootstrap
+# Quickstart: Flaresmith Platform Bootstrap (formerly CloudMake)
 
 ## Prerequisites
 - Node.js 20.x
@@ -10,8 +10,8 @@
 
 ## Clone & Install
 ```bash
-git clone <repo-url> cloudmake
-cd cloudmake
+git clone <repo-url> flaresmith
+cd flaresmith
 pnpm install
 ```
 

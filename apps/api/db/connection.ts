@@ -1,6 +1,5 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { getEnv } from "@cloudmake/utils";
 import * as schema from "./schema";
 
 /**
@@ -9,29 +8,39 @@ import * as schema from "./schema";
  */
 
 export function createDbConnection(databaseUrl?: string) {
-  const isTest = process.env.NODE_ENV === 'test';
-  const connectionString = databaseUrl || process.env.DATABASE_URL;
+  const connectionString = databaseUrl;
   if (!connectionString) {
-    if (isTest) {
-      // Provide a lightweight mock to avoid throwing in test suites that import modules with implicit db usage.
-      const mock: any = {
-        execute: async () => ({ rows: [] }),
-        select: () => ({
-          from: () => ({
-            where: () => ({
-              orderBy: () => ({
-                limit: async () => []
-              })
+    // Return lightweight mock connection when no env bindings present yet (module init time in Workers).
+    // Real connection will be created lazily by route handlers that instantiate their own connections if needed.
+    const mock: any = {
+      execute: async () => ({ rows: [] }),
+      select: () => ({
+        from: () => ({
+          where: () => ({
+            orderBy: () => ({
+              limit: async () => []
             })
           })
         })
-      };
-      return mock;
-    }
-    // Non-test environment: enforce presence
-    const required = getEnv("DATABASE_URL");
-    const sql = neon(required);
-    return drizzle(sql, { schema });
+      })
+    };
+    return mock;
+  }
+  // Treat placeholder values as absence to allow Workers deployment without real DB during early bootstrap.
+  if (typeof connectionString === 'string' && connectionString.startsWith('__PLACEHOLDER')) {
+    const mock: any = {
+      execute: async () => ({ rows: [] }),
+      select: () => ({
+        from: () => ({
+          where: () => ({
+            orderBy: () => ({
+              limit: async () => []
+            })
+          })
+        })
+      })
+    };
+    return mock;
   }
   const sql = neon(connectionString);
   return drizzle(sql, { schema });
@@ -47,6 +56,6 @@ export function getDb(databaseUrl: string) {
  * causing runtime errors. Exporting it here preserves backward compatibility while allowing
  * tests to still construct isolated connections via `createDbConnection`.
  */
-export const db = createDbConnection();
+export const db = createDbConnection(undefined);
 
 export type DbConnection = ReturnType<typeof createDbConnection>;

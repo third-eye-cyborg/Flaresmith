@@ -5,7 +5,6 @@ import { CreateProjectRequestSchema, CreateProjectResponseSchema } from "@cloudm
 import { ProjectService } from "../../services/projectService";
 import { checkIdempotency, recordIdempotency } from "../../services/idempotency";
 import { getDb } from "../../../db/connection";
-import { getEnv } from "@cloudmake/utils";
 
 /**
  * T049: Implement POST /projects endpoint with validation and idempotency
@@ -25,7 +24,7 @@ app.post("/", zValidator("json", CreateProjectRequestSchema), async (c) => {
       body.idempotencyKey || `${body.orgId}-githubRepo-${body.slug}`;
 
     // Check for existing operation
-    const db = getDb(getEnv("DATABASE_URL"));
+    const db = getDb(c.env.DATABASE_URL);
     const existing = await checkIdempotency(db, idempotencyKey);
 
     if (existing) {
@@ -34,10 +33,11 @@ app.post("/", zValidator("json", CreateProjectRequestSchema), async (c) => {
 
     // Create project service
     const projectService = new ProjectService({
-      githubToken: getEnv("GITHUB_TOKEN"),
-      neonApiKey: getEnv("NEON_API_KEY"),
-      cloudflareToken: getEnv("CLOUDFLARE_API_TOKEN"),
-      postmanApiKey: getEnv("POSTMAN_API_KEY"),
+      githubToken: c.env.GITHUB_TOKEN,
+      neonApiKey: c.env.NEON_API_KEY,
+      cloudflareToken: c.env.CLOUDFLARE_API_TOKEN,
+      postmanApiKey: c.env.POSTMAN_API_KEY,
+      bindings: c.env,
     });
 
     // Create project

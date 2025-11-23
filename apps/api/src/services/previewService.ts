@@ -27,6 +27,7 @@ interface PreviewUrlResult {
 }
 
 export class PreviewService {
+  constructor(private bindings?: Record<string, any>) {}
   /**
    * Generate preview URL for a feature branch
    */
@@ -66,7 +67,9 @@ export class PreviewService {
     }
 
     // Calculate TTL expiration (default 72h from now)
-    const ttlHours = Number(process.env.CM_PREVIEW_TTL_HOURS || '72');
+    // Prefer explicit binding injection; fall back to global shim for backward compatibility.
+    // TTL is sourced exclusively from injected bindings (DI). Default falls back to 72h if not provided.
+    const ttlHours = Number(this.bindings?.CM_PREVIEW_TTL_HOURS ?? '72');
     const expiresAt = new Date(Date.now() + ttlHours * 60 * 60 * 1000).toISOString();
 
     return {
@@ -150,7 +153,7 @@ export class PreviewService {
    * Used to enforce preview cap (max 15 concurrent)
    */
   async getActivePreviewCount(projectId: string): Promise<number> {
-    const databaseUrl = process.env.DATABASE_URL;
+    const databaseUrl = this.bindings?.DATABASE_URL;
     if (!databaseUrl) {
       logger.warn({ action: 'preview.count.db.missing_url', projectId });
       return 0;
@@ -182,4 +185,5 @@ export class PreviewService {
   }
 }
 
+// DI-friendly factory & legacy default instance
 export const previewService = new PreviewService();

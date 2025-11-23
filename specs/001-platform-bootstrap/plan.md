@@ -1,7 +1,7 @@
 # Implementation Plan: Platform Bootstrap
 
 **Branch**: `001-platform-bootstrap` | **Date**: 2025-11-21 | **Spec**: `specs/001-platform-bootstrap/spec.md`
-**Input**: CloudMake orchestration platform blueprint + feature spec
+**Input**: Flaresmith orchestration platform blueprint + feature spec (project formerly named CloudMake)
 
 **Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 

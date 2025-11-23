@@ -2,7 +2,7 @@ import { CloudMakeClient } from "../client";
 import {
   GetEnvironmentsResponseSchema,
   type GetEnvironmentsResponse,
-} from "@cloudmake/types";
+} from "@flaresmith/types";
 import { z } from "zod";
 
 /**

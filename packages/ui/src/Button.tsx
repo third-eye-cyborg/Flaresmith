@@ -1,4 +1,4 @@
-import React from "react";
+// React import removed (automatic JSX runtime)
 import { Pressable, Text, type PressableProps } from "react-native";
 
 export interface ButtonProps extends PressableProps {

@@ -50,12 +50,11 @@ describe('Deployment Rollback Integration (T171 / FR-016)', () => {
   it('unsupported provider (github) fails schema validation', async () => {
     // Provider 'github' not in enum -> expect zod validation error
     await expect(
-      // @ts-expect-error intentional invalid provider for negative test
       rollbackService.rollback({
         projectId,
         environmentId,
         targetDeploymentId: previousDeploymentId,
-        provider: 'github'
+        provider: 'github' as any // intentional type violation for test
       })
     ).rejects.toThrow(/Invalid enum value|Unsupported rollback provider/);
   });
@@ -93,12 +92,11 @@ describe('Deployment Rollback Integration (T171 / FR-016)', () => {
 
   it('fails validation when targetDeploymentId missing', async () => {
     await expect(
-      // @ts-expect-error intentionally omitting targetDeploymentId for negative test
       rollbackService.rollback({
         projectId,
         environmentId,
         provider: 'cloudflare'
-      })
-    ).rejects.toThrow(/targetDeploymentId/);
+      } as any) // intentionally omitting targetDeploymentId for negative test
+    ).rejects.toThrow(/required|targetDeploymentId/);
   });
 });

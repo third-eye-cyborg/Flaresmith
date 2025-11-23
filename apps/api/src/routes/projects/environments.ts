@@ -4,7 +4,6 @@ import { z } from "zod";
 import { EnvironmentService } from "../../services/environmentService";
 import { circuitBreakerRegistry } from "@cloudmake/utils/src/reliability/externalPolicy";
 import { getDb } from "../../../db/connection";
-import { getEnv } from "@cloudmake/utils";
 
 /**
  * T068: GET /projects/:id/environments endpoint
@@ -25,7 +24,7 @@ app.get(
     const { id: projectId } = c.req.valid("param");
     
     // Get database connection
-    const db = getDb(getEnv("DATABASE_URL"));
+    const db = getDb(c.env.DATABASE_URL);
     const environmentService = new EnvironmentService(db);
 
     try {

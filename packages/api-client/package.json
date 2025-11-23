@@ -1,5 +1,5 @@
 {
-  "name": "@cloudmake/api-client",
+  "name": "@flaresmith/api-client",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -9,12 +9,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@cloudmake/types": "workspace:*",
+    "@flaresmith/types": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cloudmake/config-eslint": "workspace:*",
-    "@cloudmake/config-tsconfig": "workspace:*",
-    "typescript": "^5.3.0"
+    "@flaresmith/config-eslint": "workspace:*",
+    "@flaresmith/config-tsconfig": "workspace:*",
+    "typescript": "^5.3.0",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0"
   }
 }

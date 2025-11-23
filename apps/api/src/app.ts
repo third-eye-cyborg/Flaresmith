@@ -8,24 +8,14 @@ import { authMiddleware } from "./middleware/auth";
 import { idempotencyMiddleware } from "./middleware/idempotency";
 import { rateLimitMiddleware } from "./middleware/rateLimit";
 import { traceContextMiddleware } from "./middleware/traceContext";
+import type { Env, Variables } from "./types/env";
 
 /**
  * T023: Hono App Initialization
  * Sets up middleware pipeline and route structure
  */
 
-export type Bindings = {
-  DATABASE_URL: string;
-  JWT_SECRET: string;
-  MASTER_ENCRYPTION_KEY: string;
-  GITHUB_TOKEN: string;
-  CLOUDFLARE_API_TOKEN: string;
-  NEON_API_KEY: string;
-  POSTMAN_API_KEY: string;
-  ENVIRONMENT: "development" | "staging" | "production";
-};
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 // Core middleware pipeline
 app.use("*", cors());

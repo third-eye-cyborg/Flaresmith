@@ -1,4 +1,4 @@
-import React from "react";
+// React import removed (automatic JSX runtime)
 import { TextInput, type TextInputProps } from "react-native";
 
 export interface InputProps extends TextInputProps {

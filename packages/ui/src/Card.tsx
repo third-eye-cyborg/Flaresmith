@@ -1,4 +1,4 @@
-import React from "react";
+// React import removed (automatic JSX runtime)
 import { View, type ViewProps } from "react-native";
 
 export interface CardProps extends ViewProps {}

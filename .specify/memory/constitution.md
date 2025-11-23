@@ -8,7 +8,7 @@ Templates Reviewed: plan-template.md ✅ (updated), spec-template.md ✅ (no cha
 Deferred TODOs: None
 -->
 
-# CloudMake Constitution
+# Flaresmith Constitution (formerly CloudMake)
 
 ## Core Principles
 
@@ -62,5 +62,5 @@ The Turborepo + pnpm monorepo MUST minimize duplication: shared logic lives in `
 6. Traceability: All merges touching orchestration, spec, or MCP descriptors MUST include spec file references and (if applicable) Postman collection IDs.
 7. Archival: Superseded versions retained in Git history; no manual deletion. External consumers may pin a Constitution version; breaking changes require migration docs in `/specs/migrations/`.
 
-**Version**: 0.1.0 | **Ratified**: 2025-11-21 | **Last Amended**: 2025-11-21
+**Version**: 0.1.1 | **Ratified**: 2025-11-21 | **Last Amended**: 2025-11-22 (Brand rename CloudMake → Flaresmith; no principle changes)
 

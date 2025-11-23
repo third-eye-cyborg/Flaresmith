@@ -1,5 +1,5 @@
 {
-  "name": "@cloudmake/ui",
+  "name": "@flaresmith/ui",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -17,9 +17,9 @@
     "react-native-web": "^0.19.12"
   },
   "devDependencies": {
-    "@cloudmake/config-eslint": "workspace:*",
-    "@cloudmake/config-tsconfig": "workspace:*",
-    "@cloudmake/config-tailwind": "workspace:*",
+    "@flaresmith/config-eslint": "workspace:*",
+    "@flaresmith/config-tsconfig": "workspace:*",
+    "@flaresmith/config-tailwind": "workspace:*",
     "@types/react": "^18.2.0",
     "typescript": "^5.3.0"
   }

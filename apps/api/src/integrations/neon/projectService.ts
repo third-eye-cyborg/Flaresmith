@@ -66,11 +66,11 @@ export class NeonProjectService {
       });
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json() as any;
         throw new Error(`Neon project creation failed: ${error.message || response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as any;
       const project = data.project;
       const defaultBranch = data.branch;
       const connectionUri = data.connection_uris?.[0]?.connection_uri || "";
@@ -117,11 +117,11 @@ export class NeonProjectService {
       });
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json() as any;
         throw new Error(`Neon branch creation failed: ${error.message || response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as any;
       const branch = data.branch;
       const connectionUri = data.connection_uris?.[0]?.connection_uri || "";
 

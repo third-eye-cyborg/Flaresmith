@@ -7,7 +7,7 @@
 interface CloudflareDeploymentStatus {
   deploymentId?: string;
   url?: string;
-  status: "deployed" | "deploying" | "failed" | "none";
+  status: "deployed" | "deploying" | "failed" | "none" | "error";
   lastDeployedAt?: string;
 }
 
@@ -36,7 +36,7 @@ export class CloudflareStatusService {
         if (response.status === 404) {
           return { status: "none" };
         }
-        return { status: "error" as any };
+        return { status: "error" };
       }
 
       const data = await response.json() as any;
@@ -48,7 +48,7 @@ export class CloudflareStatusService {
       };
     } catch (error) {
       console.error(`Error fetching Cloudflare Worker status for ${workerName}:`, error);
-      return { status: "error" as any };
+      return { status: "error" };
     }
   }
 
@@ -68,7 +68,7 @@ export class CloudflareStatusService {
         if (response.status === 404) {
           return { status: "none" };
         }
-        return { status: "error" as any };
+        return { status: "error" };
       }
 
       const data = await response.json() as any;
@@ -103,7 +103,7 @@ export class CloudflareStatusService {
       };
     } catch (error) {
       console.error(`Error fetching Cloudflare Pages status for ${projectName}:`, error);
-      return { status: "error" as any };
+      return { status: "error" };
     }
   }
 }

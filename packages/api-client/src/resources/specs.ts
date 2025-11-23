@@ -1,10 +1,9 @@
 import { CloudMakeClient } from "../client";
 import {
-  ApplySpecRequestSchema,
   ApplySpecResponseSchema,
   type ApplySpecRequest,
   type ApplySpecResponse,
-} from "@cloudmake/types";
+} from "@flaresmith/types";
 
 export class SpecsResource {
   constructor(private client: CloudMakeClient) {}

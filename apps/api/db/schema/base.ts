@@ -110,21 +110,6 @@ export const deployments = pgTable("deployments", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// Builds table
-export const builds = pgTable("builds", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  projectId: uuid("project_id")
-    .notNull()
-    .references(() => projects.id),
-  environmentId: uuid("environment_id")
-    .notNull()
-    .references(() => environments.id),
-  commitSha: varchar("commit_sha", { length: 40 }).notNull(),
-  status: buildStatusEnum("status").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
 // Type exports
 export type Organization = typeof organizations.$inferSelect;
 export type User = typeof users.$inferSelect;
@@ -132,5 +117,4 @@ export type Project = typeof projects.$inferSelect;
 export type Environment = typeof environments.$inferSelect;
 export type IntegrationConfig = typeof integrationConfigs.$inferSelect;
 export type Deployment = typeof deployments.$inferSelect;
-export type Build = typeof builds.$inferSelect;
 

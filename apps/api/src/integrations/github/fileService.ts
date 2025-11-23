@@ -83,7 +83,6 @@ export class GitHubFileService {
     }
     return { content: decoded, encoding: "utf-8", fullLength: decoded.length };
   }
-  }
 
   private decodeBase64Utf8(b64: string): string {
     // Prefer atob in Workers, fallback to Buffer in Node
