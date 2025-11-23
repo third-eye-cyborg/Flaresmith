@@ -60,10 +60,3 @@ export class GitHubResource {
   }
 }
 
-  /**
-   * Create GitHub environments with protection rules and secrets
-   * POST /github/environments
-   */
-  async createEnvironments(request: CreateEnvironmentsRequest): Promise<CreateEnvironmentsResponse> {
-    return this.client.post('/github/environments', CreateEnvironmentsResponseSchema, request);
-  }

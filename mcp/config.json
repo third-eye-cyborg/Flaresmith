@@ -12,6 +12,18 @@
         "github.getSecretSyncStatus"
       ]
     },
+    "design-system": {
+      "command": "node",
+      "args": ["./mcp/servers/design-system/index.js"],
+      "tools": [
+        "design.getTokens",
+        "design.applyOverride",
+        "design.rollbackTokens",
+        "design.detectDrift",
+        "design.auditAccessibility",
+        "design.getLatestAudit"
+      ]
+    },
     "cloudflare": {
       "command": "node",
       "args": ["./mcp/servers/cloudflare/index.js"],
@@ -61,5 +73,16 @@
       "args": ["./mcp/servers/chat/index.js"],
       "tools": []
     }
+      ,
+      "auth": {
+        "command": "node",
+        "args": ["./mcp/servers/auth/index.js"],
+        "tools": [
+          "auth.register",
+          "auth.login",
+          "auth.refresh",
+          "auth.oauthCallback"
+        ]
+      }
   }
 }

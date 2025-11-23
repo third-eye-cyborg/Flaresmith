@@ -80,7 +80,7 @@ Resources: `githubRepo`, `githubCodespace`, `neonProject`, `neonBranch`, `cloudf
 - **Why**: Edge-native, instant cold starts, no adapter complexity
 - **Location**: `apps/api/src/`
 - **DB Access**: Neon serverless driver (HTTP) via Drizzle ORM
-- **Middleware Pipeline**: Structured logging (Pino), auth (BetterAuth), error handling, idempotency checks
+- **Middleware Pipeline**: Structured logging (Pino), JWT-based auth, error handling, idempotency checks
 
 **Common Mistake**: Don't suggest Express routes—this is a Workers-native Hono API.
 

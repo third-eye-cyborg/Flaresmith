@@ -1,0 +1,40 @@
+{
+  "name": "design.getLatestAudit",
+  "description": "Retrieve the most recent accessibility audit report for a given mode. Returns full audit results including contrast ratios, status (pass/warn/fail), and overall pass percentage.",
+  "inputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#GetLatestAuditRequest"
+  },
+  "outputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#GetLatestAuditResponse"
+  },
+  "examples": [
+    {
+      "name": "Get latest dark mode audit",
+      "input": {
+        "mode": "dark"
+      },
+      "output": {
+        "id": "bb0e8400-e29b-41d4-a716-446655440007",
+        "version": 12,
+        "mode": "dark",
+        "report": [
+          {
+            "fgToken": "semantic.text.primary",
+            "bgToken": "semantic.background.base",
+            "ratio": 7.2,
+            "status": "pass"
+          },
+          {
+            "fgToken": "accent.purple.400",
+            "bgToken": "primary.blue.900",
+            "ratio": 3.8,
+            "status": "warn",
+            "recommendation": "Consider using accent.purple.300 for better contrast"
+          }
+        ],
+        "passed_pct": 96,
+        "created_at": "2025-11-23T11:00:00Z"
+      }
+    }
+  ]
+}

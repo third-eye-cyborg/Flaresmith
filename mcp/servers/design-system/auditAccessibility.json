@@ -1,0 +1,33 @@
+{
+  "name": "design.auditAccessibility",
+  "description": "Run accessibility contrast audit for specified mode (light/dark). Evaluates WCAG AA compliance (4.5:1 normal, 3:1 large text). Returns pass/warn/fail status per token pair. Target SC-003: ≥98% pass rate. Completes in ≤5s for ≤300 pairs.",
+  "inputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#RunAccessibilityAuditRequest"
+  },
+  "outputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#RunAccessibilityAuditResponse"
+  },
+  "examples": [
+    {
+      "name": "Run audit for dark mode",
+      "input": {
+        "mode": "dark"
+      },
+      "output": {
+        "auditId": "990e8400-e29b-41d4-a716-446655440005",
+        "status": "started"
+      }
+    },
+    {
+      "name": "Run focused audit for Button component",
+      "input": {
+        "mode": "light",
+        "focusComponents": ["Button"]
+      },
+      "output": {
+        "auditId": "aa0e8400-e29b-41d4-a716-446655440006",
+        "status": "started"
+      }
+    }
+  ]
+}

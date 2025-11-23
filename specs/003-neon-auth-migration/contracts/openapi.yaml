@@ -1,0 +1,133 @@
+openapi: 3.1.0
+info:
+  title: Neon Auth API
+  version: 0.1.0
+servers:
+  - url: https://api.dev.example.com
+  - url: https://api.staging.example.com
+  - url: https://api.example.com
+paths:
+  /api/auth/register:
+    post:
+      summary: Register with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+              required: [email, password]
+      responses:
+        '201':
+          description: Registered and signed in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400': { description: Invalid input }
+  /api/auth/login:
+    post:
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401': { description: Unauthorized }
+  /api/auth/refresh:
+    post:
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken: { type: string }
+              required: [refreshToken]
+      responses:
+        '200':
+          description: New access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '401': { description: Invalid or expired token }
+  /api/auth/oauth/callback:
+    get:
+      summary: OAuth callback for mobile providers (PKCE)
+      parameters:
+        - in: query
+          name: state
+          schema: { type: string }
+          required: true
+        - in: query
+          name: code
+          schema: { type: string }
+          required: true
+        - in: query
+          name: provider
+          schema: { type: string, enum: [apple, google, github] }
+          required: true
+      responses:
+        '302': { description: Redirect back to the app with session data (app scheme) }
+        '400': { description: Invalid state or code }
+  /api/auth/signout:
+    post:
+      summary: Revoke current session (sign out)
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: Signed out successfully }
+        '401': { description: Missing or invalid access token }
+  /api/auth/signoutAll:
+    post:
+      summary: Revoke all sessions (sign out everywhere)
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: All sessions revoked }
+        '401': { description: Missing or invalid access token }
+components:
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        accessToken: { type: string }
+        accessExpiresAt: { type: string, format: date-time }
+        refreshToken: { type: string }
+        refreshExpiresAt: { type: string, format: date-time }
+        user:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            email: { type: string, format: email }
+            displayName: { type: string }
+    RefreshResponse:
+      type: object
+      properties:
+        accessToken: { type: string }
+        accessExpiresAt: { type: string, format: date-time }
+        refreshToken: { type: string }
+        refreshExpiresAt: { type: string, format: date-time }
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

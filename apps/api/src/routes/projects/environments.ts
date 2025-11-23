@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { EnvironmentService } from "../../services/environmentService";
-import { circuitBreakerRegistry } from "@cloudmake/utils/src/reliability/externalPolicy";
+import { circuitBreakerRegistry } from "@flaresmith/utils/src/reliability/externalPolicy";
 import { getDb } from "../../../db/connection";
 
 /**

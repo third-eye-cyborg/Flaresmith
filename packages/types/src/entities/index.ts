@@ -10,3 +10,5 @@ export * from "./auth";
 export * from "./deployment";
 export * from "./build";
 export * from "./integrations";
+export * from "./authSession";
+export * from "./identityProviderLink";

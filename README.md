@@ -144,6 +144,8 @@ Circuit breaker: opens after ≥10 failures/60s, half-open probe after 30s; metr
 ### Security & Secrets
 
 Secret scanning pre-commit + CI; secret audit logging (`secret_access_total`, `key_rotation_total`) with origin field (`user|system`). JWT signing key rotation 90d (7d grace). Encrypted secrets metadata using pgcrypto (AES-GCM). Logger redaction denies leaking token patterns.
+**OAuth Provider Secrets** (Feature 003): Mobile authentication requires OAuth credentials for Apple (`OAUTH_APPLE_CLIENT_ID`, `OAUTH_APPLE_TEAM_ID`, `OAUTH_APPLE_KEY_ID`, `OAUTH_APPLE_PRIVATE_KEY`), Google (`OAUTH_GOOGLE_CLIENT_ID`, `OAUTH_GOOGLE_CLIENT_SECRET`), and GitHub (`OAUTH_GITHUB_CLIENT_ID`, `OAUTH_GITHUB_CLIENT_SECRET`). Add to GitHub Secrets (Actions scope) and sync to Codespaces/Dependabot via Feature 002's `/api/github/secrets/sync` endpoint. See `specs/003-neon-auth-migration/quickstart.md` for detailed setup.
+
 
 ### Preview Environments
 

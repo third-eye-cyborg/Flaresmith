@@ -1,5 +1,5 @@
 import type { Config } from "drizzle-kit";
-import { getEnv } from "@cloudmake/utils";
+import { getEnv } from "@flaresmith/utils";
 
 /**
  * T016: Initialize Drizzle ORM configuration and migration system

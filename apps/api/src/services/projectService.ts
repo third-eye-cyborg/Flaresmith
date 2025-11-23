@@ -1,5 +1,5 @@
 import { getDb } from "../../db/connection";
-import { getEnv } from "@cloudmake/utils";
+import { getEnv } from "@flaresmith/utils";
 import { projects, environments, integrationConfigs } from "../../db/schema";
 import { GitHubRepoService } from "../integrations/github/repoService";
 import { GitHubTemplateService } from "../integrations/github/templateService";

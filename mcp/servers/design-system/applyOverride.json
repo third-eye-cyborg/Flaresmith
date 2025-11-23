@@ -1,0 +1,70 @@
+{
+  "name": "design.applyOverride",
+  "description": "Submit a theme override for a specific environment. Validates size policy (≤5% auto-applied, 5-10% requires approval, >10% rejected). Returns override status and whether approval is needed.",
+  "inputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#ApplyOverrideRequest"
+  },
+  "outputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#ApplyOverrideResponse"
+  },
+  "examples": [
+    {
+      "name": "Apply small override (auto-applied)",
+      "input": {
+        "environment": "dev",
+        "diff": [
+          {
+            "name": "primary.blue.500",
+            "oldValue": "#2563eb",
+            "newValue": "#1d4ed8"
+          }
+        ],
+        "rationale": "Increase primary color contrast for accessibility"
+      },
+      "output": {
+        "override": {
+          "id": "660e8400-e29b-41d4-a716-446655440001",
+          "project_id": "770e8400-e29b-41d4-a716-446655440002",
+          "environment": "dev",
+          "submitted_by": "880e8400-e29b-41d4-a716-446655440003",
+          "status": "auto-applied",
+          "size_pct": 3,
+          "requires_approval": false,
+          "token_diff": [],
+          "created_at": "2025-11-23T10:30:00Z",
+          "updated_at": "2025-11-23T10:30:00Z"
+        }
+      }
+    },
+    {
+      "name": "Apply large override (requires approval)",
+      "input": {
+        "environment": "staging",
+        "diff": [
+          {
+            "name": "primary.blue.500",
+            "newValue": "#1d4ed8"
+          },
+          {
+            "name": "accent.purple.600",
+            "newValue": "#7c3aed"
+          }
+        ]
+      },
+      "output": {
+        "override": {
+          "id": "660e8400-e29b-41d4-a716-446655440004",
+          "project_id": "770e8400-e29b-41d4-a716-446655440002",
+          "environment": "staging",
+          "submitted_by": "880e8400-e29b-41d4-a716-446655440003",
+          "status": "pending-approval",
+          "size_pct": 7,
+          "requires_approval": true,
+          "token_diff": [],
+          "created_at": "2025-11-23T10:35:00Z",
+          "updated_at": "2025-11-23T10:35:00Z"
+        }
+      }
+    }
+  ]
+}

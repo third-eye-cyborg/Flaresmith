@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 
 /**
  * MCP Tool Sync Script
@@ -9,6 +9,13 @@
  * Usage: pnpm exec ts-node scripts/mcp/syncTools.ts --project <projectId>
  */
 
+// Register ts-node before any imports when running under plain node
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('ts-node').register({ transpileOnly: true, compilerOptions: { module: 'commonjs' } });
+} catch (e) {
+  // If ts-node isn't available, script must be run via pnpm exec ts-node
+}
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { z } from 'zod';

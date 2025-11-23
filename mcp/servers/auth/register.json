@@ -1,0 +1,7 @@
+{
+  "name": "auth.register",
+  "description": "Registers a new user with email and password and returns auth tokens.",
+  "inputSchema": { "$ref": "packages/types/src/api/auth.ts#RegisterRequestSchema" },
+  "outputSchema": { "$ref": "packages/types/src/api/auth.ts#AuthResponseSchema" },
+  "version": "0.1.0"
+}

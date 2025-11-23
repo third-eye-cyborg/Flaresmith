@@ -1,0 +1,44 @@
+{
+  "name": "design.detectDrift",
+  "description": "Detect drift between spec tokens and currently active tokens. Groups changes by category (added, removed, changed). Returns empty diff if no drift. Enforces SC-008: blocks merges when drift detected.",
+  "inputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#GetTokensRequest"
+  },
+  "outputSchema": {
+    "$ref": "file://../../packages/types/src/designSystem.ts#DetectDriftResponse"
+  },
+  "examples": [
+    {
+      "name": "No drift detected",
+      "input": {},
+      "output": {
+        "baselineVersion": 12,
+        "currentVersion": 12,
+        "drift": {},
+        "hasDrift": false
+      }
+    },
+    {
+      "name": "Drift detected in color category",
+      "input": {},
+      "output": {
+        "baselineVersion": 11,
+        "currentVersion": 12,
+        "drift": {
+          "color": {
+            "added": ["accent.teal.400"],
+            "removed": ["accent.indigo.900"],
+            "changed": [
+              {
+                "name": "primary.blue.500",
+                "old": "#2563eb",
+                "current": "#1d4ed8"
+              }
+            ]
+          }
+        },
+        "hasDrift": true
+      }
+    }
+  ]
+}

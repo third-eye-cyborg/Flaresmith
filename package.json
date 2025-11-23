@@ -16,6 +16,7 @@
     "@turbo/gen": "^2.0.0",
     "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^20.11.0",
+    "@neondatabase/serverless": "^0.9.5",
     "libsodium-wrappers": "^0.7.15",
     "octokit": "^5.0.5",
     "ts-node": "^10.9.2",

@@ -1,0 +1,242 @@
+openapi: 3.1.0
+info:
+  title: Design System API
+  version: 0.1.0
+  summary: Unified cross-platform design system endpoints (tokens, overrides, audits, drift, rollback)
+servers:
+  - url: https://api.example.com
+paths:
+  /design/tokens:
+    get:
+      operationId: getDesignTokens
+      summary: List active design tokens
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum: [color, spacing, typography, radius, elevation, glass, semantic]
+        - in: query
+          name: version
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Active tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTokensResponse'
+  /design/overrides:
+    post:
+      operationId: submitOverride
+      summary: Submit a theme override for evaluation / approval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyOverrideRequest'
+      responses:
+        '201':
+          description: Override submission result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplyOverrideResponse'
+  /design/overrides/{id}:
+    get:
+      operationId: getOverride
+      summary: Get override details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Override
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Override'
+        '404':
+          description: Not found
+  /design/rollback:
+    post:
+      operationId: rollbackTokens
+      summary: Roll back tokens to prior version
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RollbackRequest'
+      responses:
+        '200':
+          description: Rollback outcome
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackResponse'
+  /design/drift:
+    get:
+      operationId: detectDrift
+      summary: Detect drift between spec and active tokens
+      responses:
+        '200':
+          description: Drift result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetectDriftResponse'
+  /design/audits/latest:
+    get:
+      operationId: getLatestAccessibilityAudit
+      summary: Get latest accessibility audit report
+      parameters:
+        - in: query
+          name: mode
+          schema:
+            type: string
+            enum: [light, dark]
+      responses:
+        '200':
+          description: Audit report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessibilityAuditReport'
+  /design/audits/run:
+    post:
+      operationId: runAccessibilityAudit
+      summary: Trigger a new accessibility audit
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [light, dark]
+                focusComponents:
+                  type: array
+                  items:
+                    type: string
+              additionalProperties: false
+      responses:
+        '202':
+          description: Audit started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditStarted'
+components:
+  schemas:
+    Token:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        category: { type: string }
+        value: {}
+        version: { type: integer }
+    GetTokensResponse:
+      type: object
+      properties:
+        version: { type: integer }
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Token'
+    ApplyOverrideRequest:
+      type: object
+      properties:
+        environment: { type: string, enum: [dev, staging, prod] }
+        diff:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              oldValue: {}
+              newValue: {}
+            required: [name, newValue]
+        rationale: { type: string }
+      required: [environment, diff]
+    Override:
+      type: object
+      properties:
+        id: { type: string }
+        status: { type: string }
+        size_pct: { type: integer }
+        requires_approval: { type: boolean }
+        token_diff:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              oldValue: {}
+              newValue: {}
+    ApplyOverrideResponse:
+      type: object
+      properties:
+        override:
+          $ref: '#/components/schemas/Override'
+    RollbackRequest:
+      type: object
+      properties:
+        targetVersion: { type: integer }
+        rationale: { type: string }
+      required: [targetVersion]
+    RollbackResponse:
+      type: object
+      properties:
+        previousVersion: { type: integer }
+        newVersion: { type: integer }
+        hash: { type: string }
+    DetectDriftResponse:
+      type: object
+      properties:
+        baselineVersion: { type: integer }
+        currentVersion: { type: integer }
+        drift:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              added: { type: array, items: { type: string } }
+              removed: { type: array, items: { type: string } }
+              changed:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    old: {}
+                    current: {}
+    AccessibilityAuditReport:
+      type: object
+      properties:
+        version: { type: integer }
+        mode: { type: string }
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              fgToken: { type: string }
+              bgToken: { type: string }
+              ratio: { type: number }
+              status: { type: string }
+        passed_pct: { type: integer }
+    AuditStarted:
+      type: object
+      properties:
+        auditId: { type: string }
+        status: { type: string }
+      required: [auditId, status]

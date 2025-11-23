@@ -5,7 +5,6 @@ export const IntegrationProviderSchema = z.enum([
   "cloudflare",
   "neon",
   "postman",
-  "betterauth",
   "codespaces",
 ]);
 

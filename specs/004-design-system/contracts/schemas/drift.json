@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://api.flaresmith.dev/schemas/design/drift.json",
+  "title": "DesignDriftEvent",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "baseline_version": {
+      "type": "integer"
+    },
+    "current_hash": {
+      "type": "string"
+    },
+    "diff": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "added": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "removed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "changed": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "old": {},
+                "current": {}
+              },
+              "required": ["name", "old", "current"]
+            }
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["id", "baseline_version", "current_hash", "diff", "created_at"]
+}

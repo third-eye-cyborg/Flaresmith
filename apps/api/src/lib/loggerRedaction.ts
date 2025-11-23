@@ -36,6 +36,20 @@ const PATTERNS: Array<{ name: string; regex: RegExp; replacer: (match: string) =
     regex: /eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/g,
     replacer: () => "jwt****redacted",
   },
+  {
+    name: "oauthAuthorizationCode",
+    // OAuth authorization codes are typically 20-80 chars, alphanumeric + hyphens/underscores
+    // Pattern: code parameter values (avoid over-matching)
+    regex: /(?:code=|"code":\s*")[A-Za-z0-9_-]{20,80}(?:"|&)/g,
+    replacer: (m) => m.slice(0, 10) + "****" + m.slice(-5),
+  },
+  {
+    name: "refreshToken",
+    // Refresh tokens are typically high-entropy strings, often prefixed or in specific fields
+    // This is a conservative pattern; key-based redaction (below) is primary defense
+    regex: /(?:refresh_token=|"refreshToken":\s*")[A-Za-z0-9_-]{32,}(?:"|&)/g,
+    replacer: (m) => m.slice(0, 20) + "****",
+  },
 ];
 
 // Keys that trigger full masking of their values
@@ -44,12 +58,17 @@ const SENSITIVE_KEYS = new Set([
   "pass",
   "secret",
   "token",
+  "accesstoken",
+  "refreshtoken",
   "apikey", // normalized lowercase
   "authorization",
   "auth",
   "bearer",
   "privatekey",
   "clientsecret",
+  "code", // OAuth authorization code
+  "codeverifier", // PKCE code verifier
+  "state", // OAuth state parameter
 ]);
 
 // Shannon entropy approximation
@@ -60,7 +79,7 @@ function shannonEntropy(str: string): number {
   const len = str.length;
   let entropy = 0;
   for (const k in freq) {
-    const p = freq[k] / len;
+    const p = freq[k]! / len;
     entropy += -p * Math.log2(p);
   }
   return entropy; // bits per symbol total
@@ -86,7 +105,7 @@ function redactString(value: string): string {
   const parts = redacted.split(/([\s"'`,;:\]\[\{\}\(\)])/); // keep delimiters
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
-    if (looksHighEntropyToken(part)) {
+    if (part && looksHighEntropyToken(part)) {
       parts[i] = part.slice(0, 4) + "****" + part.slice(-4);
     }
   }

@@ -1,3 +1,13 @@
+/**
+ * Base Tailwind Configuration
+ * 
+ * Merges:
+ * - Static base tokens (tokens.base.json)
+ * - Generated database tokens (tokens.generated.ts) - T020
+ * 
+ * Generated tokens take precedence over base tokens.
+ */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [],
@@ -48,18 +58,120 @@ module.exports = {
           500: "#ef4444",
           900: "#7f1d1d",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "Menlo", "monospace"],
+        // Generated tokens will extend/override above colors
+        ...getGeneratedTokens().colors,
       },
       spacing: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-left": "env(safe-area-inset-left)",
         "safe-right": "env(safe-area-inset-right)",
+        // Generated spacing tokens
+        ...getGeneratedTokens().spacing,
+      },
+      fontSize: {
+        // Generated typography tokens
+        ...getGeneratedTypography(),
+      },
+      borderRadius: {
+        // Generated radius tokens
+        ...getGeneratedTokens().borderRadius,
+      },
+      boxShadow: {
+        // Generated elevation tokens
+        ...getGeneratedElevation(),
+      },
+      backdropBlur: {
+        // Generated glass tokens (blur values)
+        ...getGeneratedGlass(),
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "Menlo", "monospace"],
       },
     },
   },
   plugins: [],
 };
+
+/**
+ * Load generated tokens with fallback
+ * 
+ * Returns empty object if tokens.generated.ts doesn't exist yet
+ * (e.g., before first generation run)
+ */
+function getGeneratedTokens() {
+  try {
+    const { designTokens } = require('./tokens.generated');
+    return designTokens;
+  } catch (error) {
+    console.warn('[Tailwind Config] Generated tokens not found, using base tokens only');
+    return { colors: {}, spacing: {}, borderRadius: {}, elevation: {}, glass: {}, typography: {}, semantic: {} };
+  }
+}
+
+/**
+ * Transform typography tokens to Tailwind fontSize format
+ */
+function getGeneratedTypography() {
+  const tokens = getGeneratedTokens();
+  const typography = tokens.typography || {};
+  
+  const result: Record<string, [string, { lineHeight: string; fontWeight?: string; letterSpacing?: string }]> = {};
+  
+  for (const [key, value] of Object.entries(typography)) {
+    if (typeof value === 'object' && value.fontSize) {
+      result[key] = [
+        value.fontSize,
+        {
+          lineHeight: value.lineHeight || '1.5',
+          ...(value.fontWeight && { fontWeight: value.fontWeight }),
+          ...(value.letterSpacing && { letterSpacing: value.letterSpacing }),
+        },
+      ];
+    }
+  }
+  
+  return result;
+}
+
+/**
+ * Transform elevation tokens to Tailwind boxShadow format
+ */
+function getGeneratedElevation() {
+  const tokens = getGeneratedTokens();
+  const elevation = tokens.elevation || {};
+  
+  const result: Record<string, string> = {};
+  
+  for (const [key, value] of Object.entries(elevation)) {
+    if (typeof value === 'object' && value.shadowY && value.shadowBlur) {
+      const x = value.shadowX || '0';
+      const y = value.shadowY;
+      const blur = value.shadowBlur;
+      const color = value.shadowColor || 'rgba(0, 0, 0, 0.1)';
+      
+      result[key] = `${x} ${y} ${blur} ${color}`;
+    }
+  }
+  
+  return result;
+}
+
+/**
+ * Transform glass tokens to Tailwind backdropBlur format
+ */
+function getGeneratedGlass() {
+  const tokens = getGeneratedTokens();
+  const glass = tokens.glass || {};
+  
+  const result: Record<string, string> = {};
+  
+  for (const [key, value] of Object.entries(glass)) {
+    if (typeof value === 'object' && value.blur) {
+      result[key] = value.blur;
+    }
+  }
+  
+  return result;
+}

@@ -45,13 +45,11 @@ jobs:
             GITHUB_APP_PRIVATE_KEY
             GITHUB_APP_ID
             POSTMAN_API_KEY
-            BETTERAUTH_SECRET
         env:
           NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_STAGING }}
           GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
           GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
-          BETTERAUTH_SECRET: ${{ secrets.BETTERAUTH_SECRET }}
 
   deploy-web:
     name: Deploy Web to Staging

@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import { CloudMakeClient } from "@cloudmake/api-client";
-import { getEnv } from "@cloudmake/utils";
+import { getEnv } from "@flaresmith/utils";
 
 /**
  * T060: Add CLI script for project provisioning

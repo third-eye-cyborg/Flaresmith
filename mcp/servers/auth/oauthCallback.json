@@ -1,0 +1,7 @@
+{
+  "name": "auth.oauthCallback",
+  "description": "Completes the OAuth PKCE flow for a provider using state + code and returns auth tokens.",
+  "inputSchema": { "$ref": "packages/types/src/api/auth.ts#OAuthCallbackQuerySchema" },
+  "outputSchema": { "$ref": "packages/types/src/api/auth.ts#AuthResponseSchema" },
+  "version": "0.1.0"
+}
