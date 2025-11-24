@@ -1,0 +1,240 @@
+openapi: 3.1.0
+info:
+  title: Design Sync & Integration Hub API
+  version: 0.1.0
+  description: Endpoints for component-design synchronization, drift detection, coverage reporting, credentials, notifications, browser test sessions.
+servers:
+  - url: https://api.example.com
+paths:
+  /design-sync/operations:
+    post:
+      summary: Execute a sync across selected components
+      operationId: executeSync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [components, directionModes]
+              properties:
+                components:
+                  type: array
+                  items: { type: string, format: uuid }
+                directionModes:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    enum: [code_to_design, design_to_code, bidirectional]
+                excludeVariants:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items: { type: string }
+                dryRun:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Sync executed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  operationId: { type: string, format: uuid }
+                  status: { type: string }
+                  components: { type: array, items: { type: string, format: uuid } }
+                  diffSummary: { type: object }
+                  reversibleUntil: { type: string, format: date-time }
+        '400': { description: Validation error }
+        '403': { description: Unauthorized role }
+        '409': { description: Idempotent conflict }
+  /design-sync/drift:
+    get:
+      summary: Retrieve current drift summary
+      operationId: getDrift
+      parameters:
+        - in: query
+          name: componentIds
+          schema:
+            type: array
+            items: { type: string, format: uuid }
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: Drift summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total: { type: integer }
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        componentId: { type: string, format: uuid }
+                        changeTypes: { type: array, items: { type: string } }
+                        severity: { type: string, enum: [low, medium, high] }
+        '403': { description: Unauthorized }
+  /design-sync/undo:
+    post:
+      summary: Undo a prior sync operation
+      operationId: undoSync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [operationId]
+              properties:
+                operationId: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Undo applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  undone: { type: boolean }
+                  restoredOperationId: { type: string, format: uuid }
+        '404': { description: Operation not found or expired }
+        '403': { description: Unauthorized }
+  /design-sync/coverage:
+    get:
+      summary: Generate or fetch coverage report
+      operationId: getCoverage
+      parameters:
+        - in: query
+          name: componentId
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Coverage report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  componentId: { type: string, format: uuid }
+                  variantCoveragePct: { type: number }
+                  missingVariants: { type: array, items: { type: string } }
+                  missingTests: { type: array, items: { type: string } }
+                  generatedAt: { type: string, format: date-time }
+  /design-sync/credentials:
+    get:
+      summary: List credential statuses
+      operationId: listCredentials
+      responses:
+        '200':
+          description: Credential list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        providerType: { type: string }
+                        status: { type: string }
+                        lastValidationTime: { type: string, format: date-time }
+                        rotationDue: { type: string, format: date-time }
+    post:
+      summary: Validate or rotate credential
+      operationId: modifyCredential
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [providerType, action]
+              properties:
+                providerType: { type: string }
+                action: { type: string, enum: [validate, revoke, rotate] }
+      responses:
+        '200': { description: Operation success }
+        '400': { description: Invalid request }
+        '403': { description: Unauthorized }
+  /design-sync/digest:
+    get:
+      summary: Retrieve last daily digest
+      operationId: getDigest
+      responses:
+        '200':
+          description: Digest payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  syncCount: { type: integer }
+                  driftCount: { type: integer }
+                  coverageChanges: { type: integer }
+                  credentialExpirations: { type: integer }
+                  generatedAt: { type: string, format: date-time }
+  /design-sync/browser-session:
+    post:
+      summary: Start browser test session
+      operationId: startBrowserSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [storyId]
+              properties:
+                storyId: { type: string, format: uuid }
+                authProfile: { type: string }
+      responses:
+        '200':
+          description: Session started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId: { type: string, format: uuid }
+                  status: { type: string }
+                  startedAt: { type: string, format: date-time }
+  /design-sync/browser-session/{id}:
+    get:
+      summary: Get browser session status
+      operationId: getBrowserSession
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Session details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId: { type: string, format: uuid }
+                  storyId: { type: string, format: uuid }
+                  status: { type: string }
+                  startTime: { type: string, format: date-time }
+                  endTime: { type: string, format: date-time }
+                  performanceSummary: { type: object }
+                  correlationId: { type: string, format: uuid }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
