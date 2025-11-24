@@ -15,6 +15,17 @@ const SECRET_PATTERNS = [
   { name: "Private Key", pattern: /-----BEGIN (RSA |EC )?PRIVATE KEY-----/ },
   { name: "Generic API Key", pattern: /api[_-]?key['\"]?\s*[:=]\s*['\"]?[A-Za-z0-9]{32,}/ },
   { name: "JWT Token", pattern: /eyJ[A-Za-z0-9-_=]+\.eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=]+/ },
+  // T118: Multi-MCP ecosystem token patterns
+  { name: "Mapbox Access Token", pattern: /pk\.[A-Za-z0-9_-]{60,}/ },
+  { name: "Mapbox Secret Token", pattern: /sk\.[A-Za-z0-9_-]{60,}/ },
+  { name: "Polar API Key", pattern: /polar_[a-z]{2,4}_[A-Za-z0-9]{32,}/ },
+  { name: "Expo Access Token", pattern: /[A-Za-z0-9_-]{40,}/ }, // Generic pattern; refine if Expo has specific format
+  { name: "PostHog API Key", pattern: /phc_[A-Za-z0-9]{43}/ },
+  { name: "PostHog Personal API Key", pattern: /phx_[A-Za-z0-9]{43}/ },
+  { name: "OneSignal REST API Key", pattern: /[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}/ },
+  { name: "OneSignal App ID", pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ },
+  { name: "Neon API Key", pattern: /neon_api_key_[A-Za-z0-9]{32,}/ },
+  { name: "Cloudflare API Token", pattern: /[A-Za-z0-9_-]{40}/ }, // Generic; Cloudflare tokens are base64-like
 ];
 
 const IGNORE_PATTERNS = [

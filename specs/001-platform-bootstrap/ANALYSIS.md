@@ -241,6 +241,16 @@ All terminology standardization - no functional impact.
 2. ⚠️ Manual review: Add FR-007 pointer to openapi.yaml (U2)
 3. ✅ Optional: Terminology standardization pass (LOW priority)
 
+### Template Auth Configs Reference (Dual Auth Integration)
+To support downstream feature `005-dual-auth-architecture`, a template scaffold has been introduced (see `templates/apps/*`). Provisioning and sync scripts now ensure dual auth surfaces (`admin-web`, `user-web`, `admin-mobile`, `user-mobile`) are generated with:
+- Example admin route: `templates/apps/admin-web/app/admin/users/page.tsx` (traces FR-001, FR-022)
+- Example user dashboard route: `templates/apps/user-web/app/dashboard/page.tsx` (traces FR-002, FR-005a/b)
+- RLS baseline migration: `templates/apps/api/db/migrations/rls.sql` (traces FR-013, SC-003)
+- Polar webhook template: `templates/apps/api/src/routes/webhooks/polar.ts` (traces FR-071, SC-013)
+- Auth test stub: `templates/apps/api/tests/auth/placeholder.test.ts` (to be extended for SC-005 fast rejection tests)
+
+These artifacts align with Spec-First principles: each template includes inline comments with FR/SC trace IDs. The provisioning script (`scripts/provision/createProject.ts`) and forthcoming `sync-auth` CLI (`scripts/spec/syncAuth.ts`) guarantee idempotent convergence without overwriting existing user code. This analysis document now records awareness of the template injection to maintain traceability and prevent drift across feature boundaries.
+
 **Green Light**: All CRITICAL and HIGH severity issues affecting implementation are **RESOLVED**. Remaining issues are documentation improvements with no code impact.
 
 ---
