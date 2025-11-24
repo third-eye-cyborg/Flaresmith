@@ -16,6 +16,10 @@ import {
   type RefreshRequest,
   type AuthResponse,
   type RefreshResponse,
+  AdminLoginInput,
+  UserSignupInput,
+  UserSession,
+  AdminSession,
 } from "@flaresmith/types";
 
 export class AuthResource {
@@ -71,5 +75,23 @@ export class AuthResource {
    */
   async signoutAll(): Promise<void> {
     await this.client.post("/auth/signoutAll", z.void(), {});
+  }
+
+  /**
+   * Dual auth: Admin login flow
+   * POST /admin/auth/login
+   */
+  async adminLogin(input: z.infer<typeof AdminLoginInput>): Promise<AdminSession> {
+    AdminLoginInput.parse(input);
+    return this.client.post("/admin/auth/login", AdminSession, input);
+  }
+
+  /**
+   * Dual auth: User signup flow (Better Auth abstraction)
+   * POST /user/auth/signup
+   */
+  async userSignup(input: z.infer<typeof UserSignupInput>): Promise<UserSession> {
+    UserSignupInput.parse(input);
+    return this.client.post("/user/auth/signup", UserSession, input);
   }
 }

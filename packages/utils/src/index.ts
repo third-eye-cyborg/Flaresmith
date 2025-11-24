@@ -10,3 +10,7 @@ export * from "./designSystem/contrastAudit";
 export * from "./designSystem/driftDetector";
 export * from "./designSystem/mergeTokens";
 export * from "./designSystem/circularDetector";
+// Reliability utilities
+export * from "./reliability/externalPolicy";
+// Billing utilities
+export * from "./billing/validateReceipt";

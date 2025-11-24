@@ -1,8 +1,9 @@
 import { Hono } from "hono";
+import type { Context } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { EnvironmentService } from "../../services/environmentService";
-import { circuitBreakerRegistry } from "@flaresmith/utils/src/reliability/externalPolicy";
+import { circuitBreakerRegistry } from "@flaresmith/utils";
 import { getDb } from "../../../db/connection";
 
 /**

@@ -64,9 +64,11 @@ pnpm build
 
 ```
 apps/
-├── api/          # Hono backend on Cloudflare Workers + Drizzle ORM
-├── web/          # Next.js 14 dashboard (App Router)
-└── mobile/       # Expo mobile app (NativeWind)
+├── api/             # Hono backend on Cloudflare Workers + Drizzle ORM
+├── admin-web/       # Next.js 14 admin portal (isolated, no billing UI)
+├── user-web/        # Next.js 14 user app (billing + subscription surfaces)
+├── admin-mobile/    # Expo admin mobile app (Neon Auth + MFA)
+└── user-mobile/     # Expo user mobile app (Better Auth + Billing)
 
 packages/
 ├── types/        # Zod schemas (single source of truth)
@@ -165,6 +167,59 @@ Structured logs + traces (5% baseline sampling; forced for errors & slow ops). M
 6. Review metrics & logs for provisioning latency and rate limit overhead.
 
 Refer to `specs/001-platform-bootstrap/spec.md` for full FR (functional requirements) and SC (success criteria) mapping.
+
+## Multi-App Development (Dual Auth Architecture)
+
+The repository now hosts four frontend surfaces to enforce strict admin vs user isolation while sharing a single spec-first backend:
+
+| Surface | Directory | Auth System | Billing Context | Token Claim `type` |
+|---------|-----------|-------------|-----------------|---------------------|
+| Admin Web | `apps/admin-web` | Neon Auth + MFA | None | `admin` |
+| User Web | `apps/user-web` | Better Auth | Polar (web checkout) | `user` |
+| Admin Mobile | `apps/admin-mobile` | Neon Auth + MFA | None | `admin` |
+| User Mobile | `apps/user-mobile` | Better Auth | Polar (native purchase) | `user` |
+
+### Running Individual Surfaces
+
+```bash
+# All surfaces concurrently (admin/user web + mobile)
+pnpm dev:all
+
+# Individual targets
+pnpm dev:admin-web
+pnpm dev:user-web
+pnpm dev:admin-mobile   # Expo Dev Tools (admin)
+pnpm dev:user-mobile    # Expo Dev Tools (user)
+```
+
+`pnpm dev` (legacy) will still run all dev scripts via Turbo; prefer `pnpm dev:all` for explicit multi-app startup with filtering.
+
+### Environment Variables
+
+Set `APP_TYPE` to `admin` or `user` in the respective environment files (.env.admin, .env.user) so UI surfaces can conditionally render billing or audit features:
+
+```env
+APP_TYPE=admin
+NEXT_PUBLIC_APP_TYPE=admin
+EXPO_PUBLIC_APP_TYPE=admin
+```
+
+Admin surfaces must omit billing navigation entirely (enforced in their layouts). User surfaces include a Billing entry linking to subscription management and Polar checkout (see FR-005a/FR-049).
+
+### Billing Isolation
+
+Admin apps never load Polar keys or subscription state. User apps read billing flags (`USER_BILLING_ENABLED=true`) to conditionally enable checkout & receipt flows. This prevents privilege escalation and aligns with SC-003 (cross-role isolation).
+
+### Upcoming Work
+
+Subsequent phases will add:
+- Token type enforcement middleware (`apps/api/src/middleware/tokenType.ts`)
+- Session issuance & MFA routes (US1)
+- Subscription & webhook handlers (US2)
+- RLS migrations (US3) and mobile secure store wrappers (US4)
+- Template propagation scripts (US5)
+
+Track progress in `specs/005-dual-auth-architecture/tasks.md`.
 
 ## Documentation
 

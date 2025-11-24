@@ -1,0 +1,35 @@
+{
+  "name": "@flaresmith/user-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@flaresmith/api-client": "workspace:*",
+    "@flaresmith/types": "workspace:*",
+    "@flaresmith/utils": "workspace:*",
+    "@tanstack/react-query": "^5.28.0",
+    "next": "^14.2.0",
+    "posthog-js": "^1.297.2",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "next-themes": "^0.2.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@flaresmith/config-eslint": "workspace:*",
+    "@flaresmith/config-tsconfig": "workspace:*",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3"
+  }
+}
