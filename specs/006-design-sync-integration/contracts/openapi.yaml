@@ -10,43 +10,20 @@ paths:
     post:
       summary: Execute a sync across selected components
       operationId: executeSync
+      tags: [DesignSync]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [components, directionModes]
-              properties:
-                components:
-                  type: array
-                  items: { type: string, format: uuid }
-                directionModes:
-                  type: object
-                  additionalProperties:
-                    type: string
-                    enum: [code_to_design, design_to_code, bidirectional]
-                excludeVariants:
-                  type: object
-                  additionalProperties:
-                    type: array
-                    items: { type: string }
-                dryRun:
-                  type: boolean
-                  default: false
+              $ref: '#/components/schemas/ExecuteSyncInput'
       responses:
         '200':
           description: Sync executed successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  operationId: { type: string, format: uuid }
-                  status: { type: string }
-                  components: { type: array, items: { type: string, format: uuid } }
-                  diffSummary: { type: object }
-                  reversibleUntil: { type: string, format: date-time }
+                $ref: '#/components/schemas/SyncOperationResult'
         '400': { description: Validation error }
         '403': { description: Unauthorized role }
         '409': { description: Idempotent conflict }
@@ -54,120 +31,84 @@ paths:
     get:
       summary: Retrieve current drift summary
       operationId: getDrift
-      parameters:
-        - in: query
-          name: componentIds
-          schema:
-            type: array
-            items: { type: string, format: uuid }
-          style: form
-          explode: true
+      tags: [DesignSync]
       responses:
         '200':
           description: Drift summary
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  total: { type: integer }
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        componentId: { type: string, format: uuid }
-                        changeTypes: { type: array, items: { type: string } }
-                        severity: { type: string, enum: [low, medium, high] }
+                $ref: '#/components/schemas/DriftSummary'
         '403': { description: Unauthorized }
   /design-sync/undo:
     post:
       summary: Undo a prior sync operation
       operationId: undoSync
+      tags: [DesignSync]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [operationId]
-              properties:
-                operationId: { type: string, format: uuid }
+              $ref: '#/components/schemas/UndoRequest'
       responses:
         '200':
           description: Undo applied
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  undone: { type: boolean }
-                  restoredOperationId: { type: string, format: uuid }
+                $ref: '#/components/schemas/UndoResult'
         '404': { description: Operation not found or expired }
         '403': { description: Unauthorized }
   /design-sync/coverage:
     get:
-      summary: Generate or fetch coverage report
+      summary: Generate or fetch coverage summary
       operationId: getCoverage
-      parameters:
-        - in: query
-          name: componentId
-          schema: { type: string, format: uuid }
+      tags: [DesignSync]
       responses:
         '200':
-          description: Coverage report
+          description: Coverage summary
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  componentId: { type: string, format: uuid }
-                  variantCoveragePct: { type: number }
-                  missingVariants: { type: array, items: { type: string } }
-                  missingTests: { type: array, items: { type: string } }
-                  generatedAt: { type: string, format: date-time }
+                $ref: '#/components/schemas/CoverageSummary'
   /design-sync/credentials:
     get:
       summary: List credential statuses
       operationId: listCredentials
+      tags: [DesignSync]
       responses:
         '200':
           description: Credential list
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        providerType: { type: string }
-                        status: { type: string }
-                        lastValidationTime: { type: string, format: date-time }
-                        rotationDue: { type: string, format: date-time }
+                type: array
+                items: { $ref: '#/components/schemas/CredentialRecord' }
+  /design-sync/credentials/action:
     post:
-      summary: Validate or rotate credential
-      operationId: modifyCredential
+      summary: Perform credential action
+      operationId: credentialAction
+      tags: [DesignSync]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [providerType, action]
-              properties:
-                providerType: { type: string }
-                action: { type: string, enum: [validate, revoke, rotate] }
+              $ref: '#/components/schemas/CredentialActionRequest'
       responses:
-        '200': { description: Operation success }
+        '200':
+          description: Action result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CredentialActionResult' }
         '400': { description: Invalid request }
         '403': { description: Unauthorized }
   /design-sync/digest:
     get:
       summary: Retrieve last daily digest
       operationId: getDigest
+      tags: [DesignSync]
       responses:
         '200':
           description: Digest payload
@@ -181,35 +122,29 @@ paths:
                   coverageChanges: { type: integer }
                   credentialExpirations: { type: integer }
                   generatedAt: { type: string, format: date-time }
-  /design-sync/browser-session:
+  /design-sync/browser/session/start:
     post:
       summary: Start browser test session
       operationId: startBrowserSession
+      tags: [DesignSync]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [storyId]
-              properties:
-                storyId: { type: string, format: uuid }
-                authProfile: { type: string }
+              $ref: '#/components/schemas/BrowserSessionStartRequest'
       responses:
         '200':
           description: Session started
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  sessionId: { type: string, format: uuid }
-                  status: { type: string }
-                  startedAt: { type: string, format: date-time }
-  /design-sync/browser-session/{id}:
+                $ref: '#/components/schemas/BrowserSessionStatusResponse'
+  /design-sync/browser/session/{id}:
     get:
       summary: Get browser session status
       operationId: getBrowserSession
+      tags: [DesignSync]
       parameters:
         - in: path
           name: id
@@ -221,20 +156,153 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  sessionId: { type: string, format: uuid }
-                  storyId: { type: string, format: uuid }
-                  status: { type: string }
-                  startTime: { type: string, format: date-time }
-                  endTime: { type: string, format: date-time }
-                  performanceSummary: { type: object }
-                  correlationId: { type: string, format: uuid }
+                $ref: '#/components/schemas/BrowserSessionStatusResponse'
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  schemas:
+    ExecuteSyncInput:
+      $ref: '#/components/zod/ExecuteSyncInput'
+    SyncOperationResult:
+      $ref: '#/components/zod/SyncOperationResult'
+    DriftSummary:
+      $ref: '#/components/zod/DriftSummary'
+    UndoRequest:
+      $ref: '#/components/zod/UndoRequest'
+    UndoResult:
+      $ref: '#/components/zod/UndoResult'
+    CoverageSummary:
+      $ref: '#/components/zod/CoverageSummary'
+    CredentialRecord:
+      $ref: '#/components/zod/CredentialRecord'
+    CredentialActionRequest:
+      $ref: '#/components/zod/CredentialActionRequest'
+    CredentialActionResult:
+      $ref: '#/components/zod/CredentialActionResult'
+    BrowserSessionStartRequest:
+      $ref: '#/components/zod/BrowserSessionStartRequest'
+    BrowserSessionStatusResponse:
+      $ref: '#/components/zod/BrowserSessionStatusResponse'
+  zod:
+    ExecuteSyncInput:
+      type: object
+      required: [components, direction, diffs]
+      properties:
+        components: { type: array, items: { type: string } }
+        direction: { type: string, enum: [design_to_code, code_to_design, bidirectional] }
+        diffs:
+          type: array
+          items:
+            type: object
+            required: [componentName, changedFields, diffHash]
+            properties:
+              componentName: { type: string }
+              variant: { type: string }
+              changedFields: { type: array, items: { type: string } }
+              diffHash: { type: string }
+        explain: { type: boolean }
+    SyncOperationResult:
+      type: object
+      required: [operationId, applied, skipped, failed, durationMs, reversibleUntil]
+      properties:
+        operationId: { type: string, format: uuid }
+        applied: { type: integer }
+        skipped: { type: integer }
+        failed: { type: integer }
+        durationMs: { type: integer }
+        reversibleUntil: { type: string }
+    DriftSummary:
+      type: object
+      required: [hasDrift, components, totalComponents]
+      properties:
+        hasDrift: { type: boolean }
+        baselineVersion: { type: string }
+        components:
+          type: array
+          items:
+            type: object
+            required: [componentName, added, removed, modified, diffHash]
+            properties:
+              componentName: { type: string }
+              variant: { type: string }
+              added: { type: array, items: { type: string } }
+              removed: { type: array, items: { type: string } }
+              modified: { type: array, items: { type: string } }
+              diffHash: { type: string }
+        totalComponents: { type: integer }
+        falsePositiveHeuristicsApplied: { type: integer }
+    UndoRequest:
+      type: object
+      required: [operationId]
+      properties:
+        operationId: { type: string, format: uuid }
+    UndoResult:
+      type: object
+      required: [undoneOperationId, restoredComponents, durationMs, status]
+      properties:
+        undoneOperationId: { type: string, format: uuid }
+        restoredComponents: { type: array, items: { type: string } }
+        durationMs: { type: integer }
+        status: { type: string, enum: [success, expired, failed] }
+    CoverageSummary:
+      type: object
+      required: [reports, overallVariantCoveragePct]
+      properties:
+        reports:
+          type: array
+          items:
+            type: object
+            required: [component, variantCoveragePct, missingVariants, missingTests, generatedAt]
+            properties:
+              component: { type: string }
+              variantCoveragePct: { type: number }
+              missingVariants: { type: array, items: { type: string } }
+              missingTests: { type: array, items: { type: string } }
+              warnings: { type: array, items: { type: string } }
+              generatedAt: { type: string }
+        overallVariantCoveragePct: { type: number }
+    CredentialRecord:
+      type: object
+      required: [id, providerType, status, metadata]
+      properties:
+        id: { type: string, format: uuid }
+        providerType: { type: string, enum: [notification, design, documentation, testing, ai, analytics] }
+        status: { type: string, enum: [valid, revoked, expired, pending] }
+        lastValidationTime: { type: string }
+        rotationDue: { type: string }
+        metadata: { type: object, additionalProperties: true }
+    CredentialActionRequest:
+      type: object
+      required: [id, action]
+      properties:
+        id: { type: string, format: uuid }
+        action: { type: string, enum: [rotate, validate, revoke] }
+    CredentialActionResult:
+      type: object
+      required: [id, status, message]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [valid, revoked, expired, pending] }
+        message: { type: string }
+    BrowserSessionStartRequest:
+      type: object
+      required: [storyId, correlationId]
+      properties:
+        storyId: { type: string, format: uuid }
+        correlationId: { type: string, format: uuid }
+    BrowserSessionStatusResponse:
+      type: object
+      required: [sessionId, storyId, status, startedAt]
+      properties:
+        sessionId: { type: string, format: uuid }
+        storyId: { type: string, format: uuid }
+        status: { type: string, enum: [running, passed, failed, aborted] }
+        performanceSummary: { type: object }
+        startedAt: { type: string }
+        endedAt: { type: string }
 security:
   - bearerAuth: []
+  

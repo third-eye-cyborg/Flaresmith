@@ -1,9 +1,12 @@
 import { z } from "zod";
+import { getAppDomain } from "@flaresmith/utils/src/env/domainMapping";
 
 export interface CloudMakeClientConfig {
-  baseUrl: string;
+  /** Explicit baseUrl overrides derived environment domain resolution. */
+  baseUrl?: string;
   apiKey?: string;
   onError?: (error: unknown) => void;
+  environment?: 'dev' | 'stage' | 'prod' | 'development' | 'staging' | 'production';
 }
 
 export class CloudMakeClient {
@@ -12,7 +15,15 @@ export class CloudMakeClient {
   private onError?: (error: unknown) => void;
 
   constructor(config: CloudMakeClientConfig) {
-    this.baseUrl = config.baseUrl;
+    // Derive baseUrl if not provided using domain mapping (D005)
+    const env = config.environment || (process.env.ENVIRONMENT as any) || 'dev';
+    if (config.baseUrl) {
+      this.baseUrl = config.baseUrl;
+    } else {
+      const domain = getAppDomain(env as any);
+      // Production single-domain may serve API at /api path
+      this.baseUrl = domain === 'flaresmith.com' ? `https://${domain}/api` : `https://api.${domain}`;
+    }
     this.apiKey = config.apiKey;
     this.onError = config.onError;
   }

@@ -1,0 +1,31 @@
+{
+  "name": "design.browserTest.status",
+  "description": "Retrieves status of an existing browser MCP test session.",
+  "outputSchema": {
+    "$ref": "packages/types/src/design-sync/browserSession.ts#BrowserSessionStatusResponse"
+  }
+}
+{
+  "name": "design.browserTest.status",
+  "description": "Retrieves status for an existing browser MCP test session.",
+  "inputSchema": {
+    "type": "object",
+    "required": ["sessionId"],
+    "properties": {
+      "sessionId": { "type": "string" }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "sessionId": { "type": "string" },
+      "storyId": { "type": "string" },
+      "status": { "type": "string" },
+      "startTime": { "type": "string" },
+      "endTime": { "type": "string" },
+      "performanceSummary": { "type": "object" },
+      "correlationId": { "type": "string" }
+    }
+  },
+  "specRef": "specs/006-design-sync-integration/spec.md"
+}

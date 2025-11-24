@@ -1,0 +1,60 @@
+{
+  "name": "design.sync",
+  "description": "Executes a design ↔ code sync operation applying diffs bidirectionally or unidirectionally.",
+  "inputSchema": {
+    "$ref": "packages/types/src/design-sync/syncOperation.ts#ExecuteSyncInput"
+  },
+  "outputSchema": {
+    "$ref": "packages/types/src/design-sync/syncOperation.ts#SyncOperationResult"
+  }
+}
+{
+  "name": "design.sync",
+  "description": "Executes a manual design ↔ code synchronization across selected components.",
+  "inputSchema": {
+    "type": "object",
+    "required": ["components"],
+    "properties": {
+      "components": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["componentId", "direction"],
+          "properties": {
+            "componentId": { "type": "string" },
+            "direction": { "type": "string", "enum": ["code_to_design", "design_to_code", "bidirectional"] },
+            "excludeVariants": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "dryRun": { "type": "boolean", "default": false }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "operationId": { "type": "string" },
+      "status": { "type": "string" },
+      "components": { "type": "array", "items": { "type": "string" } },
+      "diffSummary": {
+        "type": "object",
+        "properties": {
+          "total": { "type": "number" },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "componentId": { "type": "string" },
+                "changeTypes": { "type": "array", "items": { "type": "string" } },
+                "severity": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "reversibleUntil": { "type": "string" }
+    }
+  },
+  "specRef": "specs/006-design-sync-integration/spec.md"
+}

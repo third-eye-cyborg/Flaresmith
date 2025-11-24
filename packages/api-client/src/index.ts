@@ -6,4 +6,5 @@ export * from "./resources/specs";
 export * from "./resources/chat";
 export * from "./resources/github";
 export * from "./resources/designSystem";
+export * from "./resources/designSync";
 export * from "./websocket";

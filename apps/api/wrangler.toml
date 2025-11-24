@@ -12,15 +12,15 @@ observability = { enabled = true }
 # Routes
 [env.development]
 name = "cloudmake-api-dev"
-vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__" }
+vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__", APP_DOMAIN = "dev.flaresmith.com" }
 
 [env.staging]
 name = "cloudmake-api-staging"
-vars = { ENVIRONMENT = "staging", LOG_LEVEL = "info", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__" }
+vars = { ENVIRONMENT = "staging", LOG_LEVEL = "info", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__", APP_DOMAIN = "stage.flaresmith.com" }
 
 [env.production]
 name = "cloudmake-api-prod"
-vars = { ENVIRONMENT = "production", LOG_LEVEL = "warn", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__" }
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "warn", DATABASE_URL = "__PLACEHOLDER_DB_URL__", CLOUDFLARE_ACCOUNT_ID = "__PLACEHOLDER_ACCOUNT_ID__", APP_DOMAIN = "flaresmith.com" }
 
 # Development settings
 [dev]

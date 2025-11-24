@@ -1,0 +1,29 @@
+{
+  "name": "design.undo",
+  "description": "Performs an undo of a prior reversible sync operation.",
+  "inputSchema": {
+    "$ref": "packages/types/src/design-sync/undo.ts#UndoRequest"
+  },
+  "outputSchema": {
+    "$ref": "packages/types/src/design-sync/undo.ts#UndoResult"
+  }
+}
+{
+  "name": "design.undo",
+  "description": "Undoes a prior reversible design sync operation within the allowed window.",
+  "inputSchema": {
+    "type": "object",
+    "required": ["operationId"],
+    "properties": {
+      "operationId": { "type": "string" }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "undone": { "type": "boolean" },
+      "restoredOperationId": { "type": "string" }
+    }
+  },
+  "specRef": "specs/006-design-sync-integration/spec.md"
+}

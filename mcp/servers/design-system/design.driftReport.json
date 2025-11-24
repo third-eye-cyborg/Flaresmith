@@ -1,0 +1,35 @@
+{
+  "name": "design.driftReport",
+  "description": "Generates a drift summary comparing design artifacts and code components.",
+  "outputSchema": {
+    "$ref": "packages/types/src/design-sync/drift.ts#DriftSummary"
+  }
+}
+{
+  "name": "design.driftReport",
+  "description": "Retrieves current drift summary across mapped components.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "componentIds": { "type": "array", "items": { "type": "string" } }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "total": { "type": "number" },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "componentId": { "type": "string" },
+            "changeTypes": { "type": "array", "items": { "type": "string" } },
+            "severity": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "specRef": "specs/006-design-sync-integration/spec.md"
+}

@@ -14,14 +14,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.flaresmith.app"
+      "bundleIdentifier": "com.thirdeyecyborg.flaresmith"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.flaresmith.app"
+      "package": "com.thirdeyecyborg.flaresmith"
     },
     "web": {
       "bundler": "metro",
@@ -35,7 +35,8 @@
     "extra": {
       "POSTHOG_API_KEY": process.env.POSTHOG_API_KEY,
       "POSTHOG_HOST": process.env.POSTHOG_HOST || "https://app.posthog.com",
-      "ENVIRONMENT": process.env.ENVIRONMENT || "dev"
+      "ENVIRONMENT": process.env.ENVIRONMENT || "dev",
+      "APP_DOMAIN": process.env.APP_DOMAIN || "dev.flaresmith.com"
     }
   }
 }

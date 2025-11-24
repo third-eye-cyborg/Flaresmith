@@ -17,82 +17,82 @@
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-- [ ] T009 Create DB migration file `apps/api/db/migrations/20251123_design_sync.sql`
-- [ ] T010 [P] Implement Drizzle schema `apps/api/db/schema/designSync.ts`
-- [ ] T011 [P] Add Zod schemas `packages/types/src/design-sync/syncOperation.ts`
-- [ ] T012 [P] Add Zod schemas `packages/types/src/design-sync/drift.ts`
-- [ ] T013 [P] Add Zod schemas `packages/types/src/design-sync/undo.ts`
-- [ ] T014 [P] Add Zod schemas `packages/types/src/design-sync/coverage.ts`
-- [ ] T015 [P] Add Zod schemas `packages/types/src/design-sync/credentials.ts`
-- [ ] T016 [P] Add Zod schemas `packages/types/src/design-sync/browserSession.ts`
-- [ ] T017 Create service skeleton `apps/api/src/services/designSyncService.ts`
-- [ ] T018 [P] Create service skeleton `apps/api/src/services/designDriftService.ts`
-- [ ] T019 [P] Create service skeleton `apps/api/src/services/designUndoService.ts`
-- [ ] T020 [P] Create service skeleton `apps/api/src/services/designCoverageService.ts`
-- [ ] T021 [P] Create service skeleton `apps/api/src/services/designCredentialService.ts`
-- [ ] T022 [P] Create service skeleton `apps/api/src/services/browserTestService.ts`
-- [ ] T023 Add route registration barrel `apps/api/src/routes/design-sync/index.ts`
-- [ ] T024 Implement notification category registry `apps/api/src/services/notificationCategoryService.ts`
-- [ ] T025 [P] Add MCP tool descriptor `mcp/servers/design-system/design.sync.json`
-- [ ] T026 [P] Add MCP tool descriptor `mcp/servers/design-system/design.driftReport.json`
-- [ ] T027 [P] Add MCP tool descriptor `mcp/servers/design-system/design.undo.json`
-- [ ] T028 [P] Add MCP tool descriptor `mcp/servers/design-system/design.coverageReport.json`
-- [ ] T029 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.start.json`
-- [ ] T030 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.status.json`
-- [ ] T031 Add API client resource `packages/api-client/src/resources/designSync.ts`
-- [ ] T032 [P] Add API client resource `packages/api-client/src/resources/designDrift.ts`
-- [ ] T033 [P] Add API client resource `packages/api-client/src/resources/designUndo.ts`
-- [ ] T034 [P] Add API client resource `packages/api-client/src/resources/designCoverage.ts`
-- [ ] T035 [P] Add API client resource `packages/api-client/src/resources/designCredentials.ts`
-- [ ] T036 [P] Add API client resource `packages/api-client/src/resources/designBrowserSession.ts`
-- [ ] T037 Insert OpenAPI endpoints into contract `specs/006-design-sync-integration/contracts/openapi.yaml`
-- [ ] T038 Add feature-specific logging utilities `apps/api/src/logging/designSyncLogger.ts`
-- [ ] T039 [P] Establish correlation ID middleware extension `apps/api/src/middleware/correlationDesignSync.ts`
-- [ ] T040 Implement access control matrix `apps/api/src/middleware/designSyncAccess.ts`
+-- [x] T009 Create DB migration file `apps/api/db/migrations/20251123_design_sync.sql`
+-- [x] T010 [P] Implement Drizzle schema `apps/api/db/schema/designSync.ts`
+-- [x] T011 [P] Add Zod schemas `packages/types/src/design-sync/syncOperation.ts`
+-- [x] T012 [P] Add Zod schemas `packages/types/src/design-sync/drift.ts`
+-- [x] T013 [P] Add Zod schemas `packages/types/src/design-sync/undo.ts`
+-- [x] T014 [P] Add Zod schemas `packages/types/src/design-sync/coverage.ts`
+-- [x] T015 [P] Add Zod schemas `packages/types/src/design-sync/credentials.ts`
+-- [x] T016 [P] Add Zod schemas `packages/types/src/design-sync/browserSession.ts`
+-- [x] T017 Create service skeleton `apps/api/src/services/designSyncService.ts`
+-- [x] T018 [P] Create service skeleton `apps/api/src/services/designDriftService.ts`
+-- [x] T019 [P] Create service skeleton `apps/api/src/services/designUndoService.ts`
+-- [x] T020 [P] Create service skeleton `apps/api/src/services/designCoverageService.ts`
+-- [x] T021 [P] Create service skeleton `apps/api/src/services/designCredentialService.ts`
+-- [x] T022 [P] Create service skeleton `apps/api/src/services/browserTestService.ts`
+-- [x] T023 Add route registration barrel `apps/api/src/routes/design-sync/index.ts`
+-- [x] T024 Implement notification category registry `apps/api/src/services/notificationCategoryService.ts`
+-- [x] T025 [P] Add MCP tool descriptor `mcp/servers/design-system/design.sync.json`
+-- [x] T026 [P] Add MCP tool descriptor `mcp/servers/design-system/design.driftReport.json`
+-- [x] T027 [P] Add MCP tool descriptor `mcp/servers/design-system/design.undo.json`
+-- [x] T028 [P] Add MCP tool descriptor `mcp/servers/design-system/design.coverageReport.json`
+-- [x] T029 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.start.json`
+-- [x] T030 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.status.json`
+-- [x] T031 Add API client resource `packages/api-client/src/resources/designSync.ts`
+-- [x] T032 [P] Add API client resource `packages/api-client/src/resources/designDrift.ts`
+-- [x] T033 [P] Add API client resource `packages/api-client/src/resources/designUndo.ts`
+-- [x] T034 [P] Add API client resource `packages/api-client/src/resources/designCoverage.ts`
+-- [x] T035 [P] Add API client resource `packages/api-client/src/resources/designCredentials.ts`
+-- [x] T036 [P] Add API client resource `packages/api-client/src/resources/designBrowserSession.ts`
+-- [x] T037 Insert OpenAPI endpoints into contract `specs/006-design-sync-integration/contracts/openapi.yaml`
+-- [x] T038 Add feature-specific logging utilities `apps/api/src/logging/designSyncLogger.ts`
+-- [x] T039 [P] Establish correlation ID middleware extension `apps/api/src/middleware/correlationDesignSync.ts`
+-- [x] T040 Implement access control matrix `apps/api/src/middleware/designSyncAccess.ts`
 
 ## Phase 3: User Story 1 (P1) Manual Design↔Code Sync with Control
 
-- [ ] T041 [US1] Implement diff canonicalizer util `apps/api/src/utils/designSync/canonicalize.ts`
-- [ ] T042 [P] [US1] Implement drift detection algorithm `apps/api/src/utils/designSync/driftDetect.ts`
-- [ ] T043 [US1] Implement sync execution core `apps/api/src/services/designSyncService.ts` (apply logic)
-- [ ] T044 [P] [US1] Implement undo stack manager `apps/api/src/services/designUndoService.ts` (history window)
-- [ ] T045 [US1] Implement POST /design-sync/operations route `apps/api/src/routes/design-sync/sync.ts`
-- [ ] T046 [P] [US1] Implement GET /design-sync/drift route `apps/api/src/routes/design-sync/drift.ts`
-- [ ] T047 [US1] Implement POST /design-sync/undo route `apps/api/src/routes/design-sync/undo.ts`
-- [ ] T048 [P] [US1] Create UI diff preview component `apps/web/app/(design-sync)/components/DiffPreview.tsx`
-- [ ] T049 [P] [US1] Create UI sync control panel `apps/web/app/(design-sync)/components/SyncControlPanel.tsx`
-- [ ] T050 [US1] Add undo/redo buttons logic `apps/web/app/(design-sync)/components/SyncHistoryControls.tsx`
-- [ ] T051 [US1] Add audit log entry creation `apps/api/src/services/designAuditService.ts`
-- [ ] T052 [P] [US1] Add optimistic UI state & error boundary `apps/web/app/(design-sync)/components/SyncStateBoundary.tsx`
-- [ ] T053 [US1] Integrate MCP tool design.sync invocation in UI `apps/web/app/(design-sync)/lib/mcpSyncInvoker.ts`
-- [ ] T054 [US1] Unit tests for canonicalizer `apps/api/tests/designSync/canonicalize.test.ts`
-- [ ] T055 [P] [US1] Unit tests for drift detection `apps/api/tests/designSync/driftDetect.test.ts`
-- [ ] T056 [US1] Integration test: sync operation flow `apps/api/tests/designSync/syncFlow.test.ts`
-- [ ] T057 [P] [US1] Integration test: undo / redo `apps/api/tests/designSync/undoRedo.test.ts`
+- [x] T041 [US1] Implement diff canonicalizer util `apps/api/src/utils/designSync/canonicalize.ts`
+- [x] T042 [P] [US1] Implement drift detection algorithm `apps/api/src/utils/designSync/driftDetect.ts`
+- [x] T043 [US1] Implement sync execution core `apps/api/src/services/designSyncService.ts` (apply logic)
+- [x] T044 [P] [US1] Implement undo stack manager `apps/api/src/services/designUndoService.ts` (history window)
+- [x] T045 [US1] Implement POST /design-sync/operations route `apps/api/src/routes/design-sync/sync.ts`
+- [x] T046 [P] [US1] Implement GET /design-sync/drift route `apps/api/src/routes/design-sync/drift.ts`
+- [x] T047 [US1] Implement POST /design-sync/undo route `apps/api/src/routes/design-sync/undo.ts`
+- [x] T048 [P] [US1] Create UI diff preview component `apps/web/app/(design-sync)/components/DiffPreview.tsx`
+- [x] T049 [P] [US1] Create UI sync control panel `apps/web/app/(design-sync)/components/SyncControlPanel.tsx`
+- [x] T050 [US1] Add undo/redo buttons logic `apps/web/app/(design-sync)/components/SyncHistoryControls.tsx`
+- [x] T051 [US1] Add audit log entry creation `apps/api/src/services/designAuditService.ts`
+- [x] T052 [P] [US1] Add optimistic UI state & error boundary `apps/web/app/(design-sync)/components/SyncStateBoundary.tsx`
+- [x] T053 [US1] Integrate MCP tool design.sync invocation in UI `apps/web/app/(design-sync)/lib/mcpSyncInvoker.ts`
+- [x] T054 [US1] Unit tests for canonicalizer `apps/api/tests/designSync/canonicalize.test.ts`
+- [x] T055 [P] [US1] Unit tests for drift detection `apps/api/tests/designSync/driftDetect.test.ts`
+- [x] T056 [US1] Integration test: sync operation flow `apps/api/tests/designSync/syncFlow.test.ts`
+- [x] T057 [P] [US1] Integration test: undo / redo `apps/api/tests/designSync/undoRedo.test.ts`
 
 ## Phase 4: User Story 2 (P2) Integrated Multi-Tool Test & Documentation Coverage
 
-- [ ] T058 [US2] Implement coverage calculation util `apps/api/src/utils/designSync/coverageCalc.ts`
-- [ ] T059 [P] [US2] Implement coverage report route `apps/api/src/routes/design-sync/coverage.ts`
-- [ ] T060 [US2] Implement test scaffold generator `apps/api/src/services/designCoverageService.ts` (extend)
-- [ ] T061 [P] [US2] Add Storybook story auto-registration script `scripts/design/registerStories.ts`
-- [ ] T062 [US2] Add Cypress scaffold template `apps/web/tests/designSync/cypressScaffold.spec.ts`
-- [ ] T063 [P] [US2] Add Playwright scaffold template `apps/web/tests/designSync/playwrightScaffold.spec.ts`
-- [ ] T064 [US2] Add accessibility test scaffold template `apps/web/tests/designSync/a11yScaffold.spec.ts`
-- [ ] T065 [P] [US2] Create coverage dashboard UI `apps/web/app/(design-sync)/components/CoverageDashboard.tsx`
-- [ ] T066 [US2] Slack (notification system) coverage summary dispatch `apps/api/src/services/notificationCategoryService.ts` (extend)
-- [ ] T067 [US2] Integration test coverage endpoint `apps/api/tests/designSync/coverageEndpoint.test.ts`
-- [ ] T068 [P] [US2] Unit tests coverageCalc util `apps/api/tests/designSync/coverageCalc.test.ts`
+- [X] T058 [US2] Implement coverage calculation util `apps/api/src/utils/designSync/coverageCalc.ts`
+- [X] T059 [P] [US2] Implement coverage report route `apps/api/src/routes/design-sync/coverage.ts`
+- [X] T060 [US2] Implement test scaffold generator `apps/api/src/services/designCoverageService.ts` (extend)
+- [X] T061 [P] [US2] Add Storybook story auto-registration script `scripts/design/registerStories.ts`
+- [X] T062 [US2] Add Cypress scaffold template `apps/web/tests/designSync/cypressScaffold.spec.ts`
+- [X] T063 [P] [US2] Add Playwright scaffold template `apps/web/tests/designSync/playwrightScaffold.spec.ts`
+- [X] T064 [US2] Add accessibility test scaffold template `apps/web/tests/designSync/a11yScaffold.spec.ts`
+- [X] T065 [P] [US2] Create coverage dashboard UI `apps/web/app/(design-sync)/components/CoverageDashboard.tsx`
+- [X] T066 [US2] Slack (notification system) coverage summary dispatch `apps/api/src/services/notificationCategoryService.ts` (extend)
+- [X] T067 [US2] Integration test coverage endpoint `apps/api/tests/designSync/coverageEndpoint.test.ts`
+- [X] T068 [P] [US2] Unit tests coverageCalc util `apps/api/tests/designSync/coverageCalc.test.ts`
 
 ## Phase 5: User Story 3 (P3) Notification & Collaboration Hub
 
-- [ ] T069 [US3] Implement category preference model extension `apps/api/db/schema/designSync.ts` (add table/fields)
-- [ ] T070 [P] [US3] Implement preferences route `apps/api/src/routes/design-sync/preferences.ts`
-- [ ] T071 [US3] Add digest generation job `apps/api/src/jobs/designSyncDigestJob.ts`
-- [ ] T072 [P] [US3] Notification preferences UI `apps/web/app/(design-sync)/components/NotificationPreferences.tsx`
-- [ ] T073 [US3] Daily digest dispatch integration `apps/api/src/services/notificationCategoryService.ts` (extend)
-- [ ] T074 [P] [US3] Integration test digest job `apps/api/tests/designSync/digestJob.test.ts`
-- [ ] T075 [US3] Unit tests preferences route `apps/api/tests/designSync/preferencesRoute.test.ts`
+- [X] T069 [US3] Implement category preference model extension `apps/api/db/schema/designSync.ts` (add table/fields)
+- [X] T070 [P] [US3] Implement preferences route `apps/api/src/routes/design-sync/preferences.ts`
+- [X] T071 [US3] Add digest generation job `apps/api/src/jobs/designSyncDigestJob.ts`
+- [X] T072 [P] [US3] Notification preferences UI `apps/web/app/(design-sync)/components/NotificationPreferences.tsx`
+- [X] T073 [US3] Daily digest dispatch integration `apps/api/src/services/notificationCategoryService.ts` (extend)
+- [X] T074 [P] [US3] Integration test digest job `apps/api/tests/designSync/digestJob.test.ts`
+- [X] T075 [US3] Unit tests preferences route `apps/api/tests/designSync/preferencesRoute.test.ts`
 
 ## Phase 6: User Story 4 (P4) Credential & Integration Governance
 
