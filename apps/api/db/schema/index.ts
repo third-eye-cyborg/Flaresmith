@@ -10,3 +10,4 @@ export * from "./specArtifact";
 export * from "./chatSession";
 export * from "./secrets";
 export * from "./specVersion";
+export * from "./secretSync";

@@ -16,10 +16,11 @@ export function authMiddleware() {
     }
 
     const token = authHeader.substring(7);
-    const secret = c.env.JWT_SECRET;
+    // Use the configured JWT signing key (aligned with env & BetterAuth config)
+    const secret = c.env.JWT_SIGNING_KEY;
 
     if (!secret) {
-      throw new HTTPException(500, { message: "JWT secret not configured" });
+      throw new HTTPException(500, { message: "JWT signing key not configured" });
     }
 
     try {

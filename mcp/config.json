@@ -3,7 +3,14 @@
     "github": {
       "command": "node",
       "args": ["./mcp/servers/github/index.js"],
-      "tools": []
+      "tools": [
+        "github.createRepo",
+        "github.createCodespace",
+        "github.syncSecrets",
+        "github.createEnvironments",
+        "github.validateSecrets",
+        "github.getSecretSyncStatus"
+      ]
     },
     "cloudflare": {
       "command": "node",

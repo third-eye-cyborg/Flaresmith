@@ -1,0 +1,77 @@
+{
+  "name": "github.createEnvironments",
+  "description": "Create or update GitHub environments (dev, staging, production) with protection rules and environment-specific secrets.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "projectId": { "type": "string", "format": "uuid", "description": "Project identifier (UUID)" },
+      "environments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "enum": ["dev", "staging", "production"] },
+            "protectionRules": {
+              "type": "object",
+              "properties": {
+                "requiredReviewers": { "type": "number", "minimum": 0 },
+                "reviewerIds": { "type": "array", "items": { "type": "number" } },
+                "restrictToMainBranch": { "type": "boolean" },
+                "waitTimer": { "type": "number", "minimum": 0 }
+              },
+              "additionalProperties": false
+            },
+            "secrets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+                  "value": { "type": "string" }
+                },
+                "required": ["name", "value"],
+                "additionalProperties": false
+              }
+            },
+            "linkedResources": {
+              "type": "object",
+              "properties": {
+                "neonBranchId": { "type": "string" },
+                "cloudflareWorkerName": { "type": "string" },
+                "cloudflarePagesProject": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["name", "protectionRules", "secrets", "linkedResources"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": ["projectId", "environments"],
+    "additionalProperties": false
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "created": { "type": "array", "items": { "type": "string" } },
+      "updated": { "type": "array", "items": { "type": "string" } },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "environment": { "type": "string" },
+            "error": { "type": "string" },
+            "code": { "type": "string" }
+          },
+          "required": ["environment", "error"],
+          "additionalProperties": false
+        }
+      },
+      "correlationId": { "type": "string", "format": "uuid" }
+    },
+    "required": ["created", "updated", "errors", "correlationId"],
+    "additionalProperties": false
+  }
+}

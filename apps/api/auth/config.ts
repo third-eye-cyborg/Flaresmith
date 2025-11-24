@@ -8,16 +8,20 @@ import { createDbConnection } from "../db/connection";
 
 export function createAuthConfig(env: {
   DATABASE_URL: string;
-  JWT_SECRET: string;
+  BETTERAUTH_SECRET: string; // library secret for sessions / internal encryption
+  JWT_SIGNING_KEY: string;   // signing key for JWT access tokens
   BASE_URL: string;
 }) {
   const db = createDbConnection(env.DATABASE_URL);
 
   return betterAuth({
+    // Drizzle (Neon HTTP) connection – BetterAuth expects a database-like adapter
     database: db as any,
+    // Top-level secret (some BetterAuth features use this separate from JWT signing)
+    secret: env.BETTERAUTH_SECRET,
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: false, // TODO: Enable for production
+      requireEmailVerification: false, // TODO: Enable for production rollout
     },
     session: {
       expiresIn: 60 * 60 * 24, // 24 hours
@@ -29,7 +33,7 @@ export function createAuthConfig(env: {
     },
     jwt: {
       expiresIn: 60 * 15, // 15 minutes
-      secret: env.JWT_SECRET,
+      secret: env.JWT_SIGNING_KEY,
     },
     baseURL: env.BASE_URL,
     trustedOrigins: [env.BASE_URL],

@@ -12,6 +12,7 @@ export type Env = {
   BETTERAUTH_SECRET: string;
   MASTER_ENC_KEY: string;
   JWT_SIGNING_KEY: string;
+  BASE_URL: string; // public origin for auth callbacks & trustedOrigins
 };
 
 // Extend Hono with our custom context variables
