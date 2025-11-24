@@ -1,0 +1,6 @@
+// React import removed (automatic JSX runtime)
+import { View as RNView, type ViewProps } from "react-native";
+
+export function View(props: ViewProps) {
+  return <RNView {...props} />;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "@cloudmake/config-prettier",
+  "version": "0.1.0",
+  "private": true,
+  "main": ".prettierrc.json"
+}

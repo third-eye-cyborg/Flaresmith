@@ -1,0 +1,10 @@
+{
+  "name": "specs.apply",
+  "description": "Applies the active feature specification to regenerate code artifacts and report drift.",
+  "inputSchema": {
+    "$ref": "packages/types/src/api/specs.ts#ApplySpecRequest"
+  },
+  "outputSchema": {
+    "$ref": "packages/types/src/api/specs.ts#ApplySpecResponse"
+  }
+}

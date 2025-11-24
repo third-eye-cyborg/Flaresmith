@@ -1,0 +1,30 @@
+{
+  "extends": "../../packages/config/tsconfig/cloudflare.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@flaresmith/types": ["../../packages/types/src"],
+      "@flaresmith/utils": ["../../packages/utils/src"],
+      "@cloudmake/types": ["../../packages/types/src"],
+      "@cloudmake/utils": ["../../packages/utils/src"],
+      "@cloudmake/types/*": ["../../packages/types/src/*"],
+      "@cloudmake/utils/*": ["../../packages/utils/src/*"],
+      "@cloudmake/api-client": ["../../packages/api-client/src"],
+      "@cloudmake/api-client/*": ["../../packages/api-client/src/*"],
+      "@cloudmake/ui": ["../../packages/ui/src"]
+      ,"@cloudmake/ui/*": ["../../packages/ui/src/*"]
+    },
+    "skipLibCheck": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true
+  },
+  "include": ["src", "db", "tests", "../../packages/types/src", "../../packages/utils/src", "../../scripts"],
+  "exclude": ["node_modules", "dist"]
+}

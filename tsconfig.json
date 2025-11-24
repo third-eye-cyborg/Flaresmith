@@ -1,0 +1,15 @@
+{
+  "extends": "./packages/config/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@flaresmith/ui": ["./packages/ui/src"],
+      "@flaresmith/types": ["./packages/types/src"],
+      "@flaresmith/api-client": ["./packages/api-client/src"],
+      "@flaresmith/utils": ["./packages/utils/src"],
+      "@flaresmith/config": ["./packages/config"]
+    },
+    "types": ["node"]
+  },
+  "exclude": ["node_modules", "dist", "build", ".next", ".turbo"]
+}

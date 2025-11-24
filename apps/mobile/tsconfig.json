@@ -1,0 +1,18 @@
+{
+  "extends": "@flaresmith/config-tsconfig/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./app/*"],
+      "@flaresmith/api-client": ["../../packages/api-client/src"],
+      "@flaresmith/types": ["../../packages/types/src"],
+      "@flaresmith/utils": ["../../packages/utils/src"],
+      "@flaresmith/ui": ["../../packages/ui/src"]
+    },
+    "lib": ["ES2022"],
+    "types": ["react", "react-native", "node"],
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind.d.ts"],
+  "exclude": ["node_modules"]
+}

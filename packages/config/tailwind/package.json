@@ -1,0 +1,9 @@
+{
+  "name": "@flaresmith/config-tailwind",
+  "version": "0.1.0",
+  "private": true,
+  "main": "base.js",
+  "peerDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

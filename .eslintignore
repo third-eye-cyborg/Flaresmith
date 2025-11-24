@@ -1,0 +1,25 @@
+# Node & build outputs
+node_modules/
+dist/
+build/
+coverage/
+
+# Next.js / Expo / Turbo
+.next/
+out/
+.expo/
+.expo-shared/
+.turbo/
+
+# Generated / caches
+.cache/
+.parcel-cache/
+.wrangler/
+
+# Env & local
+.env*
+.dev.vars
+
+# IDE
+.vscode/
+.idea/
