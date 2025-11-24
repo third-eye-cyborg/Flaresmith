@@ -26,9 +26,10 @@ Based on your repository secrets, here's the complete list:
 | OPENAI_API_KEY | 29m ago | AI/LLM features |
 | PLAYWRIGHT_MOBILE_TOKEN | 52m ago | Mobile browser testing |
 | PLAYWRIGHT_WEB_TOKEN | 1h ago | Web browser testing |
-| POLAR_API_KEY | 2h ago | Polar analytics |
+| POLAR_API_KEY | 2 hours ago | Polar analytics |
 | POSTHOG_API_KEY | yesterday | Product analytics |
 | POSTMAN_API_KEY | yesterday | API testing |
+| BUILDER_API_KEY | now | Builder.io CMS |
 | SLACK_ACCESS_TOKEN | 35m ago | Slack integration (access) |
 | SLACK_REFRESH_TOKEN | 35m ago | Slack integration (refresh) |
 | STORYBOOK_MOBILE_TOKEN | 53m ago | Component library (mobile) |
@@ -52,6 +53,7 @@ Based on your repository secrets, here's the complete list:
 - OPENAI_API_KEY (dev tier)
 - POSTMAN_API_KEY
 - POLAR_API_KEY
+- BUILDER_API_KEY
 - CYPRESS_WEB_TOKEN
 - CYPRESS_MOBILE_TOKEN
 - PLAYWRIGHT_WEB_TOKEN

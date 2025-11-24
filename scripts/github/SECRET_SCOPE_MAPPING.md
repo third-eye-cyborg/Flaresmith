@@ -16,6 +16,7 @@
 | NOTION_API_KEY | ✅ | ❌ | ❌ | ❌ | ❌ | Documentation sync |
 | POSTMAN_API_KEY | ✅ | ❌ | ❌ | ❌ | ❌ | API testing in dev |
 | POLAR_API_KEY | ✅ | ❌ | ❌ | ❌ | ❌ | Analytics dashboards |
+| BUILDER_API_KEY | ✅ | ❌ | ❌ | ❌ | ❌ | CMS content management |
 | **Testing Tools** |
 | CYPRESS_WEB_TOKEN | ✅ | ❌ | ❌ | ❌ | ❌ | Local E2E testing |
 | CYPRESS_MOBILE_TOKEN | ✅ | ❌ | ❌ | ❌ | ❌ | Local E2E testing |
