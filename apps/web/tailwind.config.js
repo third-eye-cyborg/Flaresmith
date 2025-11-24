@@ -1,4 +1,4 @@
-const baseConfig = require("@cloudmake/config/tailwind/base");
+const baseConfig = require("@flaresmith/config-tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

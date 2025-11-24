@@ -4,20 +4,41 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*", "./app/*"],
-      "@flaresmith/api-client": ["../../packages/api-client/src"],
-      "@flaresmith/types": ["../../packages/types/src"],
-      "@flaresmith/utils": ["../../packages/utils/src"],
-      "@flaresmith/ui": ["../../packages/ui/src"]
+      "@/*": [
+        "./src/*",
+        "./app/*"
+      ],
+      "@flaresmith/api-client": [
+        "../../packages/api-client/src"
+      ],
+      "@flaresmith/types": [
+        "../../packages/types/src"
+      ],
+      "@flaresmith/utils": [
+        "../../packages/utils/src"
+      ],
+      "@flaresmith/ui": [
+        "../../packages/ui/src"
+      ]
     },
     "rootDir": "../..",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "noEmit": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", ".next", "out"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out"
+  ]
 }
