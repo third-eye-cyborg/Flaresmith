@@ -122,21 +122,20 @@ Quickstart: `specs/005-dual-auth-architecture/quickstart.md`
 - [X] T088 [US3] Add foreign key constraints extension (cascade checks) `apps/api/db/migrations/04_fk_constraints.sql`
 - [X] T089 [US3] Negative test direct query attempt `apps/api/tests/security/adminAuditLogsBlocked.test.ts`
 - [X] T090 [US3] Update README document `apps/api/README.md` isolation decisions (RLS policies, connection pooling, security model, testing, deployment)
-- [ ] T090 [US3] Document isolation decisions in README `apps/api/README.md`
 
 ## Phase 6: User Story 4 (Expo Auth & Billing Architecture) [US4]
 (Mobile flows: secure store, deep links, biometric fallback.)
 
-- [ ] T091 [US4] Implement secure store admin wrapper `apps/admin-mobile/src/storage/adminSecureStore.ts`
-- [ ] T092 [P] [US4] Implement secure store user wrapper `apps/user-mobile/src/storage/userSecureStore.ts`
-- [ ] T093 [US4] Implement deep link handling admin `apps/admin-mobile/src/navigation/deepLinks.ts`
-- [ ] T094 [US4] Implement deep link handling user `apps/user-mobile/src/navigation/deepLinks.ts`
-- [ ] T095 [US4] Implement biometric fallback logic `apps/user-mobile/src/auth/biometricFallback.ts`
-- [ ] T096 [US4] Add subscription tier badge component `apps/user-mobile/src/components/SubscriptionBadge.tsx`
-- [ ] T097 [US4] Add admin route guard HOC `apps/admin-mobile/src/auth/routeGuard.tsx`
-- [ ] T098 [US4] Add user route guard HOC `apps/user-mobile/src/auth/routeGuard.tsx`
-- [ ] T099 [US4] Add token refresh scheduler mobile `apps/user-mobile/src/auth/tokenScheduler.ts`
-- [ ] T100 [US4] Mobile tests biometric fallback (placeholder) `apps/user-mobile/tests/biometricFallback.test.ts`
+- [X] T091 [US4] Implement secure store admin wrapper `apps/admin-mobile/src/storage/adminSecureStore.ts`
+- [X] T092 [P] [US4] Implement secure store user wrapper `apps/user-mobile/src/storage/userSecureStore.ts`
+- [X] T093 [US4] Implement deep link handling admin `apps/admin-mobile/src/navigation/deepLinks.ts`
+- [X] T094 [US4] Implement deep link handling user `apps/user-mobile/src/navigation/deepLinks.ts`
+- [X] T095 [US4] Implement biometric fallback logic `apps/user-mobile/src/auth/biometricFallback.ts`
+- [X] T096 [US4] Add subscription tier badge component `apps/user-mobile/src/components/SubscriptionBadge.tsx`
+- [X] T097 [US4] Add admin route guard HOC `apps/admin-mobile/src/auth/routeGuard.tsx`
+- [X] T098 [US4] Add user route guard HOC `apps/user-mobile/src/auth/routeGuard.tsx`
+- [X] T099 [US4] Add token refresh scheduler mobile `apps/user-mobile/src/auth/tokenScheduler.ts`
+- [X] T100 [US4] Mobile tests biometric fallback (placeholder) `apps/user-mobile/tests/biometricFallback.test.ts`
 
 ## Phase 7: User Story 5 (Template Propagation) [US5]
 (Integrate architecture into template & sync tools.)
