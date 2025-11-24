@@ -14,11 +14,19 @@ workflows:
         - expo_credentials # Contains EXPO_TOKEN
         - github_credentials # Contains GITHUB_TOKEN for repo access
         - neon_credentials # Contains NEON_API_KEY
+        - analytics_credentials # POSTHOG_API_KEY, ONESIGNAL_APP_ID
+        - billing_credentials # POLAR_API_KEY, POLAR_WEBHOOK_SECRET
+        - builder_credentials # BUILDER_API_KEY for internal builder orchestration
       vars:
         EXPO_PUBLIC_API_URL: https://api-dev.flaresmith.dev
         EXPO_OWNER: flaresmith
         EXPO_PROJECT_SLUG: flaresmith-mobile
         NODE_VERSION: 20.x
+        # The following variables are injected from secure groups (names only here):
+        POSTHOG_API_KEY: $POSTHOG_API_KEY
+        ONESIGNAL_APP_ID: $ONESIGNAL_APP_ID
+        POLAR_API_KEY: $POLAR_API_KEY
+        POLAR_WEBHOOK_SECRET: $POLAR_WEBHOOK_SECRET
       node: $NODE_VERSION
       
     triggering:
@@ -67,11 +75,18 @@ workflows:
         - expo_credentials
         - github_credentials
         - neon_credentials
+        - analytics_credentials
+        - billing_credentials
+        - builder_credentials
       vars:
         EXPO_PUBLIC_API_URL: https://api-staging.flaresmith.dev
         EXPO_OWNER: flaresmith
         EXPO_PROJECT_SLUG: flaresmith-mobile
         NODE_VERSION: 20.x
+        POSTHOG_API_KEY: $POSTHOG_API_KEY
+        ONESIGNAL_APP_ID: $ONESIGNAL_APP_ID
+        POLAR_API_KEY: $POLAR_API_KEY
+        POLAR_WEBHOOK_SECRET: $POLAR_WEBHOOK_SECRET
       node: $NODE_VERSION
       
     triggering:
@@ -135,11 +150,18 @@ workflows:
         - neon_credentials
         - apple_credentials # App Store Connect API key
         - google_credentials # Google Play Service Account
+        - analytics_credentials
+        - billing_credentials
+        - builder_credentials
       vars:
         EXPO_PUBLIC_API_URL: https://api.flaresmith.dev
         EXPO_OWNER: flaresmith
         EXPO_PROJECT_SLUG: flaresmith-mobile
         NODE_VERSION: 20.x
+        POSTHOG_API_KEY: $POSTHOG_API_KEY
+        ONESIGNAL_APP_ID: $ONESIGNAL_APP_ID
+        POLAR_API_KEY: $POLAR_API_KEY
+        POLAR_WEBHOOK_SECRET: $POLAR_WEBHOOK_SECRET
       node: $NODE_VERSION
       
     triggering:

@@ -15,7 +15,10 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules .turbo",
-    "import:env-secrets": "ts-node scripts/github/importEnvSecrets.ts"
+    "import:env-secrets": "ts-node scripts/github/importEnvSecrets.ts",
+    "distribute:env-secrets": "tsx scripts/security/distributeEnvSecrets.ts --owner third-eye-cyborg --repo CloudMake --dry-run",
+    "sync:workflow-secrets": "tsx scripts/github/workflowSyncSecrets.ts --owner third-eye-cyborg --repo CloudMake --dry-run",
+    "test:secrets": "vitest run scripts/security/__tests__/distributeEnvSecrets.test.ts"
   },
   "devDependencies": {
     "@turbo/gen": "^2.0.0",
@@ -28,7 +31,9 @@
     "tsx": "^4.20.6",
     "turbo": "^2.0.0",
     "typescript": "^5.3.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "chalk": "^5.3.0",
+    "vitest": "^1.0.0"
   },
   "packageManager": "pnpm@9.1.0",
   "engines": {
