@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface PerformanceSummary {
   lcp?: number; // Largest Contentful Paint (ms)
@@ -145,7 +145,7 @@ export function BrowserSessionViewer({
 
   if (loading) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
+      <div className="p-5 text-center">
         <div>Loading browser sessions...</div>
       </div>
     );
@@ -153,9 +153,13 @@ export function BrowserSessionViewer({
 
   if (error) {
     return (
-      <div style={{ padding: '20px', color: '#ef4444' }}>
+      <div className="p-5 text-red-500">
         <div>Error: {error}</div>
-        <button onClick={fetchSessions} style={{ marginTop: '10px', padding: '8px 16px' }}>
+        <button 
+          type="button"
+          onClick={fetchSessions} 
+          className="mt-2.5 px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
+        >
           Retry
         </button>
       </div>
@@ -163,21 +167,22 @@ export function BrowserSessionViewer({
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>Browser Test Sessions</h2>
+    <div className="p-5">
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-2xl font-bold">Browser Test Sessions</h2>
         <button
+          type="button"
           onClick={fetchSessions}
-          style={{ padding: '8px 16px', borderRadius: '6px', border: '1px solid #d1d5db' }}
+          className="px-4 py-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
         >
           🔄 Refresh
         </button>
       </div>
 
       {/* Session list */}
-      <div style={{ display: 'grid', gap: '16px' }}>
+      <div className="grid gap-4">
         {sessions.length === 0 && (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>
+          <div className="py-10 text-center text-gray-500">
             No browser sessions found
           </div>
         )}
@@ -187,36 +192,24 @@ export function BrowserSessionViewer({
           return (
             <div
               key={session.sessionId}
-              className={statusInfo.bgClass}
-              style={{
-                padding: '16px',
-                borderRadius: '8px',
-                border: '1px solid #e5e7eb',
-                cursor: 'pointer',
-              }}
+              className={`${statusInfo.bgClass} p-4 rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-shadow`}
               onClick={() => setSelectedSession(session)}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div className="flex justify-between items-start">
                 <div>
-                  <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                  <div className="font-bold mb-2">
                     Session {session.sessionId.slice(0, 8)}
                   </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                  <div className="text-sm text-gray-500">
                     Story: {session.storyId.slice(0, 8)}
                   </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                  <div className="text-sm text-gray-500">
                     Duration: {formatDuration(session.startTime, session.endTime)}
                   </div>
                 </div>
                 <div
-                  style={{
-                    padding: '4px 12px',
-                    borderRadius: '16px',
-                    backgroundColor: statusInfo.color,
-                    color: 'white',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                  }}
+                  className="px-3 py-1 rounded-full text-white text-xs font-bold"
+                  style={{ backgroundColor: statusInfo.color }}
                 >
                   {statusInfo.label}
                 </div>
@@ -224,15 +217,13 @@ export function BrowserSessionViewer({
 
               {/* Performance summary inline preview */}
               {session.performanceSummary && showPerformanceCharts && (
-                <div style={{ marginTop: '12px', display: 'flex', gap: '12px', fontSize: '12px' }}>
+                <div className="mt-3 flex gap-3 text-xs">
                   {session.performanceSummary.lcp && (
                     <div>
                       LCP:{' '}
                       <span
-                        style={{
-                          color: getMetricColor(getMetricStatus('lcp', session.performanceSummary.lcp)),
-                          fontWeight: 'bold',
-                        }}
+                        className="font-bold"
+                        style={{ color: getMetricColor(getMetricStatus('lcp', session.performanceSummary.lcp)) }}
                       >
                         {session.performanceSummary.lcp}ms
                       </span>
@@ -242,10 +233,8 @@ export function BrowserSessionViewer({
                     <div>
                       FID:{' '}
                       <span
-                        style={{
-                          color: getMetricColor(getMetricStatus('fid', session.performanceSummary.fid)),
-                          fontWeight: 'bold',
-                        }}
+                        className="font-bold"
+                        style={{ color: getMetricColor(getMetricStatus('fid', session.performanceSummary.fid)) }}
                       >
                         {session.performanceSummary.fid}ms
                       </span>
@@ -255,10 +244,8 @@ export function BrowserSessionViewer({
                     <div>
                       CLS:{' '}
                       <span
-                        style={{
-                          color: getMetricColor(getMetricStatus('cls', session.performanceSummary.cls)),
-                          fontWeight: 'bold',
-                        }}
+                        className="font-bold"
+                        style={{ color: getMetricColor(getMetricStatus('cls', session.performanceSummary.cls)) }}
                       >
                         {session.performanceSummary.cls.toFixed(3)}
                       </span>
@@ -274,40 +261,25 @@ export function BrowserSessionViewer({
       {/* Session detail modal */}
       {selectedSession && (
         <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setSelectedSession(null)}
         >
           <div
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '24px',
-              maxWidth: '600px',
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto',
-            }}
+            className="bg-white rounded-xl p-6 max-w-2xl w-11/12 max-h-[80vh] overflow-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Session Details</h3>
-              <button onClick={() => setSelectedSession(null)} style={{ fontSize: '20px' }}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Session Details</h3>
+              <button 
+                type="button"
+                onClick={() => setSelectedSession(null)} 
+                className="text-xl text-gray-500 hover:text-gray-700 transition-colors p-1"
+              >
                 ✕
               </button>
             </div>
 
-            <div style={{ display: 'grid', gap: '12px', fontSize: '14px' }}>
+            <div className="grid gap-3 text-sm">
               <div>
                 <strong>Session ID:</strong> {selectedSession.sessionId}
               </div>
@@ -331,16 +303,16 @@ export function BrowserSessionViewer({
 
               {/* Performance metrics detail */}
               {selectedSession.performanceSummary && (
-                <div style={{ marginTop: '16px' }}>
-                  <strong style={{ display: 'block', marginBottom: '8px' }}>Performance Metrics:</strong>
-                  <div style={{ display: 'grid', gap: '8px', paddingLeft: '16px' }}>
+                <div className="mt-4">
+                  <strong className="block mb-2">Performance Metrics:</strong>
+                  <div className="grid gap-2 pl-4">
                     {Object.entries(selectedSession.performanceSummary).map(([key, value]) => {
                       if (typeof value !== 'number') return null;
                       const status = getMetricStatus(key as keyof PerformanceSummary, value);
                       return (
-                        <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div key={key} className="flex justify-between">
                           <span>{key.toUpperCase()}:</span>
-                          <span style={{ color: getMetricColor(status), fontWeight: 'bold' }}>
+                          <span className="font-bold" style={{ color: getMetricColor(status) }}>
                             {key === 'cls' ? value.toFixed(3) : `${value}ms`}
                           </span>
                         </div>
@@ -352,17 +324,9 @@ export function BrowserSessionViewer({
 
               {/* Metadata */}
               {selectedSession.metadata && Object.keys(selectedSession.metadata).length > 0 && (
-                <div style={{ marginTop: '16px' }}>
-                  <strong style={{ display: 'block', marginBottom: '8px' }}>Metadata:</strong>
-                  <pre
-                    style={{
-                      backgroundColor: '#f3f4f6',
-                      padding: '12px',
-                      borderRadius: '6px',
-                      fontSize: '12px',
-                      overflow: 'auto',
-                    }}
-                  >
+                <div className="mt-4">
+                  <strong className="block mb-2">Metadata:</strong>
+                  <pre className="bg-gray-100 p-3 rounded-md text-xs overflow-auto">
                     {JSON.stringify(selectedSession.metadata, null, 2)}
                   </pre>
                 </div>

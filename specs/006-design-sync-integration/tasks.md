@@ -17,38 +17,38 @@
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
--- [x] T009 Create DB migration file `apps/api/db/migrations/20251123_design_sync.sql`
--- [x] T010 [P] Implement Drizzle schema `apps/api/db/schema/designSync.ts`
--- [x] T011 [P] Add Zod schemas `packages/types/src/design-sync/syncOperation.ts`
--- [x] T012 [P] Add Zod schemas `packages/types/src/design-sync/drift.ts`
--- [x] T013 [P] Add Zod schemas `packages/types/src/design-sync/undo.ts`
--- [x] T014 [P] Add Zod schemas `packages/types/src/design-sync/coverage.ts`
--- [x] T015 [P] Add Zod schemas `packages/types/src/design-sync/credentials.ts`
--- [x] T016 [P] Add Zod schemas `packages/types/src/design-sync/browserSession.ts`
--- [x] T017 Create service skeleton `apps/api/src/services/designSyncService.ts`
--- [x] T018 [P] Create service skeleton `apps/api/src/services/designDriftService.ts`
--- [x] T019 [P] Create service skeleton `apps/api/src/services/designUndoService.ts`
--- [x] T020 [P] Create service skeleton `apps/api/src/services/designCoverageService.ts`
--- [x] T021 [P] Create service skeleton `apps/api/src/services/designCredentialService.ts`
--- [x] T022 [P] Create service skeleton `apps/api/src/services/browserTestService.ts`
--- [x] T023 Add route registration barrel `apps/api/src/routes/design-sync/index.ts`
--- [x] T024 Implement notification category registry `apps/api/src/services/notificationCategoryService.ts`
--- [x] T025 [P] Add MCP tool descriptor `mcp/servers/design-system/design.sync.json`
--- [x] T026 [P] Add MCP tool descriptor `mcp/servers/design-system/design.driftReport.json`
--- [x] T027 [P] Add MCP tool descriptor `mcp/servers/design-system/design.undo.json`
--- [x] T028 [P] Add MCP tool descriptor `mcp/servers/design-system/design.coverageReport.json`
--- [x] T029 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.start.json`
--- [x] T030 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.status.json`
--- [x] T031 Add API client resource `packages/api-client/src/resources/designSync.ts`
--- [x] T032 [P] Add API client resource `packages/api-client/src/resources/designDrift.ts`
--- [x] T033 [P] Add API client resource `packages/api-client/src/resources/designUndo.ts`
--- [x] T034 [P] Add API client resource `packages/api-client/src/resources/designCoverage.ts`
--- [x] T035 [P] Add API client resource `packages/api-client/src/resources/designCredentials.ts`
--- [x] T036 [P] Add API client resource `packages/api-client/src/resources/designBrowserSession.ts`
--- [x] T037 Insert OpenAPI endpoints into contract `specs/006-design-sync-integration/contracts/openapi.yaml`
--- [x] T038 Add feature-specific logging utilities `apps/api/src/logging/designSyncLogger.ts`
--- [x] T039 [P] Establish correlation ID middleware extension `apps/api/src/middleware/correlationDesignSync.ts`
--- [x] T040 Implement access control matrix `apps/api/src/middleware/designSyncAccess.ts`
+- [x] T009 Create DB migration file `apps/api/db/migrations/20251123_design_sync.sql`
+- [x] T010 [P] Implement Drizzle schema `apps/api/db/schema/designSync.ts`
+- [x] T011 [P] Add Zod schemas `packages/types/src/design-sync/syncOperation.ts`
+- [x] T012 [P] Add Zod schemas `packages/types/src/design-sync/drift.ts`
+- [x] T013 [P] Add Zod schemas `packages/types/src/design-sync/undo.ts`
+- [x] T014 [P] Add Zod schemas `packages/types/src/design-sync/coverage.ts`
+- [x] T015 [P] Add Zod schemas `packages/types/src/design-sync/credentials.ts`
+- [x] T016 [P] Add Zod schemas `packages/types/src/design-sync/browserSession.ts`
+- [x] T017 Create service skeleton `apps/api/src/services/designSyncService.ts`
+- [x] T018 [P] Create service skeleton `apps/api/src/services/designDriftService.ts`
+- [x] T019 [P] Create service skeleton `apps/api/src/services/designUndoService.ts`
+- [x] T020 [P] Create service skeleton `apps/api/src/services/designCoverageService.ts`
+- [x] T021 [P] Create service skeleton `apps/api/src/services/designCredentialService.ts`
+- [x] T022 [P] Create service skeleton `apps/api/src/services/browserTestService.ts`
+- [x] T023 Add route registration barrel `apps/api/src/routes/design-sync/index.ts`
+- [x] T024 Implement notification category registry `apps/api/src/services/notificationCategoryService.ts`
+- [x] T025 [P] Add MCP tool descriptor `mcp/servers/design-system/design.sync.json`
+- [x] T026 [P] Add MCP tool descriptor `mcp/servers/design-system/design.driftReport.json`
+- [x] T027 [P] Add MCP tool descriptor `mcp/servers/design-system/design.undo.json`
+- [x] T028 [P] Add MCP tool descriptor `mcp/servers/design-system/design.coverageReport.json`
+- [x] T029 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.start.json`
+- [x] T030 [P] Add MCP tool descriptor `mcp/servers/design-system/design.browserTest.status.json`
+- [x] T031 Add API client resource `packages/api-client/src/resources/designSync.ts`
+- [x] T032 [P] Add API client resource `packages/api-client/src/resources/designDrift.ts`
+- [x] T033 [P] Add API client resource `packages/api-client/src/resources/designUndo.ts`
+- [x] T034 [P] Add API client resource `packages/api-client/src/resources/designCoverage.ts`
+- [x] T035 [P] Add API client resource `packages/api-client/src/resources/designCredentials.ts`
+- [x] T036 [P] Add API client resource `packages/api-client/src/resources/designBrowserSession.ts`
+- [x] T037 Insert OpenAPI endpoints into contract `specs/006-design-sync-integration/contracts/openapi.yaml`
+- [x] T038 Add feature-specific logging utilities `apps/api/src/logging/designSyncLogger.ts`
+- [x] T039 [P] Establish correlation ID middleware extension `apps/api/src/middleware/correlationDesignSync.ts`
+- [x] T040 Implement access control matrix `apps/api/src/middleware/designSyncAccess.ts`
 
 ## Phase 3: User Story 1 (P1) Manual Design↔Code Sync with Control
 

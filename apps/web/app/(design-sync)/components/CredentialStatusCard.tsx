@@ -142,13 +142,26 @@ export function CredentialStatusCard({ apiEndpoint = '/api/design-sync/credentia
             </div>
 
             <div className="credential-actions">
-              <button onClick={() => performAction(cred.id, 'validate')} disabled={actionInProgress === cred.id || cred.status === 'revoked'}>
+              <button 
+                type="button"
+                onClick={() => performAction(cred.id, 'validate')} 
+                disabled={actionInProgress === cred.id || cred.status === 'revoked'}
+              >
                 {actionInProgress === cred.id ? 'Processing...' : 'Validate'}
               </button>
-              <button onClick={() => performAction(cred.id, 'rotate')} disabled={actionInProgress === cred.id || cred.status === 'revoked'}>
+              <button 
+                type="button"
+                onClick={() => performAction(cred.id, 'rotate')} 
+                disabled={actionInProgress === cred.id || cred.status === 'revoked'}
+              >
                 Rotate
               </button>
-              <button onClick={() => performAction(cred.id, 'revoke')} disabled={actionInProgress === cred.id || cred.status === 'revoked'} className="revoke-btn">
+              <button 
+                type="button"
+                onClick={() => performAction(cred.id, 'revoke')} 
+                disabled={actionInProgress === cred.id || cred.status === 'revoked'} 
+                className="revoke-btn"
+              >
                 Revoke
               </button>
             </div>

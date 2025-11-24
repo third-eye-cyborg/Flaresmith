@@ -96,6 +96,27 @@
         "billing.getSubscriptionStatus",
         "billing.processWebhook"
       ]
+    },
+    "chrome": {
+      "command": "npx",
+      "args": ["-y", "@executeautomation/mcp-playwright"],
+      "tools": [
+        "mcp_io_github_chr_click",
+        "mcp_io_github_chr_emulate",
+        "mcp_io_github_chr_list_pages",
+        "mcp_io_github_chr_hover",
+        "mcp_io_github_chr_take_screenshot",
+        "mcp_io_github_chr_select_page",
+        "mcp_io_github_chr_performance_stop_trace",
+        "mcp_io_github_chr_navigate_page",
+        "mcp_io_github_chr_performance_start_trace",
+        "mcp_io_github_chr_evaluate_script",
+        "mcp_io_github_chr_get_network_request",
+        "mcp_io_github_chr_handle_dialog",
+        "mcp_io_github_chr_performance_analyze_insight",
+        "mcp_io_github_chr_upload_file",
+        "mcp_io_github_chr_wait_for"
+      ]
     }
   }
 }
