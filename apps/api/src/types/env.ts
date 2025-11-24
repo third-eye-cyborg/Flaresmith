@@ -9,7 +9,6 @@ export type Env = {
   CLOUDFLARE_ACCOUNT_ID: string;
   NEON_API_KEY: string;
   POSTMAN_API_KEY: string;
-  BETTERAUTH_SECRET: string;
   MASTER_ENC_KEY: string;
   JWT_SIGNING_KEY: string;
   BASE_URL: string; // public origin for auth callbacks & trustedOrigins

@@ -1,0 +1,7 @@
+{
+  "name": "auth.refresh",
+  "description": "Rotates the current session using a refresh token and returns new access/refresh tokens.",
+  "inputSchema": { "$ref": "packages/types/src/api/auth.ts#RefreshRequestSchema" },
+  "outputSchema": { "$ref": "packages/types/src/api/auth.ts#RefreshResponseSchema" },
+  "version": "0.1.0"
+}

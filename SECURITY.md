@@ -15,7 +15,6 @@ Flaresmith requires the following secrets to be configured:
 - `CLOUDFLARE_API_TOKEN` - Cloudflare API token with Workers/Pages permissions
 - `NEON_API_KEY` - Neon API key for database branch management
 - `POSTMAN_API_KEY` - Postman API key for collection management
-- `BETTERAUTH_SECRET` - BetterAuth session encryption key
 - `ONE_SIGNAL_KEY` - OneSignal push notification key
 - `POSTHOG_KEY` - PostHog analytics key
 

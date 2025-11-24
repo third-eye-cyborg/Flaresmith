@@ -1,21 +1,20 @@
-/**
- * T028: Scheduled Secret Synchronization Job
- * 
- * Cloudflare Workers Cron Trigger: 0 */6 * * * (every 6 hours)
- * Automatically syncs secrets for all active projects
- * 
- * This script is designed to run as a Cloudflare Workers cron job
- * configured in wrangler.toml:
- * 
- * [triggers]
- * crons = ["0 */6 * * *"]
- */
+/// <reference types="@cloudflare/workers-types" />
+// T028: Scheduled Secret Synchronization Job
+//
+// Cloudflare Workers Cron Trigger: 0 */6 * * * (every 6 hours)
+// Automatically syncs secrets for all active projects
+//
+// This script is designed to run as a Cloudflare Workers cron job
+// configured in wrangler.toml:
+//
+// [triggers]
+// crons = ["0 */6 * * *"]
 
 import { createGitHubClient } from '../../apps/api/src/integrations/github/client';
 import { SecretSyncService } from '../../apps/api/src/services/github/secretSyncService';
 import { getDb } from '../../apps/api/db/connection';
-import { projects } from '../../apps/api/db/schema/base';
-import { eq } from 'drizzle-orm';
+// import { projects } from '../../apps/api/db/schema/base';
+// import { eq } from 'drizzle-orm';
 
 interface Env {
   DATABASE_URL: string;
@@ -29,9 +28,9 @@ interface Env {
  */
 export default {
   async scheduled(
-    event: ScheduledEvent,
+    _event: ScheduledEvent,
     env: Env,
-    ctx: ExecutionContext
+    _ctx: ExecutionContext
   ): Promise<void> {
     const startTime = Date.now();
     

@@ -1,0 +1,17 @@
+{
+  "accent": {
+    "450": "#e067f5",
+    "475": "#dc57f2"
+  },
+  "glass": {
+    "blur": {
+      "xxl": "24px"
+    },
+    "opacity": {
+      "ultra": "0.3"
+    }
+  },
+  "elevation": {
+    "3xl": "0 35px 60px -15px rgb(0 0 0 / 0.3)"
+  }
+}

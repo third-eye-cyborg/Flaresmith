@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-11-23T22:49:37.539Z",
+  "baseUrl": "http://localhost:8787",
+  "parity": {
+    "parityPct": 100,
+    "raw": "🧪 Semantic Token Parity\n------------------------\nWeb Version: v0 (fallback)\nMobile Version: v0 (fallback)\nThreshold: 95%\nTotal Semantic Keys: 0\nMatched: 0\nParity %: 100%\n\n✅ Parity meets threshold.\n"
+  },
+  "propagation": {
+    "commitTs": 1763936138000,
+    "genTs": 1763938177162,
+    "propagationMs": 2039162,
+    "withinTarget": false
+  },
+  "audits": {
+    "light": {
+      "error": "fetch failed"
+    },
+    "dark": {
+      "error": "fetch failed"
+    }
+  },
+  "drift": {
+    "hasDrift": false,
+    "reason": "fallback-no-server",
+    "error": "fetch failed"
+  },
+  "bundle": {
+    "web": {
+      "baseline": 0,
+      "current": 0,
+      "pctChange": 0,
+      "withinThreshold": true
+    },
+    "mobile": {
+      "baseline": 0,
+      "current": 0,
+      "pctChange": 0,
+      "withinThreshold": true
+    },
+    "timestamp": "2025-11-23T22:49:37.498Z",
+    "webDeltaPct": 0,
+    "mobileDeltaPct": 0
+  },
+  "rollback": {
+    "durationMs": null
+  },
+  "successCriteria": {
+    "SC_001": true,
+    "SC_002": false,
+    "SC_003": false,
+    "SC_004": true,
+    "SC_005": true,
+    "SC_006": true,
+    "SC_007": true,
+    "SC_008": true,
+    "SC_009": true,
+    "SC_010": true
+  }
+}

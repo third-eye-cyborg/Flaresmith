@@ -1,0 +1,272 @@
+# Codemagic CI/CD Configuration for Flaresmith
+# Orchestrates Expo builds (EAS Build) and deployments (Expo Launch) per environment
+# T032: Configure Codemagic workflows to orchestrate Expo builds and deployments
+
+workflows:
+  # Development environment builds (feature branches)
+  mobile-dev:
+    name: Mobile Dev Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    
+    environment:
+      groups:
+        - expo_credentials # Contains EXPO_TOKEN
+        - github_credentials # Contains GITHUB_TOKEN for repo access
+        - neon_credentials # Contains NEON_API_KEY
+      vars:
+        EXPO_PUBLIC_API_URL: https://api-dev.flaresmith.dev
+        EXPO_OWNER: flaresmith
+        EXPO_PROJECT_SLUG: flaresmith-mobile
+        NODE_VERSION: 20.x
+      node: $NODE_VERSION
+      
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'feature/*'
+          include: true
+        - pattern: 'fix/*'
+          include: true
+      cancel_previous_builds: true
+      
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd apps/mobile
+          npm install -g pnpm@8
+          pnpm install --frozen-lockfile
+          
+      - name: Install EAS CLI
+        script: |
+          npm install -g eas-cli
+          
+      - name: Configure Expo Auth
+        script: |
+          # Authenticate with Expo using token from environment group
+          eas login --non-interactive
+          
+      - name: EAS Build (Development)
+        script: |
+          cd apps/mobile
+          # Build for iOS and Android development clients
+          eas build --platform all --profile development --non-interactive --no-wait
+          
+    artifacts:
+      - apps/mobile/build-*.log
+      
+  # Staging environment builds and deployments
+  mobile-staging:
+    name: Mobile Staging Build & Deploy
+    max_build_duration: 90
+    instance_type: mac_mini_m2
+    
+    environment:
+      groups:
+        - expo_credentials
+        - github_credentials
+        - neon_credentials
+      vars:
+        EXPO_PUBLIC_API_URL: https://api-staging.flaresmith.dev
+        EXPO_OWNER: flaresmith
+        EXPO_PROJECT_SLUG: flaresmith-mobile
+        NODE_VERSION: 20.x
+      node: $NODE_VERSION
+      
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'staging'
+          include: true
+      cancel_previous_builds: false
+      
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd apps/mobile
+          npm install -g pnpm@8
+          pnpm install --frozen-lockfile
+          
+      - name: Install EAS CLI
+        script: |
+          npm install -g eas-cli
+          
+      - name: Configure Expo Auth
+        script: |
+          eas login --non-interactive
+          
+      - name: EAS Build (Preview/Internal)
+        script: |
+          cd apps/mobile
+          # Build for internal distribution (TestFlight/Internal Testing)
+          eas build --platform all --profile preview --non-interactive
+          
+      - name: Deploy to Expo Launch (Staging)
+        script: |
+          cd apps/mobile
+          # Deploy update via Expo Launch for staging channel
+          npx expo export --output-dir dist
+          eas update --branch staging --message "Staging deployment $(date '+%Y-%m-%d %H:%M:%S')"
+          
+    artifacts:
+      - apps/mobile/build-*.log
+      - apps/mobile/dist/**
+      
+    publishing:
+      email:
+        recipients:
+          - dev-team@flaresmith.dev
+        notify:
+          success: true
+          failure: true
+          
+  # Production environment builds and deployments
+  mobile-production:
+    name: Mobile Production Build & Deploy
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    
+    environment:
+      groups:
+        - expo_credentials
+        - github_credentials
+        - neon_credentials
+        - apple_credentials # App Store Connect API key
+        - google_credentials # Google Play Service Account
+      vars:
+        EXPO_PUBLIC_API_URL: https://api.flaresmith.dev
+        EXPO_OWNER: flaresmith
+        EXPO_PROJECT_SLUG: flaresmith-mobile
+        NODE_VERSION: 20.x
+      node: $NODE_VERSION
+      
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+      cancel_previous_builds: false
+      
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd apps/mobile
+          npm install -g pnpm@8
+          pnpm install --frozen-lockfile
+          
+      - name: Install EAS CLI
+        script: |
+          npm install -g eas-cli
+          
+      - name: Configure Expo Auth
+        script: |
+          eas login --non-interactive
+          
+      - name: EAS Build (Production)
+        script: |
+          cd apps/mobile
+          # Build production binaries for App Store and Play Store
+          eas build --platform all --profile production --non-interactive
+          
+      - name: Deploy to Expo Launch (Production)
+        script: |
+          cd apps/mobile
+          # Deploy update via Expo Launch for production channel
+          npx expo export --output-dir dist
+          eas update --branch production --message "Production release $(date '+%Y-%m-%d %H:%M:%S')"
+          
+      - name: Submit to App Store (iOS)
+        script: |
+          cd apps/mobile
+          # Submit iOS build to App Store Connect for review
+          eas submit --platform ios --latest --non-interactive
+          
+      - name: Submit to Play Store (Android)
+        script: |
+          cd apps/mobile
+          # Submit Android build to Google Play Console for review
+          eas submit --platform android --latest --non-interactive
+          
+    artifacts:
+      - apps/mobile/build-*.log
+      - apps/mobile/dist/**
+      
+    publishing:
+      email:
+        recipients:
+          - dev-team@flaresmith.dev
+          - product@flaresmith.dev
+        notify:
+          success: true
+          failure: true
+      slack:
+        channel: '#releases'
+        notify_on_build_start: false
+        notify:
+          success: true
+          failure: true
+          
+  # Preview builds for pull requests
+  mobile-preview:
+    name: Mobile Preview Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    
+    environment:
+      groups:
+        - expo_credentials
+        - github_credentials
+      vars:
+        EXPO_PUBLIC_API_URL: https://api-preview.flaresmith.dev
+        EXPO_OWNER: flaresmith
+        EXPO_PROJECT_SLUG: flaresmith-mobile
+        NODE_VERSION: 20.x
+      node: $NODE_VERSION
+      
+    triggering:
+      events:
+        - pull_request
+      cancel_previous_builds: true
+      
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd apps/mobile
+          npm install -g pnpm@8
+          pnpm install --frozen-lockfile
+          
+      - name: Install EAS CLI
+        script: |
+          npm install -g eas-cli
+          
+      - name: Configure Expo Auth
+        script: |
+          eas login --non-interactive
+          
+      - name: EAS Build (Preview)
+        script: |
+          cd apps/mobile
+          # Build preview for PR review
+          eas build --platform all --profile preview --non-interactive --no-wait
+          
+      - name: Deploy Preview Update
+        script: |
+          cd apps/mobile
+          # Create ephemeral preview channel
+          PREVIEW_CHANNEL="pr-$CM_PULL_REQUEST_NUMBER"
+          npx expo export --output-dir dist
+          eas update --branch $PREVIEW_CHANNEL --message "PR #$CM_PULL_REQUEST_NUMBER preview"
+          
+    artifacts:
+      - apps/mobile/build-*.log
+      
+    publishing:
+      email:
+        recipients:
+          - dev-team@flaresmith.dev
+        notify:
+          success: false
+          failure: true

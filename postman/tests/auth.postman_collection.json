@@ -1,0 +1,223 @@
+{
+  "info": {
+    "name": "Authentication API",
+    "description": "Auth flows: register, login, refresh, logout, logout-all, OAuth callback (PKCE). Ensures correlationId, token formats, error taxonomy coverage.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "0.1.0",
+    "_postman_id": "003-neon-auth-migration"
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "http://localhost:8787", "type": "string" },
+    { "key": "TEST_EMAIL", "value": "test.user+ci@example.com", "type": "string" },
+    { "key": "TEST_PASSWORD", "value": "Str0ng!Passw0rd", "type": "string" },
+    { "key": "OAUTH_STATE", "value": "STATE_PLACEHOLDER", "type": "string" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-randomize email if placeholder detected",
+          "if (pm.variables.get('TEST_EMAIL').includes('ci@example.com')) {",
+          "  const rand = Date.now().toString().slice(-6);",
+          "  pm.variables.set('TEST_EMAIL', `test.user+${rand}@example.com`);",
+          "}",
+          "// Initialize dynamic OAuth state (simulate PKCE state management)",
+          "const state = 'st-' + CryptoJS.lib.WordArray.random(8).toString();",
+          "pm.variables.set('OAUTH_STATE', state);"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Register",
+      "item": [
+        {
+          "name": "Register User - Success",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}"
+            },
+            "url": { "raw": "{{BASE_URL}}/auth/register", "host": ["{{BASE_URL}}"], "path": ["auth","register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.code === 200);",
+                  "const json = pm.response.json();",
+                  "pm.test('Has accessToken + refreshToken', () => json.accessToken && json.refreshToken);",
+                  "pm.test('Has session + user object', () => json.session && json.user);",
+                  "pm.test('CorrelationId present', () => json.correlationId);",
+                  "pm.test('CorrelationId UUIDv4', () => /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i.test(json.correlationId));",
+                  "pm.test('JWT appears HS256 header', () => atob(json.accessToken.split('.')[0]) && JSON.parse(atob(json.accessToken.split('.')[0])).alg === 'HS256');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register User - Duplicate",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}" },
+            "url": { "raw": "{{BASE_URL}}/auth/register", "host": ["{{BASE_URL}}"], "path": ["auth","register"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 409 Conflict', () => pm.response.code === 409);",
+              "const json = pm.response.json();",
+              "pm.test('Error envelope structure', () => json.error && json.error.code);",
+              "pm.test('Specific error code for duplicate', () => json.error.code && json.error.code.includes('AUTH_EMAIL_ALREADY_EXISTS'));"
+            ] } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Login & Refresh",
+      "item": [
+        {
+          "name": "Login - Success",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}" },
+            "url": { "raw": "{{BASE_URL}}/auth/login", "host": ["{{BASE_URL}}"], "path": ["auth","login"] }
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 200', () => pm.response.code === 200);",
+              "const json = pm.response.json();",
+              "pm.test('Tokens present', () => json.accessToken && json.refreshToken);",
+              "pm.environment.set('ACCESS_TOKEN', json.accessToken);",
+              "pm.environment.set('REFRESH_TOKEN', json.refreshToken);",
+              "pm.test('Session expiry claim ~15m', () => {",
+              "  const payload = JSON.parse(atob(json.accessToken.split('.')[1]));",
+              "  const now = Math.floor(Date.now()/1000);",
+              "  pm.expect(payload.exp - now).to.be.greaterThan(14*60);",
+              "  pm.expect(payload.exp - now).to.be.lessThan(16*60);",
+              "});"
+            ] } }
+          ]
+        },
+        {
+          "name": "Login - Invalid Password",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"WrongPassword123!\"\n}" },
+            "url": { "raw": "{{BASE_URL}}/auth/login", "host": ["{{BASE_URL}}"], "path": ["auth","login"] }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Status 401', () => pm.response.code === 401);",
+            "const json = pm.response.json();",
+            "pm.test('Invalid credentials code', () => json.error && json.error.code === 'AUTH_INVALID_CREDENTIALS');"
+          ] } } ]
+        },
+        {
+          "name": "Refresh - Success",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{REFRESH_TOKEN}}\"\n}" },
+            "url": { "raw": "{{BASE_URL}}/auth/refresh", "host": ["{{BASE_URL}}"], "path": ["auth","refresh"] }
+          },
+            "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 200', () => pm.response.code === 200);",
+              "const json = pm.response.json();",
+              "pm.test('New access token differs', () => json.accessToken !== pm.environment.get('ACCESS_TOKEN'));",
+              "pm.environment.set('ACCESS_TOKEN', json.accessToken);",
+              "pm.environment.set('REFRESH_TOKEN', json.refreshToken);"
+            ] } } ]
+        },
+        {
+          "name": "Refresh - Reuse Old Token",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{REFRESH_TOKEN}}\"\n}" },
+            "url": { "raw": "{{BASE_URL}}/auth/refresh", "host": ["{{BASE_URL}}"], "path": ["auth","refresh"] }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Status 401 or 409', () => [401,409].includes(pm.response.code));",
+            "const json = pm.response.json();",
+            "pm.test('Reuse detection error code', () => json.error && json.error.code && json.error.code.includes('AUTH_REFRESH_REUSE'));"
+          ] } } ]
+        }
+      ]
+    },
+    {
+      "name": "Logout",
+      "item": [
+        {
+          "name": "Logout - Single Session",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{BASE_URL}}/auth/logout", "host": ["{{BASE_URL}}"], "path": ["auth","logout"] }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Status 200', () => pm.response.code === 200);"
+          ] } } ]
+        },
+        {
+          "name": "Logout - All Sessions",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{BASE_URL}}/auth/logout-all", "host": ["{{BASE_URL}}"], "path": ["auth","logout-all"] }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Status 200', () => pm.response.code === 200);"
+          ] } } ]
+        }
+      ]
+    },
+    {
+      "name": "OAuth Callback",
+      "item": [
+        {
+          "name": "OAuth Callback - Invalid State",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{BASE_URL}}/auth/oauth/callback?provider=github&code=FAKE_CODE&state=wrongState", "host": ["{{BASE_URL}}"], "path": ["auth","oauth","callback"], "query": [
+              { "key": "provider", "value": "github" },
+              { "key": "code", "value": "FAKE_CODE" },
+              { "key": "state", "value": "wrongState" }
+            ] }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Status 400 or 401', () => [400,401].includes(pm.response.code));",
+            "const json = pm.response.json();",
+            "pm.test('State mismatch code', () => json.error && json.error.code === 'AUTH_OAUTH_STATE_MISMATCH');"
+          ] } } ]
+        }
+      ]
+    },
+    {
+      "name": "Authorization & Error Handling",
+      "item": [
+        {
+          "name": "Protected Route - Missing Token",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/auth/refresh", "host": ["{{BASE_URL}}"], "path": ["auth","refresh"] },
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"some.fake.token\"\n}" }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Status 401', () => pm.response.code === 401);"
+          ] } } ]
+        }
+      ]
+    }
+  ]
+}

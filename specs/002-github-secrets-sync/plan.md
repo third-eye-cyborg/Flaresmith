@@ -79,7 +79,7 @@ The following MUST be explicitly addressed referencing the Flaresmith Constituti
 | GitHub Environment | `dev` | `staging` | `production` | GitHub Environments API (idempotent create) |
 | Environment Secrets | NEON_BRANCH_ID (dev branch), CLOUDFLARE_WORKER_NAME (api-dev), CLOUDFLARE_PAGES_PROJECT (web-dev) | NEON_BRANCH_ID (staging branch), CLOUDFLARE_WORKER_NAME (api-staging), CLOUDFLARE_PAGES_PROJECT (web-staging) | NEON_BRANCH_ID (prod branch), CLOUDFLARE_WORKER_NAME (api-prod), CLOUDFLARE_PAGES_PROJECT (web-prod) | GitHub Environment Secrets API (upsert semantics) |
 | Protection Rules | None (auto-deploy) | 1 required reviewer | 1 required reviewer + main branch only | GitHub Environment Protection API (idempotent update) |
-| Repository Secrets (shared) | GITHUB_APP_ID, CLOUDFLARE_API_TOKEN, NEON_API_KEY, POSTMAN_API_KEY, BETTERAUTH_SECRET, MASTER_ENC_KEY | Same (synced from Actions scope) | Same (synced from Actions scope) | GitHub Secrets API for Actions/Codespaces/Dependabot |
+| Repository Secrets (shared) | GITHUB_APP_ID, CLOUDFLARE_API_TOKEN, NEON_API_KEY, POSTMAN_API_KEY, MASTER_ENC_KEY, JWT_SIGNING_KEY | Same (synced from Actions scope) | Same (synced from Actions scope) | GitHub Secrets API for Actions/Codespaces/Dependabot |
 
 **Idempotent Creation Strategy**:
 - Use idempotency key pattern: `{projectId}-github-env-{environment}` for environment creation

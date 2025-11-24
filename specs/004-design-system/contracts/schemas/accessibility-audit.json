@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://api.flaresmith.dev/schemas/design/accessibility-audit.json",
+  "title": "AccessibilityAuditResult",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["light", "dark"]
+    },
+    "report": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fgToken": {
+            "type": "string"
+          },
+          "bgToken": {
+            "type": "string"
+          },
+          "ratio": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "warn", "fail"]
+          }
+        },
+        "required": ["fgToken", "bgToken", "ratio", "status"]
+      }
+    },
+    "passed_pct": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["id", "version", "mode", "report", "passed_pct", "created_at"]
+}

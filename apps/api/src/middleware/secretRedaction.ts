@@ -34,6 +34,10 @@ const SECRET_PATTERNS = [
   
   // Private keys
   { pattern: /-----BEGIN\s+(?:RSA|EC|OPENSSH)\s+PRIVATE\s+KEY-----[\s\S]*?-----END\s+(?:RSA|EC|OPENSSH)\s+PRIVATE\s+KEY-----/g, name: "Private Key" },
+  
+  // T015: Design system token patterns (reserved for future sensitive tokens)
+  // Note: Standard color/spacing tokens are not secrets; this is for extensibility
+  // if future token categories require redaction (e.g., API endpoint URLs in tokens)
 ];
 
 // Known secret environment variable names
@@ -44,7 +48,6 @@ const SECRET_ENV_VARS = [
   "NEON_API_KEY",
   "CLOUDFLARE_API_TOKEN",
   "POSTMAN_API_KEY",
-  "BETTERAUTH_SECRET",
   "MASTER_ENC_KEY",
   "JWT_SECRET",
   "API_KEY",
@@ -52,6 +55,7 @@ const SECRET_ENV_VARS = [
   "SECRET_KEY",
   "PRIVATE_KEY",
   "PASSWORD",
+  "DESIGN_TOKEN_OVERRIDE_KEY", // T015: Future extensibility for sensitive design operations
 ];
 
 /**

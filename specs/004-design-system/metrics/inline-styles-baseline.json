@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-11-23T00:00:00Z",
+  "feature": "004-design-system",
+  "phase": 9,
+  "metric": "SC-005-inline-style-literals",
+  "totalLiterals": 12,
+  "suggestableLiterals": 0,
+  "files": [
+    { "path": "apps/web/src/components/environments/PromotionHistory.tsx", "lines": [141,147,188], "examples": ["10px"] },
+    { "path": "apps/web/src/components/projects/SecretValidationPanel.tsx", "lines": [190], "examples": ["10px"] },
+    { "path": "apps/mobile/src/components/Badge.tsx", "lines": [51,55,59], "examples": ["#0ea5e9", "#e4e4e7", "#f4f4f5"] },
+    { "path": "apps/mobile/src/components/Card.tsx", "lines": [48,49,56,59,66], "examples": ["#e4e4e7", "#f4f4f5", "#ffffff", "#fafafa"] }
+  ],
+  "notes": "Baseline captured prior to token migration. Suggestion map empty due to missing direct token value matches; future enhancement will derive nearest semantic token via color distance."
+}

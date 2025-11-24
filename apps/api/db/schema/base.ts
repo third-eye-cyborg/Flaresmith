@@ -22,7 +22,6 @@ export const integrationProviderEnum = pgEnum("integration_provider", [
   "cloudflare",
   "neon",
   "postman",
-  "betterauth",
   "codespaces",
 ]);
 

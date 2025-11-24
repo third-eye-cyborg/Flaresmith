@@ -1,0 +1,7 @@
+{
+  "name": "auth.login",
+  "description": "Authenticates an existing user via email/password and returns new auth tokens.",
+  "inputSchema": { "$ref": "packages/types/src/api/auth.ts#LoginRequestSchema" },
+  "outputSchema": { "$ref": "packages/types/src/api/auth.ts#AuthResponseSchema" },
+  "version": "0.1.0"
+}

@@ -55,6 +55,13 @@ export const METRICS = {
   keyRotationTotal: 'key_rotation_total',
   secretAccessTotal: 'secret_access_total',
   rateLimitOverheadMs: 'rate_limit_overhead_ms',
+  // Auth specific metrics (Phase 7 T046)
+  authSignInAttempts: 'auth_sign_in_attempts_total',
+  authSignInSuccess: 'auth_sign_in_success_total',
+  authRefreshSuccess: 'auth_refresh_success_total',
+  authSignOutTotal: 'auth_sign_out_total',
+  authSignOutAllTotal: 'auth_sign_out_all_total',
+  authLatencyMs: 'auth_latency_ms',
 };
 
 /**

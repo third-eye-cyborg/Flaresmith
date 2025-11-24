@@ -37,6 +37,23 @@ app.get("/health", (c) => {
   });
 });
 
+// Public auth routes (no auth middleware required)
+import registerRoute from "./routes/auth/register";
+import loginRoute from "./routes/auth/login";
+import refreshRoute from "./routes/auth/refresh";
+import oauthCallbackRoute from "./routes/auth/oauthCallback";
+import signoutRoute from "./routes/auth/signout";
+import signoutAllRoute from "./routes/auth/signoutAll";
+import { jwksRoute } from "./routes/auth/jwks";
+
+app.route("/api/auth/register", registerRoute);
+app.route("/api/auth/login", loginRoute);
+app.route("/api/auth/refresh", refreshRoute);
+app.route("/api/auth/oauth/callback", oauthCallbackRoute);
+app.route("/api/auth/signout", signoutRoute);
+app.route("/api/auth/signoutAll", signoutAllRoute);
+app.get('/api/auth/jwks', jwksRoute);
+
 // Protected routes with auth + idempotency + rate limiting
 app.use("/api/*", authMiddleware());
 app.use("/api/*", rateLimitMiddleware());
@@ -47,16 +64,17 @@ app.use("/api/environments/*", idempotencyMiddleware(["POST", "PUT", "DELETE"]))
 import projectsRouter from "./routes/projects";
 import specsRouter from "./routes/specs";
 import chatRouter from "./routes/chat";
-import { jwksRoute } from "./routes/auth/jwks";
+import getTokensRoute from "./routes/designSystem/getTokens";
 
 // Mount routes
 app.route("/api/projects", projectsRouter);
 app.route("/api/specs", specsRouter);
 app.route("/api/chat", chatRouter);
-app.get('/api/auth/jwks', jwksRoute);
+app.route("/api/design/tokens", getTokensRoute);
 // app.route("/api/environments", environmentsRouter);
 // app.route("/api/specs", specsRouter);
 // app.route("/api/chat", chatRouter);
+app.route("/api/design/tokens", getTokensRoute);
 
 // Global error handler (must be last)
 app.onError(errorHandler);

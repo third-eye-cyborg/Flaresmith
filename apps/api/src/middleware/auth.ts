@@ -3,8 +3,8 @@ import { HTTPException } from "hono/http-exception";
 import { verify } from "hono/jwt";
 
 /**
- * T026: Authentication Middleware
- * Implements JWT-based authentication with BetterAuth integration
+ * Authentication Middleware
+ * Implements JWT-based authentication with session verification
  */
 
 export function authMiddleware() {
@@ -16,7 +16,7 @@ export function authMiddleware() {
     }
 
     const token = authHeader.substring(7);
-    // Use the configured JWT signing key (aligned with env & BetterAuth config)
+    // Use the configured JWT signing key
     const secret = c.env.JWT_SIGNING_KEY;
 
     if (!secret) {
