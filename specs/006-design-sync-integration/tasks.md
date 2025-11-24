@@ -6,14 +6,14 @@
 
 ## Phase 1: Setup (Project Initialization)
 
-- [ ] T001 Establish feature flag `DESIGN_SYNC_ENABLED` in `apps/api/src/config/flags.ts`
-- [ ] T002 Add design sync navigation entry in `apps/web/app/layout.tsx`
-- [ ] T003 Create placeholder feature route directory `apps/web/app/(design-sync)/page.tsx`
-- [ ] T004 [P] Add environment variable validation for required credentials in `packages/utils/src/env/validateDesignSync.ts`
-- [ ] T005 Upgrade Storybook to v10 in `apps/web/package.json` (dependency edits) and `apps/web/.storybook/main.ts`
-- [ ] T006 [P] Document credential mapping in `specs/006-design-sync-integration/quickstart.md` (append section)
-- [ ] T007 Add OpenAI usage flag `DESIGN_SYNC_RAG_EXPLAIN=false` in `apps/api/src/config/flags.ts`
-- [ ] T008 [P] Register feature in internal registry `packages/types/src/features/index.ts`
+- [x] T001 Establish feature flag `DESIGN_SYNC_ENABLED` in `apps/api/src/config/flags.ts`
+- [x] T002 Add design sync navigation entry in `apps/web/app/layout.tsx`
+- [x] T003 Create placeholder feature route directory `apps/web/app/(design-sync)/page.tsx`
+- [x] T004 [P] Add environment variable validation for required credentials in `packages/utils/src/env/validateDesignSync.ts`
+- [x] T005 Upgrade Storybook to v10 in `apps/web/package.json` (dependency edits) and `apps/web/.storybook/main.ts`
+- [x] T006 [P] Document credential mapping in `specs/006-design-sync-integration/quickstart.md` (append section)
+- [x] T007 Add OpenAI usage flag `DESIGN_SYNC_RAG_EXPLAIN=false` in `apps/api/src/config/flags.ts`
+- [x] T008 [P] Register feature in internal registry `packages/types/src/features/index.ts`
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 

@@ -5,6 +5,37 @@
 - Database migrations applied adding design sync tables.
 - Roles configured (Admin, Maintainer, Developer, Viewer).
 
+## Credential Mapping & Rotation Policy
+
+| Category | Purpose | Required Env Variables | Rotation Interval | Notes |
+|----------|---------|------------------------|-------------------|-------|
+| notification | Slack channel & digest dispatch | `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET` | 90d (align with JWT signing cadence) | Bot token scopes: chat:write, channels:read |
+| design | Builder + Figma artifact resolution | `BUILDER_API_TOKEN`, `FIGMA_PERSONAL_ACCESS_TOKEN` | 60d | Least privilege; restrict Figma token to file read |
+| documentation | Storybook publishing & Chromatic visual baseline | `CHROMATIC_PROJECT_TOKEN` | 30d | Token used for visual regression & story indexing |
+| testing | Automated test service integration | `CYPRESS_RECORD_KEY`, `PLAYWRIGHT_API_TOKEN` | 90d | Playwright key optional if using cloud service; Cypress key for dashboard |
+| ai | Optional RAG diff explanation & embeddings | `OPENAI_API_KEY` | 90d | Only required if `DESIGN_SYNC_RAG_EXPLAIN=true` |
+| analytics | Product usage & sync event tracking | `POSTHOG_API_KEY`, `POSTHOG_HOST` | 180d | Host may be self-hosted or cloud; keep minimal scopes |
+| work mgmt (future) | Notion / Linear linking (future phase) | `NOTION_API_KEY`, `LINEAR_API_KEY` | 60d | Not required for MVP; prepare placeholders |
+
+Rotation automation jobs should emit a `credential_status` notification event upon successful renewal or failure. Revocation sets `status=revoked` and blocks dependent sync flows until replaced. Validation endpoints must never log raw token values—only hashed digests.
+
+### Pre-Flight Credential Validation
+Sync initiation performs a shallow validation:
+1. Presence of required env vars for categories in use.
+2. Token format sanity (length, prefix if any).
+3. Optional live ping (Slack auth.test, Builder whoami, OpenAI models list) — failures abort sync with actionable error code.
+
+### Rotation Workflow (Admin/Maintainer)
+1. Invoke POST /design-sync/credentials `{ providerType: 'design', action: 'rotate' }`.
+2. System requests new token input via secure channel (out of scope UI — CLI or secret manager).
+3. Upon success, updates `rotation_due` and emits notification event.
+4. Failed rotation logs `dispatch_status=failed` event with retry guidance.
+
+### Security Hardening
+- Never store tokens beyond environment variable layer; `credential_records.metadata` holds non-secret metadata only (scopes, last4 hash fragment).
+- All credential actions include `correlationId` and are audited.
+- Feature flag `DESIGN_SYNC_RAG_EXPLAIN` must remain `false` unless OpenAI usage approved.
+
 ## 1. Enable Feature Flag (if using flags)
 Set `DESIGN_SYNC_ENABLED=true` in environment secrets for dev.
 

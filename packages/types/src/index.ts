@@ -32,3 +32,5 @@ export * from "./analytics/events";
 export * from "./analytics/common";
 // Design System
 export * from "./designSystem";
+// Feature registry exports
+export * from "./features";
