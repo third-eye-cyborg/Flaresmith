@@ -8,6 +8,10 @@ import { registerDriftRoutes } from './drift';
 import { registerUndoRoutes } from './undo';
 import { registerCoverageRoutes } from './coverage';
 import { registerPreferencesRoutes } from './preferences';
+import { registerCredentialRoutes } from './credentials';
+import { registerCredentialActionRoutes } from './credentialsAction';
+import { registerBrowserSessionStartRoutes } from './browserSessionStart';
+import { registerBrowserSessionStatusRoutes } from './browserSessionStatus';
 
 const designSyncRouter = new Hono();
 
@@ -24,6 +28,10 @@ registerDriftRoutes(designSyncRouter);
 registerUndoRoutes(designSyncRouter);
 registerCoverageRoutes(designSyncRouter);
 registerPreferencesRoutes(designSyncRouter);
+registerCredentialRoutes(designSyncRouter);
+registerCredentialActionRoutes(designSyncRouter);
+registerBrowserSessionStartRoutes(designSyncRouter);
+registerBrowserSessionStatusRoutes(designSyncRouter);
 
 export default designSyncRouter;
 /**

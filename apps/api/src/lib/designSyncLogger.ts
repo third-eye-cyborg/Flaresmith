@@ -15,6 +15,7 @@ type DesignSyncLogPayload = {
   status?: 'started' | 'completed' | 'failed' | 'skipped';
   errorCode?: string;
   hint?: string;
+  breadcrumbs?: string[]; // T089: Event breadcrumbs for tracing operation flow
   // Allow arbitrary supplemental fields but keep them JSON-serializable
   [key: string]: unknown;
 };

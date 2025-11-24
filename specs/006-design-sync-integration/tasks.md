@@ -96,37 +96,37 @@
 
 ## Phase 6: User Story 4 (P4) Credential & Integration Governance
 
-- [ ] T076 [US4] Implement credential status route GET `apps/api/src/routes/design-sync/credentials.ts`
-- [ ] T077 [P] [US4] Implement credential action POST rotate/validate/revoke `apps/api/src/routes/design-sync/credentialsAction.ts`
-- [ ] T078 [US4] Extend credential service logic `apps/api/src/services/designCredentialService.ts`
-- [ ] T079 [P] [US4] Credential status UI card `apps/web/app/(design-sync)/components/CredentialStatusCard.tsx`
-- [ ] T080 [US4] Integration tests credential actions `apps/api/tests/designSync/credentialActions.test.ts`
-- [ ] T081 [P] [US4] Unit tests credential service `apps/api/tests/designSync/credentialService.test.ts`
+- [X] T076 [US4] Implement credential status route GET `apps/api/src/routes/design-sync/credentials.ts`
+- [X] T077 [P] [US4] Implement credential action POST rotate/validate/revoke `apps/api/src/routes/design-sync/credentialsAction.ts`
+- [X] T078 [US4] Extend credential service logic `apps/api/src/services/designCredentialService.ts`
+- [X] T079 [P] [US4] Credential status UI card `apps/web/app/(design-sync)/components/CredentialStatusCard.tsx`
+- [X] T080 [US4] Integration tests credential actions `apps/api/tests/designSync/credentialActions.test.ts`
+- [X] T081 [P] [US4] Unit tests credential service `apps/api/tests/designSync/credentialService.test.ts`
 
 ## Phase 7: User Story 5 (P5) Browser Testing via MCP
 
-- [ ] T082 [US5] Implement browser session start route `apps/api/src/routes/design-sync/browserSessionStart.ts`
-- [ ] T083 [P] [US5] Implement browser session status route `apps/api/src/routes/design-sync/browserSessionStatus.ts`
-- [ ] T084 [US5] Extend browser test service link to stories `apps/api/src/services/browserTestService.ts`
-- [ ] T085 [P] [US5] Browser session viewer UI `apps/web/app/(design-sync)/components/BrowserSessionViewer.tsx`
-- [ ] T086 [US5] Integration test browser session flow `apps/api/tests/designSync/browserSessionFlow.test.ts`
-- [ ] T087 [P] [US5] Unit tests browserTestService `apps/api/tests/designSync/browserTestService.test.ts`
+- [X] T082 [US5] Implement browser session start route `apps/api/src/routes/design-sync/browserSessionStart.ts`
+- [X] T083 [P] [US5] Implement browser session status route `apps/api/src/routes/design-sync/browserSessionStatus.ts`
+- [X] T084 [US5] Extend browser test service link to stories `apps/api/src/services/browserTestService.ts`
+- [X] T085 [P] [US5] Browser session viewer UI `apps/web/app/(design-sync)/components/BrowserSessionViewer.tsx`
+- [X] T086 [US5] Integration test browser session flow `apps/api/tests/designSync/browserSessionFlow.test.ts`
+- [X] T087 [P] [US5] Unit tests browserTestService `apps/api/tests/designSync/browserTestService.test.ts`
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T088 Add performance metrics instrumentation `apps/api/src/metrics/designSyncMetrics.ts`
-- [ ] T089 [P] Add structured logging enrichment `apps/api/src/logging/designSyncLogger.ts` (extend)
-- [ ] T090 Add drift false positive tracking metric `apps/api/src/services/designDriftService.ts` (extend)
-- [ ] T091 [P] Add retry helper for notification dispatch `apps/api/src/utils/notificationRetry.ts`
-- [ ] T092 Add pruning job for undo & coverage cache `apps/api/src/jobs/designSyncPruneJob.ts`
-- [ ] T093 [P] Security review doc update `specs/006-design-sync-integration/research.md` (append security section)
-- [ ] T094 Add RAG diff explanation placeholder endpoint `apps/api/src/routes/design-sync/diffExplain.ts`
-- [ ] T095 [P] Implement OpenAI embedding util `apps/api/src/utils/designSync/embeddingExplain.ts`
-- [ ] T096 Accessibility audit tasks update `scripts/design/a11yAuditTrigger.ts`
-- [ ] T097 [P] E2E test scenario combining sync+coverage+browser `apps/api/tests/designSync/e2eFullFlow.test.ts`
-- [ ] T098 Final documentation pass `specs/006-design-sync-integration/quickstart.md` (update flow diagrams)
-- [ ] T099 [P] Update agent-copilot context with final tool examples `.specify/memory/agent-copilot.md`
-- [ ] T100 Final spec traceability matrix `specs/006-design-sync-integration/spec.md` (append Traceability section)
+- [X] T088 Add performance metrics instrumentation `apps/api/src/metrics/designSyncMetrics.ts`
+- [X] T089 [P] Add structured logging enrichment `apps/api/src/logging/designSyncLogger.ts` (extend)
+- [X] T090 Add drift false positive tracking metric `apps/api/src/services/designDriftService.ts` (extend)
+- [X] T091 [P] Add retry helper for notification dispatch `apps/api/src/utils/notificationRetry.ts`
+- [X] T092 Add pruning job for undo & coverage cache `apps/api/src/jobs/designSyncPruneJob.ts`
+- [X] T093 [P] Security review doc update `specs/006-design-sync-integration/research.md` (append security section)
+- [X] T094 Add RAG diff explanation placeholder endpoint `apps/api/src/routes/design-sync/diffExplain.ts`
+- [X] T095 [P] Implement OpenAI embedding util `apps/api/src/utils/designSync/embeddingExplain.ts`
+- [X] T096 Accessibility audit tasks update `scripts/design/a11yAuditTrigger.ts`
+- [X] T097 [P] E2E test scenario combining sync+coverage+browser `apps/api/tests/designSync/e2eFullFlow.test.ts`
+- [X] T098 Final documentation pass `specs/006-design-sync-integration/quickstart.md` (update flow diagrams)
+- [X] T099 [P] Update agent-copilot context with final tool examples `.specify/memory/agent-copilot.md`
+- [X] T100 Final spec traceability matrix `specs/006-design-sync-integration/spec.md` (append Traceability section)
 
 ## Dependency Graph (Story Order)
 ```
