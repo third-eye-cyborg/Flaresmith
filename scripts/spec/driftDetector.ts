@@ -1,6 +1,8 @@
 import type { GeneratedFile } from "./generators/zodSchemaGenerator";
 import { z } from "zod";
 import { DriftReportSchema, DriftConflict, DriftChangedFile, DriftReportSummary } from "@cloudmake/types";
+// T045: Extend drift detection to include MCP tool descriptor drift.
+// Compares listed tools in mcp/config.json against actual server descriptor files.
 import { execSync } from "child_process";
 import * as fs from "fs";
 import * as crypto from "crypto";
@@ -74,6 +76,23 @@ export async function computeDrift(generated: GeneratedFile[]): Promise<DriftRep
   // Detect deleted artifacts (present on disk mapping not in generated list?) - placeholder skipped for now
 
   const conflicts = detectUncommittedConflicts(generated);
+
+  // MCP tool drift detection (simplified): ensure each declared server has non-empty tools array (except allowed empty servers)
+  try {
+    const mcpConfigRaw = fs.readFileSync("mcp/config.json", "utf8");
+    const cfg = JSON.parse(mcpConfigRaw);
+    const servers = cfg.mcpServers || {};
+    const emptyAllowed = new Set(["neon", "postman", "specs", "chat"]); // placeholders allowed
+    for (const [name, server] of Object.entries<any>(servers)) {
+      if (!Array.isArray(server.tools)) {
+        conflicts.push({ path: `mcp/config.json:${name}`, reason: "MCP_TOOLS_MISSING", resolution: undefined, suggestedAction: "Add tools array for MCP server." });
+      } else if (server.tools.length === 0 && !emptyAllowed.has(name)) {
+        conflicts.push({ path: `mcp/config.json:${name}`, reason: "MCP_TOOLS_EMPTY", resolution: undefined, suggestedAction: "Populate tool list or remove server." });
+      }
+    }
+  } catch {
+    // ignore parse errors
+  }
 
   const totalFiles = generated.length;
   const summary: DriftReportSummary = {

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "0.1.0",
+  "tools": [
+    {
+      "name": "polar.listSubscriptions",
+      "description": "List current user subscriptions (standard user context only)",
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false },
+      "outputSchema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {"type": "string"},
+            "tier": {"type": "string"},
+            "status": {"type": "string"},
+            "currentPeriodEnd": {"type": "string", "format": "date-time"}
+          },
+          "required": ["id","tier","status"]
+        }
+      }
+    },
+    {
+      "name": "polar.createCheckout",
+      "description": "Create a checkout session (dev/staging only; user context)",
+      "inputSchema": { "type": "object", "properties": {"planId": {"type": "string"}}, "required": ["planId"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"checkoutUrl": {"type": "string", "format": "uri"}}, "required": ["checkoutUrl"] }
+    },
+    {
+      "name": "betterAuth.getOnboarding",
+      "description": "Return onboarding guidance (non-sensitive auth context)",
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"steps": {"type": "array", "items": {"type": "string"}}}, "required": ["steps"] }
+    },
+    {
+      "name": "neon.listBranches",
+      "description": "List Neon database branches (read-only in staging/prod)",
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false },
+      "outputSchema": { "type": "array", "items": {"type": "object", "properties": {"name": {"type": "string"}, "createdAt": {"type": "string", "format": "date-time"}}, "required": ["name"]} }
+    },
+    {
+      "name": "cloudflare.imagesTransform",
+      "description": "Generate optimized image variants (dev/staging; prod read-only preset fetch)",
+      "inputSchema": { "type": "object", "properties": {"imageId": {"type": "string"}, "preset": {"type": "string"}}, "required": ["imageId","preset"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"variants": {"type": "array", "items": {"type": "object", "properties": {"url": {"type": "string", "format": "uri"}, "format": {"type": "string"}, "sizeBytes": {"type": "integer"}}, "required": ["url","format"]}}}, "required": ["variants"] }
+    },
+    {
+      "name": "cloudflare.streamPlaybackToken",
+      "description": "Issue short-lived playback token (5m TTL)",
+      "inputSchema": { "type": "object", "properties": {"videoId": {"type": "string"}}, "required": ["videoId"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"token": {"type": "string"}, "expiresAt": {"type": "string", "format": "date-time"}}, "required": ["token","expiresAt"] }
+    },
+    {
+      "name": "onesignal.dispatchNotification",
+      "description": "Dispatch notification to segment (admin context only)",
+      "inputSchema": { "type": "object", "properties": {"segmentId": {"type": "string"}, "message": {"type": "string"}}, "required": ["segmentId","message"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"queued": {"type": "boolean"}, "segmentId": {"type": "string"}}, "required": ["queued"] }
+    },
+    {
+      "name": "posthog.listFeatureFlags",
+      "description": "List feature flags (read-only)",
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false },
+      "outputSchema": { "type": "array", "items": {"type": "object", "properties": {"key": {"type": "string"}, "enabled": {"type": "boolean"}}, "required": ["key","enabled"]} }
+    },
+    {
+      "name": "github.listIssues",
+      "description": "List repository issues (read-only staging/prod; dev can mutate via other tools)",
+      "inputSchema": { "type": "object", "properties": {"repo": {"type": "string"}}, "required": ["repo"], "additionalProperties": false },
+      "outputSchema": { "type": "array", "items": {"type": "object", "properties": {"number": {"type": "integer"}, "title": {"type": "string"}, "state": {"type": "string"}}, "required": ["number","title"]} }
+    },
+    {
+      "name": "postman.runContractTests",
+      "description": "Execute Postman collection contract tests (dev/staging)",
+      "inputSchema": { "type": "object", "properties": {"collectionId": {"type": "string"}}, "required": ["collectionId"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"passed": {"type": "integer"}, "failed": {"type": "integer"}, "durationMs": {"type": "integer"}}, "required": ["passed","failed"] }
+    },
+    {
+      "name": "mapbox.listStyles",
+      "description": "List available Mapbox styles (cached 10m in KV)",
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false },
+      "outputSchema": { "type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "name": {"type": "string"}}, "required": ["id","name"]} }
+    },
+    {
+      "name": "framework.getContextRules",
+      "description": "Return framework guidance (React/Next.js/Hono/Drizzle/Postgres) version-pinned",
+      "inputSchema": { "type": "object", "properties": {"framework": {"type": "string"}}, "required": ["framework"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"rules": {"type": "array", "items": {"type": "string"}}, "version": {"type": "string"}}, "required": ["rules","version"] }
+    },
+    {
+      "name": "system.rateLimitStatus",
+      "description": "Get current rate limit counters (admin or self user view)",
+      "inputSchema": { "type": "object", "properties": {"server": {"type": "string"}}, "required": ["server"], "additionalProperties": false },
+      "outputSchema": { "type": "object", "properties": {"remaining": {"type": "integer"}, "resetSeconds": {"type": "integer"}}, "required": ["remaining","resetSeconds"] }
+    }
+  ]
+}

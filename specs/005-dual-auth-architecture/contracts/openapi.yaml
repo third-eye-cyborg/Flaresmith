@@ -1,0 +1,246 @@
+openapi: 3.1.0
+info:
+  title: Dual Auth & Multi-MCP API
+  version: 0.1.0
+  description: Endpoints for authentication, billing (Polar), notifications, Mapbox token management, MCP observability.
+servers:
+  - url: https://api.cloudmake.dev
+paths:
+  /auth/admin/login:
+    post:
+      summary: Admin Neon Auth login
+      operationId: adminLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+                totp: { type: string, minLength: 6, maxLength: 6 }
+              required: [email, password]
+      responses:
+        '200':
+          description: Admin session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  type: { type: string, enum: [admin] }
+                  expiresAt: { type: string, format: date-time }
+        '401': { description: Invalid credentials }
+  /auth/user/login:
+    post:
+      summary: User Better Auth login
+      operationId: userLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+              required: [email, password]
+      responses:
+        '200':
+          description: User session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  type: { type: string, enum: [user] }
+                  polarCustomerId: { type: string }
+                  subscriptionTier: { type: string }
+                  subscriptionStatus: { type: string }
+                  expiresAt: { type: string, format: date-time }
+        '401': { description: Invalid credentials }
+  /billing/web/checkout:
+    post:
+      summary: Create Polar web checkout session
+      operationId: createWebCheckout
+      responses:
+        '200':
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checkoutUrl: { type: string, format: uri }
+  /billing/mobile/receipt:
+    post:
+      summary: Validate mobile purchase receipt
+      operationId: validateMobileReceipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receiptToken: { type: string }
+              required: [receiptToken]
+      responses:
+        '200':
+          description: Subscription updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptionTier: { type: string }
+                  subscriptionStatus: { type: string }
+  /mapbox/tokens:
+    post:
+      summary: Store a new Mapbox token (hashed)
+      operationId: addMapboxToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token: { type: string }
+                scopes: { type: array, items: { type: string } }
+              required: [token]
+      responses:
+        '201': { description: Token stored }
+    get:
+      summary: List own Mapbox tokens (partial display)
+      operationId: listMapboxTokens
+      responses:
+        '200':
+          description: Tokens
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    prefix: { type: string }
+                    suffix: { type: string }
+                    scopes: { type: array, items: { type: string } }
+  /notifications/segments:
+    get:
+      summary: List notification segments (admin only)
+      operationId: listNotificationSegments
+      responses:
+        '200':
+          description: Segments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+                    description: { type: string }
+    post:
+      summary: Create segment (admin)
+      operationId: createNotificationSegment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                description: { type: string }
+                criterion: { type: object }
+              required: [name, criterion]
+      responses:
+        '201': { description: Segment created }
+  /notifications/dispatch:
+    post:
+      summary: Dispatch notification to segment (admin)
+      operationId: dispatchNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                segmentId: { type: string }
+                message: { type: string }
+              required: [segmentId, message]
+      responses:
+        '202': { description: Enqueued }
+  /mcp/audit:
+    get:
+      summary: List MCP tool invocations (admin/all or self subset)
+      operationId: listMcpToolInvocations
+      parameters:
+        - in: query
+          name: server
+          schema: { type: string }
+        - in: query
+          name: actorId
+          schema: { type: string }
+      responses:
+        '200':
+          description: Invocation list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    tool_name: { type: string }
+                    server_name: { type: string }
+                    actor_type: { type: string }
+                    duration_ms: { type: integer }
+                    success: { type: boolean }
+                    error_code: { type: string }
+                    timestamp: { type: string, format: date-time }
+                    rate_limit_applied: { type: boolean }
+  /mcp/drift:
+    get:
+      summary: List drift snapshots (admin)
+      operationId: listDriftSnapshots
+      responses:
+        '200':
+          description: Drift snapshots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    server_name: { type: string }
+                    status: { type: string }
+                    detected_at: { type: string, format: date-time }
+                    resolved_at: { type: string, format: date-time }
+  /billing/webhook/polar:
+    post:
+      summary: Polar webhook handler
+      operationId: polarWebhook
+      responses:
+        '200': { description: Event processed }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

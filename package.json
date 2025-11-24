@@ -5,6 +5,11 @@
   "description": "Spec-first orchestration platform for multi-environment development workflows",
   "scripts": {
     "dev": "turbo run dev",
+    "dev:all": "turbo run dev --parallel --filter=@flaresmith/admin-web --filter=@flaresmith/user-web --filter=@flaresmith/admin-mobile --filter=@flaresmith/user-mobile",
+    "dev:admin-web": "pnpm --filter @flaresmith/admin-web dev",
+    "dev:user-web": "pnpm --filter @flaresmith/user-web dev",
+    "dev:admin-mobile": "pnpm --filter @flaresmith/admin-mobile start",
+    "dev:user-mobile": "pnpm --filter @flaresmith/user-mobile start",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",

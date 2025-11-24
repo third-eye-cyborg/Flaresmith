@@ -1,0 +1,50 @@
+{
+  "info": {
+    "name": "Billing API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "0.1.0",
+    "description": "Polar billing & subscription flows: checkout creation, webhook processing, subscription status retrieval."
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "http://localhost:8787" },
+    { "key": "TEST_EMAIL", "value": "billing.user+ci@example.com" }
+  ],
+  "item": [
+    {
+      "name": "Checkout",
+      "item": [
+        {
+          "name": "Create Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw": "{\n \"planId\": \"plan_basic\"\n}"},
+            "url": {"raw": "{{BASE_URL}}/billing/web/checkout", "host":["{{BASE_URL}}"], "path":["billing","web","checkout"]}
+          },
+          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
+            "pm.test('201 Created', () => pm.response.code === 201);",
+            "const json = pm.response.json();",
+            "pm.test('Has checkoutUrl', () => json.checkoutUrl);"
+          ]}}]
+        }
+      ]
+    },
+    {
+      "name": "Webhook",
+      "item": [
+        {
+          "name": "Polar Webhook Subscription Updated",
+          "request": {
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw": "{\n  \"type\": \"subscription.updated\",\n  \"data\": { \"status\": \"active\", \"planId\": \"plan_basic\" }\n}"},
+            "url": {"raw": "{{BASE_URL}}/webhooks/polar", "host":["{{BASE_URL}}"], "path":["webhooks","polar"]}
+          },
+          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
+            "pm.test('200 OK', () => pm.response.code === 200);"
+          ]}}]
+        }
+      ]
+    }
+  ]
+}

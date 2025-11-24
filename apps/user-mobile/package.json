@@ -1,0 +1,46 @@
+{
+  "name": "@flaresmith/user-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flaresmith/api-client": "workspace:*",
+    "@flaresmith/types": "workspace:*",
+    "@flaresmith/ui": "workspace:*",
+    "@flaresmith/utils": "workspace:*",
+    "@tanstack/react-query": "^5.28.0",
+    "expo": "^51.0.0",
+    "expo-auth-session": "^7.0.9",
+    "expo-secure-store": "^15.0.7",
+    "expo-router": "^3.5.0",
+    "nativewind": "^4.0.0",
+    "posthog-react-native": "^4.12.4",
+    "react": "18.3.1",
+    "react-native": "0.74.0",
+    "react-native-safe-area-context": "4.10.0",
+    "react-native-screens": "~3.31.0",
+    "react-native-web": "~0.19.10",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@flaresmith/config-eslint": "workspace:*",
+    "@flaresmith/config-tsconfig": "workspace:*",
+    "@types/node": "^20.11.0",
+    "@types/react": "~18.3.0",
+    "@types/react-native": "^0.74.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0",
+    "jsdom": "^24.0.0"
+  }
+}

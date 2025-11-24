@@ -1,6 +1,6 @@
 import type { Context, Next } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { circuitBreakerRegistry } from "@flaresmith/utils/src/reliability/externalPolicy";
+import { circuitBreakerRegistry } from "@flaresmith/utils";
 import { incrementCounter, METRICS, observeHistogram } from "../lib/metrics";
 
 /**
@@ -13,6 +13,38 @@ interface RateLimitBucket {
   lastRefill: number;
   maxTokens: number;
   refillRate: number; // tokens per second
+}
+
+// Exported status accessor (T112)
+export function getRateLimitSnapshot(userId: string, projectId?: string) {
+  const userBucket = userBuckets.get(userId);
+  const user = userBucket ? {
+    remaining: Math.floor(userBucket.tokens),
+    limit: userBucket.maxTokens,
+    refillRate: userBucket.refillRate,
+    secondsToFull: Number(((userBucket.maxTokens - userBucket.tokens) / userBucket.refillRate).toFixed(2)),
+  } : {
+    remaining: USER_RATE_LIMIT.maxTokens,
+    limit: USER_RATE_LIMIT.maxTokens,
+    refillRate: USER_RATE_LIMIT.refillRate,
+    secondsToFull: 0,
+  };
+  let project: any = undefined;
+  if (projectId) {
+    const projectBucket = projectBuckets.get(projectId);
+    project = projectBucket ? {
+      remaining: Math.floor(projectBucket.tokens),
+      limit: projectBucket.maxTokens,
+      refillRate: projectBucket.refillRate,
+      secondsToFull: Number(((projectBucket.maxTokens - projectBucket.tokens) / projectBucket.refillRate).toFixed(2)),
+    } : {
+      remaining: PROJECT_RATE_LIMIT.maxTokens,
+      limit: PROJECT_RATE_LIMIT.maxTokens,
+      refillRate: PROJECT_RATE_LIMIT.refillRate,
+      secondsToFull: 0,
+    };
+  }
+  return { user, project };
 }
 
 const userBuckets = new Map<string, RateLimitBucket>();

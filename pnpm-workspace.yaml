@@ -1,4 +1,11 @@
 packages:
+  # App workspaces (explicitly documenting dual auth surfaces; pattern still matches)
   - "apps/*"
+  # Newly added admin/user split (redundant due to apps/* but retained for clarity per T005)
+  - "apps/admin-web"
+  - "apps/user-web"
+  - "apps/admin-mobile"
+  - "apps/user-mobile"
+  # Shared packages
   - "packages/*"
   - "packages/config/*"

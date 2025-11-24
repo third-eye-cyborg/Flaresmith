@@ -65,12 +65,24 @@ import projectsRouter from "./routes/projects";
 import specsRouter from "./routes/specs";
 import chatRouter from "./routes/chat";
 import getTokensRoute from "./routes/designSystem/getTokens";
+import billingWebCheckoutRoute from "./routes/billing/web/checkout";
+import billingMobileReceiptRoute from "./routes/billing/mobile/receipt";
+import polarWebhookRoute from "./routes/webhooks/polar";
+import mcpMetricsRoute from "./routes/mcp/metrics";
+import rateLimitStatusRoute from "./routes/rateLimit/status";
+import mcpDegradationRoute from "./routes/mcp/degradation";
 
 // Mount routes
 app.route("/api/projects", projectsRouter);
 app.route("/api/specs", specsRouter);
 app.route("/api/chat", chatRouter);
 app.route("/api/design/tokens", getTokensRoute);
+app.route("/billing/web", billingWebCheckoutRoute);
+app.route("/billing/mobile", billingMobileReceiptRoute);
+app.route("/webhooks", polarWebhookRoute);
+app.route("/api/mcp/metrics", mcpMetricsRoute);
+app.route("/api/rate-limit/status", rateLimitStatusRoute);
+app.route("/api/mcp/degradation", mcpDegradationRoute);
 // app.route("/api/environments", environmentsRouter);
 // app.route("/api/specs", specsRouter);
 // app.route("/api/chat", chatRouter);

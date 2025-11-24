@@ -21,6 +21,12 @@ export * from "./github/validation";
 // MCP Schemas
 export * from "./mcp/cloudflare";
 export * from "./mcp/posthog";
+export * from "./mcp/toolInvocation";
+// Dual auth & billing schemas
+export * from "./auth/admin";
+export * from "./auth/user";
+export * from "./billing/polar";
+export * from "./notifications/segments";
 // Analytics
 export * from "./analytics/events";
 export * from "./analytics/common";

@@ -1,0 +1,77 @@
+{
+  "servers": {
+    "github": {
+      "p95LatencyMs": 500,
+      "maxErrorRatePct": 3.0,
+      "description": "GitHub API operations (secrets sync, repo creation)"
+    },
+    "design-system": {
+      "p95LatencyMs": 100,
+      "maxErrorRatePct": 1.0,
+      "description": "Design token retrieval and accessibility audits"
+    },
+    "cloudflare": {
+      "p95LatencyMs": 400,
+      "maxErrorRatePct": 2.0,
+      "description": "Worker deployments, Pages builds, KV operations"
+    },
+    "neon": {
+      "p95LatencyMs": 300,
+      "maxErrorRatePct": 2.0,
+      "description": "Database branching, connection pool management"
+    },
+    "postman": {
+      "p95LatencyMs": 600,
+      "maxErrorRatePct": 5.0,
+      "description": "Collection sync and test runs"
+    },
+    "polar": {
+      "p95LatencyMs": 800,
+      "maxErrorRatePct": 5.0,
+      "description": "Billing webhooks, subscription checks"
+    },
+    "better-auth": {
+      "p95LatencyMs": 200,
+      "maxErrorRatePct": 1.0,
+      "description": "User authentication, OAuth flows"
+    },
+    "mapbox": {
+      "p95LatencyMs": 350,
+      "maxErrorRatePct": 3.0,
+      "description": "Geocoding, token validation"
+    },
+    "onesignal": {
+      "p95LatencyMs": 450,
+      "maxErrorRatePct": 4.0,
+      "description": "Push notification dispatch, segment management"
+    },
+    "posthog": {
+      "p95LatencyMs": 300,
+      "maxErrorRatePct": 2.0,
+      "description": "Feature flags, analytics events"
+    }
+  },
+  "globalDefaults": {
+    "p95LatencyMs": 500,
+    "maxErrorRatePct": 5.0
+  },
+  "alerting": {
+    "criticalThreshold": {
+      "p95LatencyMs": 1000,
+      "maxErrorRatePct": 10.0,
+      "description": "Exceeding these triggers immediate incident"
+    },
+    "warningThreshold": {
+      "p95LatencyMsMultiplier": 1.5,
+      "maxErrorRatePctMultiplier": 2.0,
+      "description": "1.5x baseline latency or 2x baseline error rate"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-11-23",
+    "feature": "005-dual-auth-architecture",
+    "task": "T117",
+    "usage": "Consumed by scripts/mcp/loadTestServers.ts nightly cron job"
+  }
+}

@@ -10,6 +10,26 @@
       "cache": false,
       "persistent": true
     },
+    "dev:admin-web": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
+    "dev:user-web": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
+    "dev:admin-mobile": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
+    "dev:user-mobile": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },

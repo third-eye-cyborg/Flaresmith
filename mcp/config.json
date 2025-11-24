@@ -74,15 +74,28 @@
       "tools": []
     }
       ,
-      "auth": {
-        "command": "node",
-        "args": ["./mcp/servers/auth/index.js"],
-        "tools": [
-          "auth.register",
-          "auth.login",
-          "auth.refresh",
-          "auth.oauthCallback"
-        ]
-      }
+    "auth": {
+      "command": "node",
+      "args": ["./mcp/servers/auth/index.js"],
+      "tools": [
+        "auth.register",
+        "auth.login",
+        "auth.refresh",
+        "auth.oauthCallback",
+        "auth.adminLogin",
+        "auth.userSignup",
+        "auth.adminMfaVerify"
+      ]
+    },
+    "billing": {
+      "command": "node",
+      "args": ["./mcp/servers/billing/index.js"],
+      "tools": [
+        "billing.createCheckout",
+        "billing.validateReceipt",
+        "billing.getSubscriptionStatus",
+        "billing.processWebhook"
+      ]
+    }
   }
 }

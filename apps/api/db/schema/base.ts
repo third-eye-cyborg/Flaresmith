@@ -16,7 +16,10 @@ export const deploymentStatusEnum = pgEnum("deployment_status", [
   "rolledback",
 ]);
 export const buildStatusEnum = pgEnum("build_status", ["queued", "running", "succeeded", "failed"]);
+// Legacy userRoleEnum retained for backward compatibility with existing features.
+// Dual auth architecture introduces a single authoritative role enum (admin|user) for RLS & token typing.
 export const userRoleEnum = pgEnum("user_role", ["admin", "developer", "viewer"]);
+export const authRoleEnum = pgEnum("auth_role", ["admin", "user"]);
 export const integrationProviderEnum = pgEnum("integration_provider", [
   "github",
   "cloudflare",
@@ -42,7 +45,11 @@ export const users = pgTable("users", {
     .references(() => organizations.id),
   email: varchar("email", { length: 255 }).notNull(),
   displayName: varchar("display_name", { length: 64 }),
+  // Existing multi-role array retained; dual auth uses singular role column below for enforcement per FR-015.
   roles: varchar("roles").array().notNull().default(["viewer"]),
+  role: authRoleEnum("role").notNull().default("user"), // FR-015 authoritative role (admin|user)
+  neonAuthId: varchar("neon_auth_id", { length: 255 }), // FR-001 / FR-002
+  betterAuthId: varchar("better_auth_id", { length: 255 }), // FR-003 / FR-004
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

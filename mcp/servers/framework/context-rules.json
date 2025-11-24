@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "frameworks": {
+    "react": {"major": 18, "routing": "next-app-router"},
+    "next": {"version": "14.x", "routingMode": "app"},
+    "hono": {"edge": true, "recommended": ["typed routes", "error envelope"]},
+    "drizzle": {"orm": "postgres", "migrations": "sql+drizzle-kit"},
+    "postgres": {"rls": true, "uuid": "v4"}
+  },
+  "rules": [
+    {"id": "no-express", "message": "Do not suggest Express; use Hono (edge-native)."},
+    {"id": "no-offset-pagination", "message": "Use cursor-based pagination for scalable queries."},
+    {"id": "uuid-v4", "message": "All primary keys must be UUID v4."},
+    {"id": "spec-first", "message": "All changes originate from spec documents before code."},
+    {"id": "zod-source-of-truth", "message": "Validation logic must derive from shared Zod schemas in packages/types."}
+  ]
+}
