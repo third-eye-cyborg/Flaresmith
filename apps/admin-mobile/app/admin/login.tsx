@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { neonAuthFlow } from '../../../src/auth/neonAuthFlow';
+import { neonAuthFlow } from '@/auth/neonAuthFlow';
 
 export default function AdminLoginScreen() {
   const [email, setEmail] = useState('');

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./app/*"],
+      "@/*": ["./app/*", "./src/*"],
       "@flaresmith/api-client": ["../../packages/api-client/src"],
       "@flaresmith/types": ["../../packages/types/src"],
       "@flaresmith/utils": ["../../packages/utils/src"],

@@ -20,8 +20,7 @@
  * Spec: FR-038, SC-016 (subscription tier syncs across devices)
  */
 
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
 /**

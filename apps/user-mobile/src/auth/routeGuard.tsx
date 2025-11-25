@@ -23,11 +23,11 @@
  * Spec: FR-002, FR-022, FR-044, SC-015 (mobile apps maintain session isolation)
  */
 
-import React, { useEffect, useState, ComponentType } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { UserSecureStore } from '../storage/userSecureStore';
-import { BiometricAuth, BiometricAuthResult } from './biometricFallback';
+import { BiometricAuth, type BiometricAuthResult } from './biometricFallback';
 
 /**
  * Props that will be passed through to wrapped component

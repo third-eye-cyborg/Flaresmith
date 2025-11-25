@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
-import { neonAuthFlow } from '../../../src/auth/neonAuthFlow';
+import { neonAuthFlow } from '@/auth/neonAuthFlow';
 
 export default function AdminDashboardScreen() {
   const [stats, setStats] = useState({ users: 0, projects: 0, activeEnvs: 0 });

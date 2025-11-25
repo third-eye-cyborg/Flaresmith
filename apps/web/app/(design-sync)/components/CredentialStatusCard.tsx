@@ -30,11 +30,12 @@ const PROVIDER_LABELS: Record<string, string> = {
   analytics: 'Analytics',
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  valid: '#10b981', // green
-  expired: '#f59e0b', // yellow
-  pending: '#6b7280', // gray
-  revoked: '#ef4444', // red
+// Map credential status to Tailwind background color classes (design tokens)
+const STATUS_BADGE_CLASS: Record<Credential['status'], string> = {
+  valid: 'bg-emerald-600',
+  expired: 'bg-amber-600',
+  pending: 'bg-gray-600',
+  revoked: 'bg-red-600',
 };
 
 export function CredentialStatusCard({ apiEndpoint = '/api/design-sync/credentials', refreshInterval = 0 }: CredentialStatusCardProps) {
@@ -121,7 +122,7 @@ export function CredentialStatusCard({ apiEndpoint = '/api/design-sync/credentia
           <div key={cred.id} className="credential-card">
             <div className="credential-header">
               <h3>{PROVIDER_LABELS[cred.providerType] || cred.providerType}</h3>
-              <span className="status-badge" style={{ backgroundColor: STATUS_COLORS[cred.status] }}>
+              <span className={`status-badge ${STATUS_BADGE_CLASS[cred.status]}`}>
                 {cred.status}
               </span>
             </div>
@@ -221,11 +222,12 @@ export function CredentialStatusCard({ apiEndpoint = '/api/design-sync/credentia
 
         .status-badge {
           padding: 0.25rem 0.75rem;
-          color: white;
+          color: #fff;
           border-radius: 12px;
           font-size: 0.75rem;
           font-weight: 600;
           text-transform: uppercase;
+          display: inline-block;
         }
 
         .credential-details {

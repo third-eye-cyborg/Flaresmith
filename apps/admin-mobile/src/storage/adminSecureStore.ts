@@ -32,7 +32,7 @@ const ADMIN_TOKEN_KEY = 'cloudmake_admin_token';
 const ADMIN_REFRESH_TOKEN_KEY = 'cloudmake_admin_refresh_token';
 const ADMIN_SESSION_METADATA_KEY = 'cloudmake_admin_session_metadata';
 
-interface AdminTokenPayload {
+export interface AdminTokenPayload {
   sub: string; // admin user ID
   type: 'admin';
   role: 'admin';
@@ -40,7 +40,7 @@ interface AdminTokenPayload {
   exp: number;
 }
 
-interface AdminSessionMetadata {
+export interface AdminSessionMetadata {
   userId: string;
   email?: string;
   lastAccessedAt: number;

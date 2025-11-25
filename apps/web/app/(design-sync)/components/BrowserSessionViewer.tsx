@@ -34,11 +34,12 @@ interface BrowserSessionViewerProps {
   showPerformanceCharts?: boolean; // Enable performance metric visualization
 }
 
+// Session status presentation configuration (uses Tailwind design tokens; no inline styles)
 const STATUS_CONFIG = {
-  running: { color: '#3b82f6', label: '🔄 Running', bgClass: 'bg-blue-50' },
-  passed: { color: '#10b981', label: '✅ Passed', bgClass: 'bg-green-50' },
-  failed: { color: '#ef4444', label: '❌ Failed', bgClass: 'bg-red-50' },
-  aborted: { color: '#6b7280', label: '⏹️ Aborted', bgClass: 'bg-gray-50' },
+  running: { label: '🔄 Running', cardBg: 'bg-blue-50', badgeBg: 'bg-blue-600' },
+  passed: { label: '✅ Passed', cardBg: 'bg-green-50', badgeBg: 'bg-emerald-600' },
+  failed: { label: '❌ Failed', cardBg: 'bg-red-50', badgeBg: 'bg-red-600' },
+  aborted: { label: '⏹️ Aborted', cardBg: 'bg-gray-50', badgeBg: 'bg-gray-600' },
 } as const;
 
 export function BrowserSessionViewer({
@@ -133,14 +134,15 @@ export function BrowserSessionViewer({
     return 'poor';
   };
 
-  const getMetricColor = (status: string) => {
-    const colors = {
-      good: '#10b981',
-      needsImprovement: '#f59e0b',
-      poor: '#ef4444',
-      neutral: '#6b7280',
+  // Map metric status to Tailwind text color classes
+  const getMetricClass = (status: string) => {
+    const map: Record<string, string> = {
+      good: 'text-emerald-600',
+      needsImprovement: 'text-amber-600',
+      poor: 'text-red-600',
+      neutral: 'text-gray-600',
     };
-    return colors[status as keyof typeof colors] || colors.neutral;
+    return map[status] || map.neutral;
   };
 
   if (loading) {
@@ -192,7 +194,7 @@ export function BrowserSessionViewer({
           return (
             <div
               key={session.sessionId}
-              className={`${statusInfo.bgClass} p-4 rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-shadow`}
+              className={`${statusInfo.cardBg} p-4 rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-shadow`}
               onClick={() => setSelectedSession(session)}
             >
               <div className="flex justify-between items-start">
@@ -207,10 +209,7 @@ export function BrowserSessionViewer({
                     Duration: {formatDuration(session.startTime, session.endTime)}
                   </div>
                 </div>
-                <div
-                  className="px-3 py-1 rounded-full text-white text-xs font-bold"
-                  style={{ backgroundColor: statusInfo.color }}
-                >
+                <div className={`px-3 py-1 rounded-full text-white text-xs font-bold ${statusInfo.badgeBg}`}>
                   {statusInfo.label}
                 </div>
               </div>
@@ -222,8 +221,7 @@ export function BrowserSessionViewer({
                     <div>
                       LCP:{' '}
                       <span
-                        className="font-bold"
-                        style={{ color: getMetricColor(getMetricStatus('lcp', session.performanceSummary.lcp)) }}
+                        className={`font-bold ${getMetricClass(getMetricStatus('lcp', session.performanceSummary.lcp))}`}
                       >
                         {session.performanceSummary.lcp}ms
                       </span>
@@ -233,8 +231,7 @@ export function BrowserSessionViewer({
                     <div>
                       FID:{' '}
                       <span
-                        className="font-bold"
-                        style={{ color: getMetricColor(getMetricStatus('fid', session.performanceSummary.fid)) }}
+                        className={`font-bold ${getMetricClass(getMetricStatus('fid', session.performanceSummary.fid))}`}
                       >
                         {session.performanceSummary.fid}ms
                       </span>
@@ -244,8 +241,7 @@ export function BrowserSessionViewer({
                     <div>
                       CLS:{' '}
                       <span
-                        className="font-bold"
-                        style={{ color: getMetricColor(getMetricStatus('cls', session.performanceSummary.cls)) }}
+                        className={`font-bold ${getMetricClass(getMetricStatus('cls', session.performanceSummary.cls))}`}
                       >
                         {session.performanceSummary.cls.toFixed(3)}
                       </span>
@@ -312,7 +308,7 @@ export function BrowserSessionViewer({
                       return (
                         <div key={key} className="flex justify-between">
                           <span>{key.toUpperCase()}:</span>
-                          <span className="font-bold" style={{ color: getMetricColor(status) }}>
+                          <span className={`font-bold ${getMetricClass(status)}`}>
                             {key === 'cls' ? value.toFixed(3) : `${value}ms`}
                           </span>
                         </div>

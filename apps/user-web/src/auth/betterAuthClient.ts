@@ -13,8 +13,6 @@
  * - Polar customer linkage on registration
  */
 
-import { createAuthClient } from 'better-auth/client';
-
 export interface BetterAuthConfig {
   baseUrl: string;
   basePath?: string;
@@ -51,15 +49,10 @@ export interface UserSession {
 }
 
 export class BetterAuthClient {
-  private client: ReturnType<typeof createAuthClient>;
   private baseUrl: string;
 
   constructor(config: BetterAuthConfig) {
     this.baseUrl = config.baseUrl;
-    this.client = createAuthClient({
-      baseURL: config.baseUrl,
-      basePath: config.basePath || '/api/user/auth',
-    });
   }
 
   /**

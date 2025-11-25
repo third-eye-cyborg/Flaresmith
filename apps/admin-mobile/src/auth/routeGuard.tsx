@@ -20,8 +20,8 @@
  * Spec: FR-001, FR-022, SC-005 (HTTP 403 within 50ms for unauthorized access)
  */
 
-import React, { useEffect, useState, ComponentType } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { useEffect, useState, type ComponentType } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { AdminSecureStore } from '../storage/adminSecureStore';
 
@@ -37,9 +37,9 @@ export interface WithAdminGuardProps {
  */
 function LoadingScreen(): JSX.Element {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
+    <View style={styles.loadingContainer}>
       <ActivityIndicator size="large" color="#3b82f6" />
-      <Text className="mt-4 text-gray-600">Verifying authentication...</Text>
+      <Text style={styles.loadingMessage}>Verifying authentication...</Text>
     </View>
   );
 }
@@ -49,14 +49,45 @@ function LoadingScreen(): JSX.Element {
  */
 function UnauthorizedScreen(): JSX.Element {
   return (
-    <View className="flex-1 items-center justify-center bg-white px-6">
-      <Text className="text-2xl font-bold text-red-600 mb-2">Unauthorized</Text>
-      <Text className="text-gray-700 text-center">
+    <View style={styles.unauthorizedContainer}>
+      <Text style={styles.unauthorizedTitle}>Unauthorized</Text>
+      <Text style={styles.unauthorizedSubtitle}>
         Your admin session has expired or is invalid. Please log in again.
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+  },
+  loadingMessage: {
+    marginTop: 16,
+    color: '#4b5563',
+  },
+  unauthorizedContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+  },
+  unauthorizedTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#dc2626',
+    marginBottom: 8,
+  },
+  unauthorizedSubtitle: {
+    color: '#374151',
+    textAlign: 'center',
+  },
+});
 
 /**
  * Higher-order component that wraps admin screens with authentication checks.

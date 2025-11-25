@@ -25,6 +25,10 @@ export * from "./mcp/toolInvocation";
 // Dual auth & billing schemas
 export * from "./auth/admin";
 export * from "./auth/user";
+export * from "./auth/common";
+export * from "./chat/diff";
+export * from "./chat/events";
+export * from "./projects/create";
 export * from "./billing/polar";
 export * from "./notifications/segments";
 // Analytics

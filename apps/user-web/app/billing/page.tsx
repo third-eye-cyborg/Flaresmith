@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 /**
@@ -6,7 +8,7 @@ import { useState } from 'react';
  * For now, uses simple fetch to /billing/web/checkout with planId.
  */
 export default function BillingPage() {
-  const [tier, setTier] = useState<'free' | 'pro' | 'enterprise'>('free');
+  const tier: 'free' | 'pro' | 'enterprise' = 'free';
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 

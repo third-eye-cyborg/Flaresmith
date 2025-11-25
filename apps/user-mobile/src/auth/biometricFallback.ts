@@ -34,6 +34,8 @@ import { Platform } from 'react-native';
 
 export type BiometricType = 'fingerprint' | 'facialRecognition' | 'iris' | 'none';
 
+export type FallbackType = 'password' | 'none';
+
 export type FallbackReason =
   | 'unavailable' // Hardware not available
   | 'notEnrolled' // No biometric enrolled
@@ -44,16 +46,51 @@ export type FallbackReason =
 
 export interface BiometricAuthResult {
   success: boolean;
-  fallback?: 'password' | 'none';
+  fallback?: FallbackType;
+  fallbackType?: FallbackType;
   reason?: FallbackReason;
   message?: string;
 }
 
 export interface BiometricCapability {
   isAvailable: boolean;
+  available: boolean;
   isEnrolled: boolean;
   supportedTypes: BiometricType[];
   hardwarePresent: boolean;
+  hasHardware: boolean;
+  type: BiometricType;
+  typeName: string;
+}
+
+function mapAuthenticationType(value: number): BiometricType {
+  switch (value) {
+    case LocalAuthentication.AuthenticationType.FINGERPRINT:
+      return 'fingerprint';
+    case LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION:
+      return 'facialRecognition';
+    case LocalAuthentication.AuthenticationType.IRIS:
+      return 'iris';
+    default:
+      return 'none';
+  }
+}
+
+function getTypeDisplayName(type: BiometricType): string {
+  switch (type) {
+    case 'facialRecognition':
+      return Platform.OS === 'ios' ? 'Face ID' : 'Face Recognition';
+    case 'fingerprint':
+      return Platform.OS === 'ios' ? 'Touch ID' : 'Fingerprint';
+    case 'iris':
+      return 'Iris Recognition';
+    default:
+      return 'Biometric Authentication';
+  }
+}
+
+function getPrimaryType(types: BiometricType[]): BiometricType {
+  return types.find((type) => type !== 'none') ?? 'none';
 }
 
 export class BiometricAuth {
@@ -64,34 +101,34 @@ export class BiometricAuth {
     try {
       const hardwarePresent = await LocalAuthentication.hasHardwareAsync();
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-      const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
+      const supportedTypesRaw = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
-      const types: BiometricType[] = supportedTypes.map((type) => {
-        switch (type) {
-          case LocalAuthentication.AuthenticationType.FINGERPRINT:
-            return 'fingerprint';
-          case LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION:
-            return 'facialRecognition';
-          case LocalAuthentication.AuthenticationType.IRIS:
-            return 'iris';
-          default:
-            return 'none';
-        }
-      });
+      const mappedTypes = supportedTypesRaw.map((value) => mapAuthenticationType(value));
+      const types: BiometricType[] = mappedTypes.length ? mappedTypes : ['none'];
+      const primaryType = getPrimaryType(types);
+      const available = hardwarePresent && isEnrolled;
 
       return {
-        isAvailable: hardwarePresent && isEnrolled,
+        isAvailable: available,
+        available,
         isEnrolled,
         supportedTypes: types,
         hardwarePresent,
+        hasHardware: hardwarePresent,
+        type: primaryType,
+        typeName: getTypeDisplayName(primaryType),
       };
     } catch (error) {
       console.error('[BiometricAuth] Failed to get capability:', error);
       return {
         isAvailable: false,
+        available: false,
         isEnrolled: false,
-        supportedTypes: [],
+        supportedTypes: ['none'],
         hardwarePresent: false,
+        hasHardware: false,
+        type: 'none',
+        typeName: getTypeDisplayName('none'),
       };
     }
   }
@@ -107,22 +144,17 @@ export class BiometricAuth {
   /**
    * Get user-friendly biometric type name
    */
-  static async getBiometricTypeName(): Promise<string> {
-    const capability = await this.getCapability();
-
-    if (capability.supportedTypes.includes('facialRecognition')) {
-      return Platform.OS === 'ios' ? 'Face ID' : 'Face Recognition';
+  static getBiometricTypeName(type: BiometricType): string;
+  static getBiometricTypeName(): Promise<string>;
+  static getBiometricTypeName(type?: BiometricType): string | Promise<string> {
+    if (type) {
+      return getTypeDisplayName(type);
     }
 
-    if (capability.supportedTypes.includes('fingerprint')) {
-      return Platform.OS === 'ios' ? 'Touch ID' : 'Fingerprint';
-    }
-
-    if (capability.supportedTypes.includes('iris')) {
-      return 'Iris Recognition';
-    }
-
-    return 'Biometric Authentication';
+    return (async () => {
+      const capability = await this.getCapability();
+      return capability.typeName || getTypeDisplayName('none');
+    })();
   }
 
   /**
@@ -134,13 +166,13 @@ export class BiometricAuth {
     disableDeviceFallback?: boolean;
   }): Promise<BiometricAuthResult> {
     try {
-      // Check capability first
       const capability = await this.getCapability();
 
       if (!capability.hardwarePresent) {
         return {
           success: false,
           fallback: 'password',
+          fallbackType: 'password',
           reason: 'unavailable',
           message: 'Biometric hardware not available on this device',
         };
@@ -150,13 +182,23 @@ export class BiometricAuth {
         return {
           success: false,
           fallback: 'password',
+          fallbackType: 'password',
           reason: 'notEnrolled',
           message: 'No biometric credentials enrolled. Please use password login.',
         };
       }
 
-      // Attempt authentication
-      const biometricTypeName = await this.getBiometricTypeName();
+      if (capability.available === false) {
+        return {
+          success: false,
+          fallback: 'password',
+          fallbackType: 'password',
+          reason: 'unavailable',
+          message: 'Biometric authentication is unavailable on this device.',
+        };
+      }
+
+      const biometricTypeName = capability.typeName;
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: options?.promptMessage || `Authenticate with ${biometricTypeName}`,
         cancelLabel: options?.cancelLabel || 'Use Password',
@@ -165,10 +207,9 @@ export class BiometricAuth {
 
       if (result.success) {
         console.log('[BiometricAuth] Authentication successful');
-        return { success: true };
+        return { success: true, fallback: 'none', fallbackType: 'none' };
       }
 
-      // Handle authentication failure
       const errorCode = result.error;
       let reason: FallbackReason = 'failed';
       let message = 'Biometric authentication failed';
@@ -196,6 +237,7 @@ export class BiometricAuth {
       return {
         success: false,
         fallback: 'password',
+        fallbackType: 'password',
         reason,
         message,
       };
@@ -204,6 +246,7 @@ export class BiometricAuth {
       return {
         success: false,
         fallback: 'password',
+        fallbackType: 'password',
         reason: 'failed',
         message: 'Biometric authentication error. Please use password login.',
       };
@@ -249,6 +292,7 @@ export class BiometricAuth {
     return {
       success: false,
       fallback: 'password',
+      fallbackType: 'password',
       reason: 'failed',
       message: 'Maximum biometric authentication attempts reached. Please use password.',
     };
@@ -257,12 +301,20 @@ export class BiometricAuth {
   /**
    * Check if biometric lockout is active
    */
-  static async isLockedOut(): Promise<boolean> {
-    const result = await this.authenticate({
-      promptMessage: 'Checking biometric status...',
-      disableDeviceFallback: true,
-    });
+  static isLockedOut(result: BiometricAuthResult): boolean;
+  static isLockedOut(): Promise<boolean>;
+  static isLockedOut(result?: BiometricAuthResult): boolean | Promise<boolean> {
+    if (result) {
+      return result.reason === 'lockout';
+    }
 
-    return result.reason === 'lockout';
+    return (async () => {
+      const outcome = await this.authenticate({
+        promptMessage: 'Checking biometric status...',
+        disableDeviceFallback: true,
+      });
+
+      return outcome.reason === 'lockout';
+    })();
   }
 }

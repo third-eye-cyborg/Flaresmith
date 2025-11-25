@@ -1,5 +1,5 @@
-import { db } from '../../db/client';
-import { polarCustomers } from '../../db/schema';
+import { db } from '../../../db/connection';
+import { polarCustomers } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 
 /**

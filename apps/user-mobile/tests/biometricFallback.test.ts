@@ -15,7 +15,8 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { BiometricAuth, BiometricCapability, BiometricAuthResult, FallbackType, FallbackReason } from '../src/auth/biometricFallback';
+import { BiometricAuth } from '../src/auth/biometricFallback';
+import type { BiometricCapability, BiometricAuthResult } from '../src/auth/biometricFallback';
 
 // Mock expo-local-authentication
 vi.mock('expo-local-authentication', () => ({
@@ -316,7 +317,7 @@ describe('BiometricAuth', () => {
     });
     
     it('should return fallback for unknown type', () => {
-      expect(BiometricAuth.getBiometricTypeName('none')).toBe('biometric');
+      expect(BiometricAuth.getBiometricTypeName('none')).toBe('Biometric Authentication');
     });
   });
   
@@ -357,7 +358,7 @@ describe('BiometricAuth', () => {
       vi.mocked(LocalAuthentication.hasHardwareAsync).mockResolvedValue(true);
       vi.mocked(LocalAuthentication.isEnrolledAsync).mockResolvedValue(true);
       vi.mocked(LocalAuthentication.supportedAuthenticationTypesAsync).mockResolvedValue([LocalAuthentication.AuthenticationType.FINGERPRINT]);
-      vi.mocked(LocalAuthentication.authenticateAsync).mockResolvedValue({ success: false });
+      vi.mocked(LocalAuthentication.authenticateAsync).mockResolvedValue({ success: false, error: 'unknown' });
       
       const result = await BiometricAuth.authenticate();
       

@@ -12,15 +12,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "^51.0.0",
-    "expo-router": "^3.5.0",
-    "react": "18.3.1",
-    "react-native": "0.74.0",
-    "expo-secure-store": "^15.0.7",
     "@flaresmith/api-client": "workspace:*",
     "@flaresmith/types": "workspace:*",
-    "@flaresmith/utils": "workspace:*",
     "@flaresmith/ui": "workspace:*",
+    "@flaresmith/utils": "workspace:*",
+    "expo": "^51.0.0",
+    "expo-linking": "^6.3.0",
+    "expo-router": "^3.5.0",
+    "expo-secure-store": "^15.0.7",
+    "jwt-decode": "^4.0.0",
+    "react": "18.3.1",
+    "react-native": "0.74.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

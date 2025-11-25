@@ -34,7 +34,7 @@ const USER_REFRESH_TOKEN_KEY = 'cloudmake_user_refresh_token';
 const USER_SESSION_METADATA_KEY = 'cloudmake_user_session_metadata';
 const BIOMETRIC_ENABLED_KEY = 'cloudmake_biometric_enabled';
 
-interface UserTokenPayload {
+export interface UserTokenPayload {
   sub: string; // user ID
   type: 'user';
   role: 'user';
@@ -43,7 +43,7 @@ interface UserTokenPayload {
   exp: number;
 }
 
-interface UserSessionMetadata {
+export interface UserSessionMetadata {
   userId: string;
   email?: string;
   subscriptionTier: 'free' | 'pro' | 'enterprise';

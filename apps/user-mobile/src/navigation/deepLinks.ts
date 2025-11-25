@@ -42,14 +42,14 @@ export class DeepLinkHandler {
    */
   static initialize(): void {
     // Handle initial URL (app opened via deep link)
-    Linking.getInitialURL().then((url) => {
+    Linking.getInitialURL().then((url: string | null) => {
       if (url) {
         this.handleDeepLink(url);
       }
     });
 
     // Handle subsequent deep links (app already open)
-    Linking.addEventListener('url', (event) => {
+    Linking.addEventListener('url', (event: { url: string }) => {
       this.handleDeepLink(event.url);
     });
 
