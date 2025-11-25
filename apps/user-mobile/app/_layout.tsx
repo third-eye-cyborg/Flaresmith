@@ -1,16 +1,26 @@
-import { Stack } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { Text } from 'react-native';
+import { View } from 'react-native';
+
+function TabLabel({ label }: { label: string }) {
+  return <Text style={{ fontSize: 11 }}>{label}</Text>;
+}
 
 export default function UserMobileLayout() {
   return (
-    <>
-      {/* Placeholder user route group; subscription screen to be added (US2/US4) */}
-      <Stack>
-        <Stack.Screen name="index" options={{ title: 'User Home' }} />
-        <Stack.Screen name="login" options={{ title: 'Login' }} />
-        <Stack.Screen name="subscription" options={{ title: 'Subscription' }} />
-      </Stack>
-      <Text style={{ textAlign: 'center', padding: 8, fontSize: 12 }}>Flaresmith User Mobile</Text>
-    </>
+    <View style={{ flex: 1 }}>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { backgroundColor: '#090909', borderTopColor: '#222' },
+          tabBarActiveTintColor: '#FF6B35',
+          tabBarInactiveTintColor: '#666'
+        }}
+      >
+        <Tabs.Screen name="index" options={{ title: 'Home', tabBarLabel: () => <TabLabel label="Home" /> }} />
+        <Tabs.Screen name="subscription" options={{ title: 'Subscription', tabBarLabel: () => <TabLabel label="Plan" /> }} />
+        <Tabs.Screen name="login" options={{ title: 'Login', tabBarLabel: () => <TabLabel label="Login" /> }} />
+      </Tabs>
+    </View>
   );
 }

@@ -1,0 +1,24 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flame gradient -->
+  <defs>
+    <linearGradient id="flameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F7931E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FDC830;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="hammerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7B68EE;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Flame shape -->
+  <path d="M100 40 C85 60, 75 75, 75 95 C75 120, 85 135, 100 150 C115 135, 125 120, 125 95 C125 75, 115 60, 100 40 Z" 
+        fill="url(#flameGradient)" opacity="0.9"/>
+  
+  <!-- Hammer head -->
+  <rect x="90" y="110" width="40" height="15" rx="2" fill="url(#hammerGradient)"/>
+  
+  <!-- Hammer handle -->
+  <rect x="105" y="125" width="10" height="50" rx="2" fill="url(#hammerGradient)" opacity="0.8"/>
+</svg>

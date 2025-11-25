@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/src/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { getBetterAuthClient } from '../../../src/auth/betterAuthClient';
 
@@ -122,13 +123,14 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              loading={loading}
+              spinnerPosition='right'
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {loading ? 'Processing...' : isSignup ? 'Sign up' : 'Sign in'}
-            </button>
+              {loading ? 'Processing…' : isSignup ? 'Sign up' : 'Sign in'}
+            </Button>
           </div>
         </form>
 
@@ -143,9 +145,10 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
-            <button
+            <Button
               onClick={() => handleOAuthLogin('google')}
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              variant='outline'
+              className="w-full bg-white text-gray-600 hover:bg-gray-50"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path
@@ -166,11 +169,12 @@ export default function LoginPage() {
                 />
               </svg>
               <span className="ml-2">Google</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={() => handleOAuthLogin('github')}
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              variant='outline'
+              className="w-full bg-white text-gray-600 hover:bg-gray-50"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -180,7 +184,7 @@ export default function LoginPage() {
                 />
               </svg>
               <span className="ml-2">GitHub</span>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

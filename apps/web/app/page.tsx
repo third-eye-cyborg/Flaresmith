@@ -5,34 +5,33 @@ import Link from "next/link"
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <main className="min-h-screen relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,107,53,0.12),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_30%,rgba(74,144,226,0.18),transparent_55%)]" />
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-900/[0.04] bg-[size:75px_75px] dark:bg-grid-slate-400/[0.05]" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-          <div className="text-center space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50">
+          <div className="text-center space-y-8 relative">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 animate-in fade-in slide-in-from-top-2 duration-700">
               <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Multi-Environment Orchestration</span>
             </div>
-            
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-white bg-clip-text text-transparent">
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-primary via-accent to-primary text-transparent bg-clip-text animate-in fade-in slide-in-from-top-4 duration-700">
               Welcome to Flaresmith
             </h1>
-            
-            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto animate-in fade-in slide-in-from-top-6 duration-700 delay-100">
               Provision and sync GitHub, Cloudflare, Neon, and Postman - all from one platform
             </p>
-            
-            <div className="flex gap-4 justify-center pt-4">
+            <div className="flex gap-4 justify-center pt-4 animate-in fade-in slide-in-from-top-8 duration-700 delay-200">
               <Link href="/projects">
-                <Button size="lg" className="gap-2 bg-indigo-600 hover:bg-indigo-700">
+                <Button size="lg" variant="gradient" className="gap-2">
                   <Rocket className="w-4 h-4" />
                   View Projects
                 </Button>
               </Link>
               <Link href="/projects/new">
-                <Button size="lg" variant="outline" className="gap-2 border-slate-300 dark:border-slate-700">
+                <Button size="lg" variant="glass" className="gap-2">
                   <Zap className="w-4 h-4" />
                   New Project
                 </Button>

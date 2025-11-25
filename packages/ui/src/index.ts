@@ -8,3 +8,4 @@ export { Text } from "./Text";
 export { View } from "./View";
 export { EnvironmentCard } from "./EnvironmentCard";
 export type { EnvironmentCardProps } from "./EnvironmentCard";
+export { Logo } from "./Logo";

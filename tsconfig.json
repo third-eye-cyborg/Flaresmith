@@ -2,6 +2,8 @@
   "extends": "./packages/config/tsconfig/base.json",
   "compilerOptions": {
     "ignoreDeprecations": "6.0",
+    "noEmit": true,
+    "allowJs": false,
     "baseUrl": ".",
     "paths": {
       "@flaresmith/ui": ["./packages/ui/src"],
@@ -12,5 +14,15 @@
     },
     "types": ["node"]
   },
-  "exclude": ["node_modules", "dist", "build", ".next", ".turbo"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    ".turbo",
+    "**/next.config.js",
+    "**/tailwind.config.js",
+    "**/postcss.config.js",
+    "**/wrangler.toml"
+  ]
 }

@@ -1,6 +1,7 @@
 {
   "extends": "@flaresmith/config-tsconfig/react.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./app/*", "./src/*"],
