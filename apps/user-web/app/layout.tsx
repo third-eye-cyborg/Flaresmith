@@ -1,11 +1,12 @@
 import React from 'react';
+import './globals.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-white text-neutral-900">
         <header className="border-b px-6 py-4 flex items-center justify-between">
-          <h1 className="font-bold">CloudMake User</h1>
+          <h1 className="font-bold">Flaresmith</h1>
           <nav className="text-sm flex gap-4">
             <a href="/" className="hover:underline">Home</a>
             {/* Placeholder billing link per T010 */}

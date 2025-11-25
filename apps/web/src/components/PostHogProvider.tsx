@@ -21,39 +21,45 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
       if (!apiKey) {
-        console.warn('PostHog API key not configured');
+        console.warn('PostHog API key not configured - analytics disabled');
         return;
       }
 
-      await initializeAnalytics({
-        apiKey,
-        host,
-        platform: 'browser',
-        autocapture: true,
-        capture_pageview: false, // We'll track manually for better control
-        session_recording: {
-          enabled: true,
-        },
-      });
+      try {
+        await initializeAnalytics({
+          apiKey,
+          host,
+          platform: 'browser',
+          autocapture: true,
+          capture_pageview: false, // We'll track manually for better control
+          session_recording: {
+            enabled: true,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to initialize PostHog:', error);
+      }
     };
 
-    initAnalytics().catch((error) => {
-      console.error('Failed to initialize PostHog:', error);
-    });
+    initAnalytics();
   }, []);
 
   // Track page views on navigation
   useEffect(() => {
     if (pathname) {
-      const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-      
-      trackPageView({
-        pagePath: url,
-        pageTitle: document.title,
-        referrer: document.referrer || undefined,
-        environment: (process.env.NEXT_PUBLIC_ENVIRONMENT as 'dev' | 'staging' | 'prod') || 'dev',
-        platform: 'web',
-      });
+      try {
+        const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+        
+        trackPageView({
+          pagePath: url,
+          pageTitle: typeof document !== 'undefined' ? document.title : '',
+          referrer: typeof document !== 'undefined' ? (document.referrer || undefined) : undefined,
+          environment: (process.env.NEXT_PUBLIC_ENVIRONMENT as 'dev' | 'staging' | 'prod') || 'dev',
+          platform: 'web',
+        });
+      } catch (error) {
+        console.error('Failed to track page view:', error);
+      }
     }
   }, [pathname, searchParams]);
 

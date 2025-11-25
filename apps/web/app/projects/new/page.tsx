@@ -14,7 +14,7 @@ export default function NewProjectPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Create New Project</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Set up a new CloudMake project with automated provisioning for GitHub, Neon, Cloudflare,
+          Set up a new Flaresmith project with automated provisioning for GitHub, Neon, Cloudflare,
           and Postman.
         </p>
       </div>
