@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface CTA {
@@ -42,20 +42,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ eyebrow, title, subtit
         </h1>
         {subtitle && <p className='text-xl md:text-2xl text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed'>{subtitle}</p>}
         <div className='flex flex-col sm:flex-row gap-4 justify-center pt-6'>
-          <a href={primaryCta.href} data-analytics-id={primaryCta.analyticsId || 'hero-primary-cta'} target={primaryCta.href.startsWith('http') ? '_blank' : undefined} rel={primaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
-            <Button size='lg' variant={primaryCta.variant as any || 'default'} className='gap-2 text-base px-8 py-6 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all'>
-              {primaryCta.iconLeft}
-              <span>{primaryCta.label}</span>
-              {primaryCta.iconRight}
-            </Button>
+          <a
+            href={primaryCta.href}
+            target={primaryCta.href.startsWith('http') ? '_blank' : undefined}
+            rel={primaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            data-analytics-id={primaryCta.analyticsId || 'hero-primary-cta'}
+            className={cn(
+              buttonVariants({ variant: (primaryCta.variant as any) || 'default', size: 'lg' }),
+              'gap-2 text-base px-8 py-6 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all'
+            )}
+          >
+            {primaryCta.iconLeft}<span>{primaryCta.label}</span>{primaryCta.iconRight}
           </a>
           {secondaryCta && (
-            <a href={secondaryCta.href} data-analytics-id={secondaryCta.analyticsId || 'hero-secondary-cta'} target={secondaryCta.href.startsWith('http') ? '_blank' : undefined} rel={secondaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
-              <Button size='lg' variant={secondaryCta.variant as any || 'outline'} className='gap-2 text-base px-8 py-6 hover:bg-primary/10 transition-all'>
-                {secondaryCta.iconLeft}
-                <span>{secondaryCta.label}</span>
-                {secondaryCta.iconRight}
-              </Button>
+            <a
+              href={secondaryCta.href}
+              target={secondaryCta.href.startsWith('http') ? '_blank' : undefined}
+              rel={secondaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              data-analytics-id={secondaryCta.analyticsId || 'hero-secondary-cta'}
+              className={cn(
+                buttonVariants({ variant: (secondaryCta.variant as any) || 'outline', size: 'lg' }),
+                'gap-2 text-base px-8 py-6 hover:bg-primary/10 transition-all'
+              )}
+            >
+              {secondaryCta.iconLeft}<span>{secondaryCta.label}</span>{secondaryCta.iconRight}
             </a>
           )}
         </div>
