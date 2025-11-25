@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { CloudMakeClient } from "@flaresmith/api-client/src/client"; // Adjust path if barrel export exists
+import { FlaresmithClient } from "@flaresmith/api-client/src/client"; // Adjust path if barrel export exists
 import { GitHubResource } from "@flaresmith/api-client/src/resources/github";
 import type { SecretValidationResponse } from "@flaresmith/types";
 
@@ -44,7 +44,7 @@ export const SecretValidationPanel: React.FC<SecretValidationPanelProps> = ({
 
   // Instantiate API client lazily
   const client = React.useMemo(
-    () => new CloudMakeClient({ baseUrl: apiBaseUrl }),
+    () => new FlaresmithClient({ baseUrl: apiBaseUrl }),
     [apiBaseUrl]
   );
   const github = React.useMemo(() => new GitHubResource(client), [client]);

@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 /**
  * Polar Customer Linking Service
  * 
- * Creates Polar customer records and links them to CloudMake users.
+ * Creates Polar customer records and links them to Flaresmith users.
  * 
  * Triggered by:
  * - User registration (T068 Better Auth signup)

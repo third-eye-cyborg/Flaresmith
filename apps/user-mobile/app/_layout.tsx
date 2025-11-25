@@ -10,7 +10,7 @@ export default function UserMobileLayout() {
         <Stack.Screen name="login" options={{ title: 'Login' }} />
         <Stack.Screen name="subscription" options={{ title: 'Subscription' }} />
       </Stack>
-      <Text style={{ textAlign: 'center', padding: 8, fontSize: 12 }}>CloudMake User Mobile</Text>
+      <Text style={{ textAlign: 'center', padding: 8, fontSize: 12 }}>Flaresmith User Mobile</Text>
     </>
   );
 }

@@ -5,8 +5,8 @@ import { PostmanWorkspaceService } from '../../src/integrations/postman/workspac
  * T175 / FR-029: Postman Hybrid Collection Structure Validation
  * Verifies provisioning pattern: Base collection + environment-specific collections (dev/staging/prod)
  * using naming conventions:
- *   CloudMake Base - <ProjectName>
- *   CloudMake - <ProjectName> (dev|staging|prod)
+ *   Flaresmith Base - <ProjectName>
+ *   Flaresmith - <ProjectName> (dev|staging|prod)
  * Network calls are mocked; we only validate naming logic and sequence of API invocations.
  */
 
@@ -30,7 +30,7 @@ describe('Postman hybrid collections (T175 / FR-029)', () => {
         return mockResponse({ workspaces: [] });
       }
       if (url.includes('/workspaces') && method === 'POST') {
-        return mockResponse({ workspace: { id: 'ws-123', name: `CloudMake - ${projectName}` } });
+        return mockResponse({ workspace: { id: 'ws-123', name: `Flaresmith - ${projectName}` } });
       }
       if (url.includes('/collections') && method === 'POST') {
         const body = JSON.parse(init.body);
@@ -54,13 +54,13 @@ describe('Postman hybrid collections (T175 / FR-029)', () => {
   }
 
   it('creates base + environment collections with expected naming', async () => {
-    const workspace = await service.createWorkspace({ name: `CloudMake - ${projectName}`, description: 'Test workspace' });
+    const workspace = await service.createWorkspace({ name: `Flaresmith - ${projectName}`, description: 'Test workspace' });
     expect(workspace.workspaceId).toBe('ws-123');
 
-    const baseName = `CloudMake Base - ${projectName}`;
-    const devName = `CloudMake - ${projectName} (dev)`;
-    const stagingName = `CloudMake - ${projectName} (staging)`;
-    const prodName = `CloudMake - ${projectName} (prod)`;
+    const baseName = `Flaresmith Base - ${projectName}`;
+    const devName = `Flaresmith - ${projectName} (dev)`;
+    const stagingName = `Flaresmith - ${projectName} (staging)`;
+    const prodName = `Flaresmith - ${projectName} (prod)`;
 
     const created: string[] = [];
     for (const name of [baseName, devName, stagingName, prodName]) {

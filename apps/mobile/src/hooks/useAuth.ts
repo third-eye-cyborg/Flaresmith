@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AuthResource } from "@flaresmith/api-client";
-import { CloudMakeClient } from "@flaresmith/api-client";
+import { FlaresmithClient } from "@flaresmith/api-client";
 import { getEnv } from "@flaresmith/utils";
 import type {
   RegisterRequest,
@@ -56,7 +56,7 @@ export function useAuth(): UseAuthReturn {
   
   // Initialize API client
   const apiBaseUrl = getEnv("EXPO_PUBLIC_API_URL") || "http://localhost:8787";
-  const client = new CloudMakeClient({ baseUrl: apiBaseUrl });
+  const client = new FlaresmithClient({ baseUrl: apiBaseUrl });
   const authResource = new AuthResource(client);
 
   /**

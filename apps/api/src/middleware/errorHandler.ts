@@ -13,7 +13,7 @@ import { incrementCounter, METRICS } from "../lib/metrics";
  * - User-friendly hints and actionable messages
  */
 
-export interface CloudMakeError {
+export interface FlaresmithError {
   code: string;
   message: string;
   severity: "info" | "warning" | "error" | "critical";
@@ -69,7 +69,7 @@ export function errorHandler(err: Error, c: Context) {
     
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal); // sample all HTTP exceptions for now
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: errorCode,
       message: err.message,
       severity: status >= 500 ? "error" : "warning",
@@ -88,7 +88,7 @@ export function errorHandler(err: Error, c: Context) {
   if (err.name === "ZodError") {
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: "VALIDATION_ERROR",
       message: "Request validation failed",
       severity: "warning",
@@ -108,7 +108,7 @@ export function errorHandler(err: Error, c: Context) {
   if (err.message.includes('ENV_PREVIEW_EXPIRED')) {
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: 'ENV_PREVIEW_EXPIRED',
       message: 'Preview environment has expired',
       severity: 'error',
@@ -126,7 +126,7 @@ export function errorHandler(err: Error, c: Context) {
   if (err.message.includes('ENV_PREVIEW_LIMIT_REACHED')) {
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: 'ENV_PREVIEW_LIMIT_REACHED',
       message: 'Maximum preview environments (15) reached',
       severity: 'error',
@@ -146,7 +146,7 @@ export function errorHandler(err: Error, c: Context) {
     const provider = err.message.match(/INTEGRATION_(\w+)_/)?.[1] || 'UNKNOWN';
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: err.message.split(':')[0] || 'INTEGRATION_ERROR',
       message: `Integration with ${provider} failed`,
       severity: 'error',
@@ -165,7 +165,7 @@ export function errorHandler(err: Error, c: Context) {
   if (err.message.includes('SPEC_DRIFT_CONFLICT')) {
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: 'SPEC_DRIFT_CONFLICT',
       message: 'Spec changes conflict with uncommitted local changes',
       severity: 'warning',
@@ -184,7 +184,7 @@ export function errorHandler(err: Error, c: Context) {
   if (err.message.includes('CHAT_DIFF_OUTDATED_BASE')) {
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: 'CHAT_DIFF_OUTDATED_BASE',
       message: 'The file has been modified since this diff was generated',
       severity: 'warning',
@@ -203,7 +203,7 @@ export function errorHandler(err: Error, c: Context) {
   if (err.message.includes("ECONNREFUSED") || err.message.includes("database")) {
     incrementCounter(METRICS.errorTotal);
     incrementCounter(METRICS.errorSampledTotal);
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: "DATABASE_UNAVAILABLE",
       message: "Database connection failed",
       severity: "critical",
@@ -220,7 +220,7 @@ export function errorHandler(err: Error, c: Context) {
 
   // Handle idempotency conflicts
   if (err.message.includes('IDEMPOTENCY_MISMATCH')) {
-    const errorResponse: CloudMakeError = {
+    const errorResponse: FlaresmithError = {
       code: 'IDEMPOTENCY_MISMATCH',
       message: 'Idempotency key conflict - request body differs from original',
       severity: 'warning',
@@ -239,7 +239,7 @@ export function errorHandler(err: Error, c: Context) {
   // IMPORTANT: Do not expose stack traces or internal error details
   incrementCounter(METRICS.errorTotal);
   incrementCounter(METRICS.errorSampledTotal);
-  const errorResponse: CloudMakeError = {
+  const errorResponse: FlaresmithError = {
     code: "INTERNAL_UNEXPECTED",
     message: "An unexpected error occurred",
     severity: "error",

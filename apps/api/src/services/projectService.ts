@@ -103,7 +103,7 @@ export class ProjectService {
             templateRepo: "monorepo",
             targetOwner: orgId,
             targetRepo: slug,
-            description: `CloudMake project: ${name}`,
+            description: `Flaresmith project: ${name}`,
           });
 
           integrationResults.githubRepo = repo.fullName;
@@ -245,7 +245,7 @@ export class ProjectService {
 
           // Create workspace
           const workspace = await postmanService.createWorkspace({
-            name: `CloudMake - ${name}`,
+            name: `Flaresmith - ${name}`,
             description: `API workspace for ${name}`,
             type: "team",
           });
@@ -255,7 +255,7 @@ export class ProjectService {
           // Create base collection
           await postmanService.createCollection({
             workspaceId: workspace.workspaceId,
-            name: `CloudMake Base - ${name}`,
+            name: `Flaresmith Base - ${name}`,
             description: `Base API collection for ${name}`,
           });
 
@@ -263,7 +263,7 @@ export class ProjectService {
           for (const env of ["dev", "staging", "prod"]) {
             await postmanService.createCollection({
               workspaceId: workspace.workspaceId,
-              name: `CloudMake - ${name} (${env})`,
+              name: `Flaresmith - ${name} (${env})`,
               description: `${env} environment collection for ${name}`,
             });
 

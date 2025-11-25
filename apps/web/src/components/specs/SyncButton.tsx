@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CloudMakeClient, SpecsResource } from "@flaresmith/api-client";
+import { FlaresmithClient, SpecsResource } from "@flaresmith/api-client";
 import type { ApplySpecResponse } from "@flaresmith/types";
 
 type SyncButtonProps = {
@@ -14,7 +14,7 @@ type SyncButtonProps = {
 function makeClient() {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "/api";
-  return new CloudMakeClient({ baseUrl });
+  return new FlaresmithClient({ baseUrl });
 }
 
 export function SyncButton({ projectId, onResult, className, label }: SyncButtonProps) {

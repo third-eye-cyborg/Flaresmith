@@ -1,5 +1,11 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import '../globals.css';
+
+export const metadata: Metadata = {
+  title: 'Flaresmith - Admin Portal',
+  description: 'System administration and management',
+};
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

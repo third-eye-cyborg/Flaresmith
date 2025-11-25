@@ -4,7 +4,7 @@ import { prettyJSON } from "hono/pretty-json";
 import type { Context } from "hono";
 
 /**
- * Minimal CloudMake API for Cloudflare Workers
+ * Minimal Flaresmith API for Cloudflare Workers
  * Health check and basic endpoints without database dependencies
  */
 
@@ -39,7 +39,7 @@ app.get("/", (c) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CloudMake API • ${c.env.ENVIRONMENT}</title>
+  <title>Flaresmith API • ${c.env.ENVIRONMENT}</title>
   <link rel="icon" type="image/png" href="/favicon.ico" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'unsafe-inline' 'self'; img-src 'self' data:; connect-src 'self';" />
   <style>
@@ -52,10 +52,10 @@ app.get("/", (c) => {
 </head>
 <body>
   <header>
-    <h1>CloudMake API</h1>
+    <h1>Flaresmith API</h1>
     <div class="pill">Environment: ${c.env.ENVIRONMENT}</div>
   </header>
-  <p>This is the minimal edge deployment of the CloudMake platform. Core endpoints are being migrated to the Workers runtime.</p>
+  <p>This is the minimal edge deployment of the Flaresmith platform. Core endpoints are being migrated to the Workers runtime.</p>
   <h2>Available Endpoints</h2>
   <ul>
     <li><code>GET /health</code> – status & timestamp</li>
@@ -63,7 +63,7 @@ app.get("/", (c) => {
     <li><code>POST /metrics/page-load</code> – internal performance beacon</li>
   </ul>
   <script src="/script.js" defer></script>
-  <footer>v0.1.0 • &copy; ${new Date().getUTCFullYear()} CloudMake</footer>
+  <footer>v0.1.0 • &copy; ${new Date().getUTCFullYear()} Flaresmith</footer>
 </body>
 </html>`;
   return c.newResponse(html, 200, {

@@ -25,7 +25,7 @@ vi.mock('@flaresmith/api-client', () => {
     async refresh(req: any) { return { accessToken: 'at.3', refreshToken: 'rt.3', accessExpiresAt: new Date(Date.now()+15*60*1000).toISOString(), refreshExpiresAt: new Date(Date.now()+24*60*60*1000).toISOString() }; }
     async signout() { return {}; }
   }
-  return { CloudMakeClient: class {}, AuthResource: AuthResourceMock };
+  return { FlaresmithClient: class {}, AuthResource: AuthResourceMock };
 });
 
 function renderHook<T>(hook: () => T) {

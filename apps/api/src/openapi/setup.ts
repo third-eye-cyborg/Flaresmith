@@ -14,7 +14,7 @@ export function createOpenAPIApp() {
     openapi: "3.0.0",
     info: {
       version: "0.1.0",
-      title: "CloudMake API",
+      title: "Flaresmith API",
       description: "Multi-environment orchestration platform API",
     },
     servers: [

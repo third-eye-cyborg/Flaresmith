@@ -11,7 +11,7 @@ export default function AdminMobileLayout() {
         <Stack.Screen name="settings" options={{ title: 'Settings' }} />
       </Stack>
       {/* Simple footer placeholder to differentiate surface */}
-      <Text style={{ textAlign: 'center', padding: 8, fontSize: 12 }}>CloudMake Admin Mobile</Text>
+      <Text style={{ textAlign: 'center', padding: 8, fontSize: 12 }}>Flaresmith Admin Mobile</Text>
     </>
   );
 }
