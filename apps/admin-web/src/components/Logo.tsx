@@ -1,52 +1,55 @@
 export function Logo({ className = 'h-8 w-8' }: { className?: string }) {
   return (
     <svg
-      viewBox='0 0 200 200'
+      viewBox='0 0 400 400'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       className={className}
       aria-label='Flaresmith Logo'
+      preserveAspectRatio='xMidYMid meet'
     >
-      <defs>
-        <linearGradient id='flame-grad-admin' x1='0%' y1='0%' x2='0%' y2='100%'>
-          <stop offset='0%' stopColor='#FF6B35' stopOpacity={1} />
-          <stop offset='50%' stopColor='#F7931E' stopOpacity={1} />
-          <stop offset='100%' stopColor='#FDC830' stopOpacity={1} />
-        </linearGradient>
-        <linearGradient id='hammer-grad-admin' x1='0%' y1='0%' x2='0%' y2='100%'>
-          <stop offset='0%' stopColor='#4A90E2' stopOpacity={1} />
-          <stop offset='100%' stopColor='#7B68EE' stopOpacity={1} />
-        </linearGradient>
-      </defs>
-      {/* Flame */}
+      {/* Orange cloud - smooth rounded blob */}
       <path
-        d='M100 30 C90 50, 85 70, 90 90 C95 110, 105 110, 110 90 C115 70, 110 50, 100 30 Z'
-        fill='url(#flame-grad-admin)'
-        opacity={0.9}
+        d='M 120 200 Q 100 170 120 145 Q 145 125 175 130 Q 205 115 240 130 Q 275 140 295 165 Q 320 160 340 180 Q 355 200 350 225 Q 360 240 355 265 Q 345 290 315 298 Q 300 310 275 312 Q 245 318 215 308 Q 185 315 155 303 Q 130 288 120 260 Q 105 240 110 215 Q 115 205 120 200 Z'
+        fill='#FF6B35'
+      />
+      
+      {/* White infinity flow through center */}
+      <path
+        d='M 170 210 Q 185 195 205 202 Q 225 210 230 228 Q 235 246 220 256 Q 210 263 195 256 Q 185 248 180 232 Q 175 218 170 210 Z'
+        fill='white'
+        opacity='0.9'
       />
       <path
-        d='M100 40 C95 55, 92 65, 95 80 C98 95, 102 95, 105 80 C108 65, 105 55, 100 40 Z'
-        fill='url(#flame-grad-admin)'
-        opacity={0.7}
+        d='M 230 228 Q 235 218 250 212 Q 265 206 280 220 Q 292 234 287 250 Q 282 264 268 268 Q 254 270 243 258 Q 237 248 230 228 Z'
+        fill='white'
+        opacity='0.9'
       />
-      {/* Hammer */}
-      <path
-        d='M80 120 L120 120 L120 130 L80 130 Z'
-        fill='url(#hammer-grad-admin)'
-      />
-      <rect
-        x='95'
-        y='130'
-        width='10'
-        height='50'
-        rx='2'
-        fill='url(#hammer-grad-admin)'
-      />
-      <path
-        d='M75 115 L125 115 L125 120 L75 120 Z'
-        fill='url(#hammer-grad-admin)'
-        opacity={0.8}
-      />
+      
+      {/* White gear on the right edge */}
+      <g transform='translate(320, 240)'>
+        {/* Outer gear circle */}
+        <circle cx='0' cy='0' r='45' fill='white' />
+        
+        {/* 8 gear teeth */}
+        <rect x='-6' y='-50' width='12' height='18' fill='white' rx='2' />
+        <rect x='-6' y='32' width='12' height='18' fill='white' rx='2' />
+        <rect x='-50' y='-6' width='18' height='12' fill='white' rx='2' />
+        <rect x='32' y='-6' width='18' height='12' fill='white' rx='2' />
+        
+        <g transform='rotate(45)'>
+          <rect x='-6' y='-50' width='12' height='18' fill='white' rx='2' />
+          <rect x='-6' y='32' width='12' height='18' fill='white' rx='2' />
+          <rect x='-50' y='-6' width='18' height='12' fill='white' rx='2' />
+          <rect x='32' y='-6' width='18' height='12' fill='white' rx='2' />
+        </g>
+        
+        {/* Inner orange circle */}
+        <circle cx='0' cy='0' r='28' fill='#FF6B35' />
+        
+        {/* Center hole */}
+        <circle cx='0' cy='0' r='12' fill='white' />
+      </g>
     </svg>
   );
 }

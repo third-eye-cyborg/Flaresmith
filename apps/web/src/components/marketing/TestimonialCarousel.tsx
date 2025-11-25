@@ -52,7 +52,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ classN
 
   return (
     <div
-      className={cn('relative mx-auto max-w-3xl rounded-2xl border border-white/10 glass p-8 text-center select-none', className)}
+      className={cn('relative mx-auto max-w-3xl rounded-lg border border-border bg-card p-8 text-center select-none shadow-lg', className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}

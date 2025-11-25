@@ -21,24 +21,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{__html:`(function(){try{var t=localStorage.getItem('theme');if(t){document.documentElement.classList.add(t);}else{document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();`}} />
+        <script dangerouslySetInnerHTML={{__html:`(function(){document.documentElement.classList.add('dark');})();`}} />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} dark`}>
           <Providers>
-            <nav className="w-full border-b border-neutral-800/40 bg-neutral-950/80 backdrop-blur-sm">
-              <div className="max-w-7xl mx-auto px-6 py-3 flex gap-8 items-center text-sm text-neutral-300">
-                <Link href="/" className="flex items-center gap-2 font-semibold text-neutral-100">
-                  <Logo className="h-8 w-8" />
+            <nav className="w-full border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+              <div className="max-w-7xl mx-auto px-6 py-5 flex gap-8 items-center text-sm">
+                <Link href="/" className="flex items-center gap-3 font-bold text-foreground text-base">
+                  <Logo className="h-9 w-9" />
                   <span>Flaresmith</span>
                 </Link>
-                <Link href="/features" className="hover:text-neutral-100 transition-colors">Features</Link>
-                <Link href="/pricing" className="hover:text-neutral-100 transition-colors">Pricing</Link>
-                <Link href="/projects" className="hover:text-neutral-100 transition-colors">Dashboard</Link>
+                <Link href="/features" className="text-muted-foreground hover:text-primary transition-colors font-medium">Features</Link>
+                <Link href="/pricing" className="text-muted-foreground hover:text-primary transition-colors font-medium">Pricing</Link>
+                <Link href="/projects" className="text-muted-foreground hover:text-primary transition-colors font-medium">Dashboard</Link>
                 {designSyncFlagSnapshot.DESIGN_SYNC_ENABLED && (
-                  <Link href="/design-sync" className="hover:text-neutral-100 transition-colors ml-auto">Design Sync</Link>
+                  <Link href="/design-sync" className="text-muted-foreground hover:text-foreground transition-colors">Design Sync</Link>
                 )}
+                <div className="ml-auto flex items-center gap-4">
+                  <Link href="/login" className="text-muted-foreground hover:text-primary transition-colors font-medium">Login</Link>
+                  <Link href="/signup" className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium">Sign Up</Link>
+                </div>
               </div>
             </nav>
             {children}

@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/src/components/ui/button';
-
-export const metadata = { title: 'Billing - Flaresmith' };
+import { Button } from '@/components/ui/button';
 
 export default function BillingPage() {
   const tier: 'free' | 'pro' | 'enterprise' = 'free';

@@ -1,7 +1,11 @@
+'use client';
+
+
 import React, { useState } from 'react'
-export const metadata = { title: 'Pricing - Flaresmith' };
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { HeroSection } from '@/components/marketing/HeroSection'
+import { CTASection } from '@/components/marketing/CTASection'
 
 const tiers = [
   {
@@ -51,23 +55,27 @@ export default function PricingPage() {
   const [loadingTier, setLoadingTier] = useState<string | null>(null)
   const handleSelect = (tierName: string) => {
     setLoadingTier(tierName)
-    // Simulate async action
     setTimeout(() => setLoadingTier(null), 1200)
   }
   return (
-    <div className='relative min-h-screen py-16 overflow-hidden'>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,107,53,0.15),transparent_60%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(74,144,226,0.15),transparent_55%)]" />
-      <div className='max-w-7xl mx-auto px-6 space-y-12 relative'>
-        <header className='text-center space-y-4'>
-          <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary via-accent to-primary text-transparent bg-clip-text animate-in fade-in slide-in-from-top-4 duration-700'>Pricing</h1>
-          <p className='text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto animate-in fade-in slide-in-from-top-6 duration-700 delay-100'>Transparent tiers with environment parity, security & observability baked in.</p>
-        </header>
+    <main className='relative' role='main'>
+      <HeroSection
+        eyebrow='Pricing'
+        title='Transparent tiers aligned with environment maturity'
+        subtitle='Scale from exploration to production promotion workflows with security & observability built in.'
+        primaryCta={{ label: 'Start Free', href: '/projects/new' }}
+        secondaryCta={{ label: 'View Features', href: '/features' }}
+      />
+      <section aria-labelledby='pricing-heading' className='max-w-7xl mx-auto px-6 py-16'>
+        <h2 id='pricing-heading' className='sr-only'>Pricing tiers</h2>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           {tiers.map(t => (
-            <div key={t.name} className='glass rounded-2xl p-6 flex flex-col gap-4 hover:border-primary/40 transition-colors border border-white/10'>
+            <div
+              key={t.name}
+              className={`relative rounded-lg p-6 flex flex-col gap-4 border bg-card transition-all group ${t.name === 'Growth' ? 'border-primary shadow-lg shadow-primary/10 scale-[1.02]' : 'border-border hover:border-primary/50'}`}
+            >
               <div className='flex items-center gap-3'>
-                <h2 className='text-xl font-semibold'>{t.name}</h2>
+                <h3 className='text-xl font-semibold'>{t.name}</h3>
                 <Badge className='ml-auto'>{t.badge}</Badge>
               </div>
               <div className='flex items-baseline gap-2'>
@@ -76,33 +84,30 @@ export default function PricingPage() {
               </div>
               <p className='text-sm text-muted-foreground'>{t.description}</p>
               <ul className='space-y-1 text-sm text-muted-foreground mt-2'>
-                {t.features.map(f => <li key={f} className='flex items-center gap-2'><span className='text-primary'>✓</span>{f}</li>)}
+                {t.features.map(f => <li key={f} className='flex items-center gap-2'><span className='text-primary' aria-hidden='true'>✓</span>{f}</li>)}
               </ul>
               <Button
-                variant='gradient'
+                variant={t.name === 'Growth' ? 'default' : 'outline'}
                 className='mt-4 w-full'
                 loading={loadingTier === t.name}
                 onClick={() => handleSelect(t.name)}
                 spinnerPosition='right'
+                data-analytics-id={`pricing-tier-select-${t.name.toLowerCase()}`}
               >
                 {loadingTier === t.name ? 'Processing' : 'Select'}
               </Button>
             </div>
           ))}
         </div>
-        <section className='text-center space-y-6 pt-8'>
-          <h2 className='text-3xl font-semibold bg-gradient-to-r from-primary/80 to-accent/80 text-transparent bg-clip-text'>Not sure where to start?</h2>
-          <p className='max-w-xl mx-auto text-muted-foreground'>Begin on the free tier, upgrade when you need production promotion workflow guarantees. Enterprise? We’ll tailor SLAs & compliance.</p>
-          <div className='flex justify-center gap-4'>
-            <Button variant='glass' size='lg' asChild>
-              <a href='/features'>Explore Features</a>
-            </Button>
-            <Button variant='gradient' size='lg' asChild>
-              <a href='/projects'>Launch Dashboard</a>
-            </Button>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
+      </section>
+      <section className="max-w-4xl mx-auto px-6 py-16">
+        <CTASection
+          heading='Not sure where to begin?'
+          body='Start with Starter, upgrade when production promotion workflows & audit history become critical.'
+          primaryCta={{ label: 'Create Free Project', href: '/projects/new', variant: 'default' }}
+          secondaryCta={{ label: 'View Features', href: '/features', variant: 'outline' }}
+        />
+      </section>
+    </main>
+  )
 }

@@ -2,25 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-  }
-}
-
-body {
-  color: rgb(var(--foreground));
-  background: rgb(var(--background));
-}
-
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -50,25 +31,25 @@ body {
     --radius: 0.5rem;
   }
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 240 10% 3.9%; /* Very dark, almost black */
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 240 8% 10%; /* Dark cards */
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 240 8% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 15 100% 60%; /* #FF6B35 - Flame orange */
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
+    --primary: 16 100% 60%; /* Orange #FF6B35 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 6% 15%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 212 78% 60%; /* #4A90E2 - Hammer blue */
-    --accent-foreground: 0 0% 98%;
+    --muted: 240 5% 20%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 16 100% 60%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 15 100% 60%;
+    --border: 240 6% 18%;
+    --input: 240 8% 10%;
+    --ring: 16 100% 60%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -76,8 +57,6 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {

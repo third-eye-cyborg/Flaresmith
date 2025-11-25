@@ -14,19 +14,22 @@ interface FeatureCardProps {
 
 export function FeatureCard({ icon, title, description, href, className, badge }: FeatureCardProps) {
   const Inner = (
-    <div className={cn('relative group rounded-xl glass p-6 flex flex-col gap-3 overflow-hidden', className)}>
-      <div className='flex items-center gap-3'>
-        <div className='w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500/70 to-accent-500/70 flex items-center justify-center text-primary-foreground'>
+    <div className={cn('relative group rounded-xl bg-card border border-border p-8 flex flex-col gap-4 overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1', className)}>
+      <div className='flex items-start gap-4'>
+        <div className='w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300'>
           {icon}
         </div>
-        <h3 className='text-lg font-semibold tracking-tight'>{title}</h3>
-        {badge && <Badge className='ml-auto'>{badge}</Badge>}
+        <div className='flex-1'>
+          <div className='flex items-center gap-2'>
+            <h3 className='text-xl font-bold tracking-tight'>{title}</h3>
+            {badge && <Badge className='ml-auto'>{badge}</Badge>}
+          </div>
+        </div>
       </div>
-      <p className='text-sm text-muted-foreground leading-relaxed'>{description}</p>
+      <p className='text-base text-muted-foreground/90 leading-relaxed'>{description}</p>
       {href && (
-        <span className='pt-1 text-primary-300 text-sm font-medium group-hover:underline'>{'Learn more →'}</span>
+        <span className='pt-1 text-primary text-sm font-medium group-hover:underline'>{'Learn more →'}</span>
       )}
-      <div className='pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-primary/5 to-accent/10' />
     </div>
   );
   return href ? <a href={href}>{Inner}</a> : Inner;

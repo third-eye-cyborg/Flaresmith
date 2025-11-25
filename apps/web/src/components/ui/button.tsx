@@ -10,17 +10,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        gradient: "bg-gradient-to-r from-primary to-accent text-white shadow-md hover:shadow-lg hover:brightness-110",
-        glass: "bg-white/10 backdrop-blur-sm border border-white/15 text-white hover:bg-white/15",
-        subtle: "bg-neutral-800 text-neutral-100 hover:bg-neutral-700",
+        gradient: "bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:brightness-110",
+        glass: "bg-card border border-border text-foreground hover:bg-muted",
+        glassElevated: "bg-card border border-border shadow-lg hover:bg-muted",
+        subtle: "bg-muted text-foreground hover:bg-muted/80",
+        soft: "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20",
+        outlineGradient: "bg-transparent border-2 border-primary text-primary hover:bg-primary/10",
       },
       size: {
         default: "h-10 px-4 py-2",

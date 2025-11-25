@@ -1,6 +1,6 @@
 export const metadata = { title: 'New Project - Flaresmith' };
 
-import { Button } from '@/src/components/ui/button'
+import { Button } from '@/components/ui/button'
 export default function NewProjectPage() {
   return (
     <div className='gradient-bg min-h-[calc(100vh-4rem)] py-12'>
